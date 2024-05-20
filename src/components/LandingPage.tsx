@@ -1,8 +1,25 @@
 import React from "react";
 import Image from "next/image";
-import MaxWidthWrapper from "./MaxWidthWrapper";
 import Link from "next/link";
+import MaxWidthWrapper from "./MaxWidthWrapper";
 const LandingPage = () => {
+  const imageAbout = [
+    {
+      image:"https://placehold.co/600x400",
+      title:"TITLE",
+      desc:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore"
+    },
+    {
+      image:"https://placehold.co/600x400",
+      title:"TITLE",
+      desc:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore"
+    },
+    {
+      image:"https://placehold.co/600x400",
+      title:"TITLE",
+      desc:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore"
+    },
+  ]
   return (
     <div className="relative">
       <div className="md:h-[70vh] h-[100vh] relative flex flex-col">
@@ -30,6 +47,53 @@ const LandingPage = () => {
               Download Here
             </Link>
           </div>
+        </div>
+      </div>
+      <div className="relative  h-fit p-4">
+        <div className="pt-20">
+          <MaxWidthWrapper>
+            <h1 className="font-bold text-5xl tracking-wide">About</h1>
+            <div className="pt-10 flex gap-10 md:flex-row flex-col">
+              <div className="flex flex-col gap-5 md:w-[50%] w-full">
+                <div className="relative md:w-[500px] md:h-[300px] w-full h-[200px]">
+                  <Image
+                    src="https://placehold.co/600x400"
+                    alt="IMAGE"
+                      fill
+                    className="rounded-md object-cover"
+                  />
+                </div>
+                <div className="flex flex-col items-start">
+                  <h1 className="font-bold text-xl tracking-wide">TITLE</h1>
+                  <p className="text-md">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit
+                    esse cillum dolore eu fugiat nulla pariatur.
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-8">
+              {imageAbout.map((content)=>(
+                <div className="flex gap-5" key={content.desc}>
+                <div  className="relative md:w-[150px] w-full h-[100px]">
+                  <Image src={content.image}
+                     alt="IMAGE"
+                     fill
+                     className="rounded-md object-cover"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <h3 className="font-bold text-xl">{content.title}</h3>
+                  <p className="text-sm">{content.desc}</p>
+                </div>
+                </div>
+              ))}
+              </div>
+            </div>
+          </MaxWidthWrapper>
         </div>
       </div>
     </div>
