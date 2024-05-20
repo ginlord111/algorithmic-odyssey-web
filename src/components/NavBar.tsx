@@ -1,36 +1,87 @@
-import React from "react";
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Button} from "@nextui-org/react";
+"use client";
+import React, { useEffect, useState } from "react";
+import { cn } from "@nextui-org/react";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Button,
+} from "@nextui-org/react";
 import Link from "next/link";
+import { Menu } from 'lucide-react';
+import MaxWidthWrapper from "./MaxWidthWrapper";
 export default function NavBar() {
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
-    <Navbar className=" bg-orange-300 bg-opacity-70 backdrop-filter backdrop-blur-sm">
-      <NavbarBrand>
-        <p className="font-bold text-inherit">LOGO</p>
-      </NavbarBrand>
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
-          <Link  href="#">
-            Features
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href="#">
-            Customers
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href="">
-            Integrations
-          </Link>
-        </NavbarItem>
+    <Navbar
+      className={cn(
+        "bg-transparent bg-opacity-70  backdrop-filter backdrop-blur-sm absolute z-50 text-white font-bold",
+        { fixed: isScrolled }
+      )}
+      maxWidth="xl"
+    >
+      <NavbarContent>
+        <p className="font-bold text-xl mr-16">LOGO</p>
+        <div className="hidden sm:flex gap-10">
+          <NavbarItem>
+            <Link href="#" className="text-xl">
+              Features
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <Link href="#" className="text-xl">
+              Community
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <Link href="#" className="text-xl">
+              About
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <Link href="#" className="text-xl">
+              Socials
+            </Link>
+          </NavbarItem>
+        </div>
       </NavbarContent>
-      <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
+      <NavbarContent justify="end" className="flex gap-10">
+      <NavbarItem  className="md:hidden flex">
+      <Menu />
         </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
+        <NavbarItem className="hidden lg:flex">
+          <Link href="#" className="text-xl">
+            Contribute
+          </Link>
+        </NavbarItem>
+        <NavbarItem className="hidden lg:flex">
+          <Link href="#" className="text-xl">
+            Docs
+          </Link>
+        </NavbarItem>
+        <NavbarItem className="hidden lg:flex">
+          <Button
+            as={Link}
+            href="#"
+            className="text-red-500 p-6 font-bold border-3 text-md border-black mr-4"
+          >
+            Download now
           </Button>
         </NavbarItem>
       </NavbarContent>
