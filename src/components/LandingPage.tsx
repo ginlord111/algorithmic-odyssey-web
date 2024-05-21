@@ -111,7 +111,8 @@ const LandingPage = () => {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
-            className="md:w-[1060px] md:h-[700px] w-full h-[300px]"
+            className="md:w-[1060px] md:h-[700px] w-full h-[300px] cursor-pointer"
+
           ></iframe>
         </div>
         </MaxWidthWrapper>

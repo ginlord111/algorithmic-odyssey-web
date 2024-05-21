@@ -25,8 +25,8 @@ export default function RootLayout({
        <div className="relative h-full w-full ">
     {children}
        </div>
+       <Footer />
         </Provider>
-        <Footer />
         </main>
         </body>
     </html>
