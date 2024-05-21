@@ -3,17 +3,14 @@ import React, { useEffect, useState } from "react";
 import { cn } from "@nextui-org/react";
 import {
   Navbar,
-  NavbarBrand,
   NavbarContent,
   NavbarItem,
   Button,
 } from "@nextui-org/react";
 import Link from "next/link";
 import { Menu } from 'lucide-react';
-import MaxWidthWrapper from "./MaxWidthWrapper";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
-
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -31,8 +28,8 @@ export default function NavBar() {
   return (
     <Navbar
       className={cn(
-        "bg-transparent bg-opacity-70  backdrop-filter backdrop-blur-sm absolute z-50 text-white font-bold",
-        { fixed: isScrolled }
+        "bg-transparent bg-opacity-70 transition  backdrop-filter backdrop-blur-sm absolute z-50 text-white font-bold",
+        { "fixed bg-orange-200": isScrolled }
       )}
       maxWidth="xl"
     >

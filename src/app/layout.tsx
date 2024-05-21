@@ -21,7 +21,7 @@ export default function RootLayout({
 <main className="relative flex flex-col min-h-screen"> 
      <Provider>
      <NavBar />
-       <div className="relative h-full w-full bg-[#eff1f5]">
+       <div className="relative h-full w-full ">
     {children}
        </div>
         </Provider>

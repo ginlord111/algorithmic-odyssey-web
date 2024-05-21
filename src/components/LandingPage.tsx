@@ -5,23 +5,23 @@ import MaxWidthWrapper from "./MaxWidthWrapper";
 const LandingPage = () => {
   const imageAbout = [
     {
-      image:"https://placehold.co/600x400",
-      title:"TITLE",
-      desc:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore"
+      image: "https://placehold.co/600x400",
+      title: "TITLE",
+      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
     },
     {
-      image:"https://placehold.co/600x400",
-      title:"TITLE",
-      desc:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore"
+      image: "https://placehold.co/600x400",
+      title: "TITLE",
+      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
     },
     {
-      image:"https://placehold.co/600x400",
-      title:"TITLE",
-      desc:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore"
+      image: "https://placehold.co/600x400",
+      title: "TITLE",
+      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
     },
-  ]
+  ];
   return (
-    <div className="relative">
+    <div className="relative bg-[#eff1f5]">
       <div className="md:h-[70vh] h-[100vh] relative flex flex-col">
         <Image
           src="https://img.itch.zone/aW1hZ2UvOTMyNjc3LzU0NzM5MjMuZ2lm/347x500/dFxgtd.gif"
@@ -33,7 +33,7 @@ const LandingPage = () => {
           <div className="font-bold md:text-[60px] text-[30px] max-w-2xl text-white">
             Unlock Algorithm Skills with Every Level
           </div>
-          <div className="text-lg font-bold tracking-wide text-white">
+          <div className="text-lg font-bold tracking-wide text-white max-w-2xl">
             <p>
               Embark on a 2D Gaming Journey to Master Algorithms and Boost Your
               Problem-Solving Abilities
@@ -59,7 +59,7 @@ const LandingPage = () => {
                   <Image
                     src="https://placehold.co/600x400"
                     alt="IMAGE"
-                      fill
+                    fill
                     className="rounded-md object-cover"
                   />
                 </div>
@@ -76,25 +76,47 @@ const LandingPage = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-8">
-              {imageAbout.map((content)=>(
-                <div className="flex gap-5" key={content.desc}>
-                <div  className="relative md:w-[150px] w-full h-[100px]">
-                  <Image src={content.image}
-                     alt="IMAGE"
-                     fill
-                     className="rounded-md object-cover"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <h3 className="font-bold text-xl">{content.title}</h3>
-                  <p className="text-sm">{content.desc}</p>
-                </div>
-                </div>
-              ))}
+                {imageAbout.map((content, index) => (
+                  <div className="flex gap-5" key={index}>
+                    <div className="relative md:w-[150px] w-full h-[100px]">
+                      <Image
+                        src={content.image}
+                        alt="IMAGE"
+                        fill
+                        className="rounded-md object-cover"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <h3 className="font-bold text-xl">{content.title}</h3>
+                      <p className="text-sm">{content.desc}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </MaxWidthWrapper>
         </div>
+      </div>
+      {/* YOUTUBE TUTORIAL */}
+      <div className="h-fit mt-[250px] pb-20">
+        <MaxWidthWrapper >
+          <h1 className="font-bold tracking-wide text-5xl mb-10">
+              Tutorial
+          </h1>
+        <div className="relative ">
+          <iframe
+            width="1060"
+            height="700"
+            src="https://www.youtube.com/embed/EC7BoilfBSk?si=FaSx4j5eQXA6zAPS"
+            title="Tutorial"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+            
+          ></iframe>
+        </div>
+        </MaxWidthWrapper>
       </div>
     </div>
   );
