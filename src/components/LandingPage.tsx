@@ -52,7 +52,7 @@ const LandingPage = () => {
       <div className="relative  h-fit p-4">
         <div className="pt-20">
           <MaxWidthWrapper>
-            <h1 className="font-bold text-5xl tracking-wide">About</h1>
+            <h1 className="font-bold md:text-5xl text-2xl tracking-wide">About</h1>
             <div className="pt-10 flex gap-10 md:flex-row flex-col">
               <div className="flex flex-col gap-5 md:w-[50%] w-full">
                 <div className="relative md:w-[500px] md:h-[300px] w-full h-[200px]">
@@ -100,19 +100,18 @@ const LandingPage = () => {
       {/* YOUTUBE TUTORIAL */}
       <div className="h-fit mt-[250px] pb-20">
         <MaxWidthWrapper >
-          <h1 className="font-bold tracking-wide text-5xl mb-10">
+          <h1 className="font-bold tracking-wide md:text-5xl text-2xl mb-10">
               Tutorial
           </h1>
         <div className="relative ">
           <iframe
-            width="1060"
-            height="700"
             src="https://www.youtube.com/embed/EC7BoilfBSk?si=FaSx4j5eQXA6zAPS"
             title="Tutorial"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
+            className="md:w-[1060px] md:h-[700px] w-full h-[300px]"
             
           ></iframe>
         </div>
