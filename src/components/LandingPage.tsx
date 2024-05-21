@@ -98,7 +98,7 @@ const LandingPage = () => {
         </div>
       </div>
       {/* YOUTUBE TUTORIAL */}
-      <div className="h-fit mt-[250px] pb-20">
+      <div className="h-fit mt-[250px] pb-[150px]">
         <MaxWidthWrapper >
           <h1 className="font-bold tracking-wide md:text-5xl text-2xl mb-10">
               Tutorial
@@ -112,7 +112,6 @@ const LandingPage = () => {
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
             className="md:w-[1060px] md:h-[700px] w-full h-[300px]"
-            
           ></iframe>
         </div>
         </MaxWidthWrapper>
