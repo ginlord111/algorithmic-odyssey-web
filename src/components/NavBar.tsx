@@ -29,7 +29,7 @@ export default function NavBar() {
     <Navbar
       className={cn(
         "bg-transparent bg-opacity-70 transition  backdrop-filter backdrop-blur-sm absolute z-10 text-white font-bold",
-        { "sticky bg-[#414d69]": isScrolled }
+        { "fixed bg-[#414d69]": isScrolled }
       )}
       maxWidth="xl"
     >
