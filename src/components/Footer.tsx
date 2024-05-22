@@ -109,7 +109,7 @@ const Footer = () => {
             <div className="flex flex-col items-center">
                 <div className="flex gap-4">
                 <Mail className="h-5 w-5 text-white"/>
-                <h4 className="text-white text-sm font-semibold">
+                <h4 className="text-white text-sm font-semibold w-full">
                 Stay up to date on the latest from Algorithmic Odyssey
                 </h4>
                 </div>
