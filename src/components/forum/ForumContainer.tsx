@@ -1,9 +1,10 @@
 import React, { useMemo } from "react";
-import { Avatar, Button } from "@nextui-org/react";
-import { ThumbsUp, MessageSquareText } from "lucide-react";
+import { Avatar } from "@nextui-org/react";
+
 import Image from "next/image";
 import { Forum } from "@prisma/client";
 import timeDiff from "@/utils/timeCalc";
+import ForumButtons from "./ForumButtons";
 const ForumContainer = ({
   id,
   userId,
@@ -46,15 +47,7 @@ const ForumContainer = ({
               />
             </div>
           )}
-
-          <div className="flex flex-row gap-4 mt-4">
-            <Button isIconOnly size="sm">
-              <ThumbsUp className="h-5 w-5" />
-            </Button>
-            <Button isIconOnly size="sm">
-              <MessageSquareText className="h-5 w-5" />
-            </Button>
-          </div>
+<ForumButtons />
         </div>
       </div>
     </div>
