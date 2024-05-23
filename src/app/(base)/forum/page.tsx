@@ -1,20 +1,12 @@
-import Header from '@/components/layout/Header'
-import MaxWidthWrapper from '@/components/layout/MaxWidthWrapper'
-import PostContainer from '@/components/post/PostContainer'
-import React from 'react'
-
-const Forum = () => {
+import React from "react";
+import Forum from "./_components/Forum";
+import Query from "@/components/tanstack-query/Query";
+const page = () => {
   return (
-    <div>
-      <Header />
-        <MaxWidthWrapper className='flex justify-center'>
-      <PostContainer />
-        </MaxWidthWrapper>
-        {/* <div>
-         THIS IS WHERE YOU PUT THE INVIEW
-        </div> */}
-    </div>
-  )
-}
+    <Query>
+      <Forum />
+    </Query>
+  );
+};
 
-export default Forum
+export default page;

@@ -1,14 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { cn } from "@nextui-org/react";
-import {
-  Navbar,
-  NavbarContent,
-  NavbarItem,
-  Button,
-} from "@nextui-org/react";
+import { Navbar, NavbarContent, NavbarItem, Button } from "@nextui-org/react";
 import Link from "next/link";
-import { Menu } from 'lucide-react';
+import { Menu } from "lucide-react";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   useEffect(() => {
@@ -42,8 +37,8 @@ export default function NavBar() {
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link href="#" className="text-xl">
-              Community
+            <Link href="/forum" className="text-xl">
+              Forum
             </Link>
           </NavbarItem>
           <NavbarItem>
@@ -59,8 +54,8 @@ export default function NavBar() {
         </div>
       </NavbarContent>
       <NavbarContent justify="end" className="flex gap-10">
-      <NavbarItem  className="md:hidden flex">
-      <Menu />
+        <NavbarItem className="md:hidden flex">
+          <Menu />
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
           <Link href="#" className="text-xl">
