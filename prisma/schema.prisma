@@ -23,7 +23,7 @@ model Forum{
 id                  String         @id @default(cuid())
 userId              String
 authorUsername      String
-authorImage         String
+forumImage          String
 title               String
 caption             String?
  createdAt          DateTime        @default(now())
