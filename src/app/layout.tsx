@@ -24,7 +24,8 @@ export default function RootLayout({
           <Provider>
             <Nav />
             <div className="relative h-full w-full">{children}</div>
-            {/* <Footer /> */}
+            <Footer />
+
           </Provider>
         </main>
       </body>
