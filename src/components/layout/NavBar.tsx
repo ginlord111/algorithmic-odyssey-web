@@ -4,6 +4,7 @@ import { cn } from "@nextui-org/react";
 import { Navbar, NavbarContent, NavbarItem, Button } from "@nextui-org/react";
 import Link from "next/link";
 import { Menu } from "lucide-react";
+import DarkModeButton from "./DarkModeButton";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   useEffect(() => {
@@ -23,8 +24,8 @@ export default function NavBar() {
   return (
     <Navbar
       className={cn(
-        "bg-transparent bg-opacity-70 transition  backdrop-filter backdrop-blur-sm absolute z-10 text-white font-bold",
-        { "fixed bg-[#414d69]": isScrolled }
+        "bg-transparent bg-opacity-70 transition backdrop-filter backdrop-blur-sm absolute z-10 text-white font-bold border-b-1 border-[#cbd5e11a]",
+        { "fixed bg-[#414d69] dark:bg-[#1b1b1f]  ": isScrolled }
       )}
       maxWidth="xl"
     >
@@ -72,12 +73,17 @@ export default function NavBar() {
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
           <Button
+          color="default"
+          variant="faded"
             as={Link}
             href="#"
             className="text-red-500 p-6 font-bold border-3 text-md border-black mr-4"
           >
             Download now
           </Button>
+        </NavbarItem>
+        <NavbarItem>
+    <DarkModeButton />
         </NavbarItem>
       </NavbarContent>
     </Navbar>
