@@ -1,9 +1,8 @@
 import prisma from "@/db";
 import { Forum } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-
 export async function GET(req:NextRequest):Promise<any> {
-  const url = new URL(req.url);
+  const url = new URL(req.url);         
   const cursor = url.searchParams.get("cursor");
   try {
    const forums = await prisma.forum.findMany({

@@ -2,7 +2,7 @@ import React from 'react'
 import {Skeleton, Card} from "@nextui-org/react";
 const ForumSkeleton = () => {
   return (
-    <Card className="w-[1000px] space-y-5 p-4 h-[250px] mt-20 relative  max-w-4xl " radius="lg">
+    <Card className="w-[1000px] space-y-5 p-4 h-[250px] mt-20 relative  max-w-4xl mb-[150px] " radius="lg">
         <div className='flex flex-row gap-5 items-center'> 
     <Skeleton className="rounded-full w-10 ">
       <div className="h-10 rounded-lg bg-default-300  "></div>
