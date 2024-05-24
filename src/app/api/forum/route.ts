@@ -42,7 +42,7 @@ export async function GET(req:NextRequest):Promise<any> {
    }
     return NextResponse.json({data}, {status:200});
   } catch (error) {
-    console.error('Error fetching forums:', error); // Log the actual error message
+    console.error('Error fetching forums:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
