@@ -36,7 +36,7 @@ const ForumContainer = ({
           </div>
           <div className="text-sm text-gray-500 tracking-wide">{caption}</div>
           {forumImage && (
-            <div className="w-[90%] !h-[50%]">
+            <div className="w-[90%] !h-[50%] mx-auto md:mx-0">
               <Image
                 src={forumImage}
                 alt="Animated GIF"

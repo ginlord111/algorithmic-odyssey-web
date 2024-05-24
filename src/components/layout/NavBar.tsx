@@ -29,7 +29,10 @@ export default function NavBar() {
       maxWidth="xl"
     >
       <NavbarContent>
-        <p className="font-bold text-xl mr-16">LOGO</p>
+        <Link href="/">
+          <p className="font-bold text-xl mr-16">LOGO</p>
+        </Link>
+
         <div className="hidden sm:flex gap-10">
           <NavbarItem>
             <Link href="#" className="text-xl">

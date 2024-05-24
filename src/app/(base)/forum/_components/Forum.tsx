@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect,Fragment } from "react";
 import { useInView } from "react-intersection-observer";
 import ForumContainer from "@/components/forum/ForumContainer";
 import Header from "@/components/layout/Header";
@@ -17,18 +17,24 @@ const Forums = () => {
     const data = await response.data;
     return data;
   };
-  const { data, isSuccess, isPending, isLoading, hasNextPage, fetchNextPage,isFetchingNextPage } =
-    useInfiniteQuery({
-      initialPageParam: "",
-      queryKey: ["forums"],
-      queryFn: ({ pageParam = "" }) =>
-        getForums({ cursor: pageParam as string }),
-      getNextPageParam: (lastPage) => {
-        return Object.keys(lastPage).length !== 0
-          ? lastPage?.metaData.lastCursor
-          : undefined;
-      },
-    });
+  const {
+    data,
+    isSuccess,
+    isPending,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    initialPageParam: "",
+    queryKey: ["forums"],
+    queryFn: ({ pageParam = "" }) => getForums({ cursor: pageParam as string }),
+    getNextPageParam: (lastPage) => {
+      return Object.keys(lastPage).length !== 0
+        ? lastPage?.metaData.lastCursor
+        : undefined;
+    },
+  });
   const { ref, inView } = useInView();
 
   useEffect(() => {
@@ -37,6 +43,7 @@ const Forums = () => {
       fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, inView]);
+  console.log(data, "DATAAAA");
   return (
     <div>
       <Header />
@@ -48,7 +55,7 @@ const Forums = () => {
                 page.data &&
                 page.data.map((forum: Forum) => (
                   <div key={forum.userId} ref={ref}>
-                  <ForumContainer {...forum}  />
+                    <ForumContainer {...forum} />
                   </div>
                 ))
             )
@@ -56,6 +63,11 @@ const Forums = () => {
             <ForumSkeleton />
           )}
           {isFetchingNextPage && <ForumSkeleton />}
+          {!hasNextPage && !isPending && !isLoading && (
+            <div className="font-bold py-4 flex items-center w-full text-center justify-center">
+              -------------No more post-------------
+            </div>
+          )}
         </div>
       </MaxWidthWrapper>
     </div>

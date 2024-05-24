@@ -56,7 +56,7 @@ const LandingPage = () => {
     },
   ];
   return (
-    <div className="relative bg-[#eff1f5]">
+    <div className="relative ">
       <div className="md:h-[70vh] h-[100vh] relative flex flex-col">
         <Image
           src="https://img.itch.zone/aW1hZ2UvOTMyNjc3LzU0NzM5MjMuZ2lm/347x500/dFxgtd.gif"

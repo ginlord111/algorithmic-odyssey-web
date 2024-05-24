@@ -23,7 +23,7 @@ export default function RootLayout({
         <main className="relative flex flex-col min-h-screen">
           <Provider>
             <Nav />
-            <div className="relative h-full w-full ">{children}</div>
+            <div className="relative h-full w-full bg-[#eff1f5]">{children}</div>
             {/* <Footer /> */}
           </Provider>
         </main>
