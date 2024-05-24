@@ -7,6 +7,7 @@ import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper";
 import { Forum } from "@prisma/client";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import ForumSkeleton from "@/components/forum/ForumSkeleton";
+import { useSession } from "next-auth/react";
 const Forums = () => {
   const getForums = async ({ cursor }: { cursor: string }) => {
     const params = new URLSearchParams({
@@ -36,14 +37,14 @@ const Forums = () => {
     },
   });
   const { ref, inView } = useInView();
-
+  const { data: session, status } = useSession();
   useEffect(() => {
     // if the last element is in view and there is a next page, fetch the next page
     if (inView && hasNextPage) {
       fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, inView]);
-  console.log(data, "DATAAAA");
+  console.log(session?.user.id, "USER ID")
   return (
     <div>
       <Header />

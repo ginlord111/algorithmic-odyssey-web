@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Forum } from "@prisma/client";
 import timeDiff from "@/utils/timeCalc";
 import ForumButtons from "./ForumButtons";
+
 const ForumContainer = ({
   id,
   userId,
@@ -17,6 +18,8 @@ const ForumContainer = ({
   const timeDiffCalc = useMemo(() => {
     return timeDiff(createdAt);
   }, [createdAt]);
+
+
   return (
     <div className="relative pt-20 max-w-4xl flex ">
       <div className="h-fit w-full pb-10">
