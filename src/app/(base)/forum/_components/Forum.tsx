@@ -8,6 +8,8 @@ import { Forum } from "@prisma/client";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import ForumSkeleton from "@/components/forum/ForumSkeleton";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 const Forums = () => {
   const getForums = async ({ cursor }: { cursor: string }) => {
     const params = new URLSearchParams({
@@ -50,6 +52,10 @@ const Forums = () => {
       <Header />
       <MaxWidthWrapper className="flex justify-center">
         <div className="flex flex-col">
+        {/* TODO: MOVE THIS BUTTON TO THE NAVBAR */}
+          <Link href="/new" className="flex items-center justify-center mt-5">
+          <Button >Create Post</Button> 
+          </Link>
           {isSuccess && !isPending && !isLoading ? (
             data.pages.map(
               (page) =>

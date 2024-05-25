@@ -2,8 +2,11 @@
 import { Editor } from "@tiptap/react";
 import React from "react";
 import { Toggle } from "@/components/ui/toggle";
-import { Heading2,Bold,Italic,Image } from "lucide-react";
+import { Heading2, Bold, Italic, Image } from "lucide-react";
+import { useRef } from "react";
+import { Input } from "@nextui-org/react";
 const Toolbar = ({ editor }: { editor: Editor | null }) => {
+  const fileBtn = useRef<HTMLInputElement>(null);
   if (!editor) return;
   return (
     <div className="border border-input bg-transparent rounded">
@@ -20,9 +23,7 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
       <Toggle
         size="sm"
         pressed={editor.isActive("bold")}
-        onPressedChange={() =>
-          editor.chain().focus().toggleBold().run()
-        }
+        onPressedChange={() => editor.chain().focus().toggleBold().run()}
       >
         <Bold />
       </Toggle>
@@ -30,20 +31,39 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
       <Toggle
         size="sm"
         pressed={editor.isActive("Italic")}
-        onPressedChange={() =>
-          editor.chain().focus().toggleItalic()
-        }
+        onPressedChange={() => editor.chain().focus().toggleItalic().run()}
       >
         <Italic />
       </Toggle>
 
       <Toggle
         size="sm"
-        pressed={editor.isActive("Italic")}
-        // onClick={editor.chain().focus().setImage({ src: url }).run()}
+        onClick={() => {
+          if (fileBtn.current) {
+            fileBtn.current.click();
+          }
+        }}
       >
         <Image />
       </Toggle>
+      <Input
+        type="file"
+        ref={fileBtn}
+        // accept="image/*"
+        style={{ display: "none" }}
+        onChange={(event) => {
+          if (!event.target.files) return;
+          const file = event.target.files[0];
+      console.log(file, "FILESSS")
+          if (file) {
+            editor
+              .chain()
+              .focus()
+              .setImage({ src: URL.createObjectURL(file) })
+              .run();
+          }
+        }}
+      />
     </div>
   );
 };

@@ -14,6 +14,8 @@ import {
     FormMessage,
   } from "@/components/ui/form"
   import { Input } from "@/components/ui/input"
+import MaxWidthWrapper from '@/components/layout/MaxWidthWrapper'
+import { Button } from '@/components/ui/button'
 const CreatePost = () => {
     const formSchema = z.object({
         title: z.string().min(2, {
@@ -35,7 +37,8 @@ const CreatePost = () => {
         console.log(values)
       }
   return (
-    <div className='h-[100vh] relative mt-20'>  
+    <div className='h-screen relative mt-20'>  
+    <MaxWidthWrapper> 
     <Form {...form}>
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
       <FormField
@@ -45,7 +48,7 @@ const CreatePost = () => {
           <FormItem>
             <FormLabel>Title</FormLabel>
             <FormControl>
-              <Input placeholder="shadcn" {...field} />
+              <Input placeholder="Your title here" {...field} />
             </FormControl>
             {/* <FormDescription>
               This is your public display name.
@@ -60,7 +63,7 @@ const CreatePost = () => {
         name="description"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Username</FormLabel>
+            <FormLabel>Caption</FormLabel>
             <FormControl>
 <Tiptap  name ={field.name} onChange={field.onChange} />
             </FormControl>
@@ -71,9 +74,10 @@ const CreatePost = () => {
           </FormItem>
         )}
       />
-      {/* <Button type="submit">Submit</Button> */}
+      <Button type="submit"  className='w-full font-bold text-lg text-white'>Submit</Button>
     </form>
   </Form>
+  </MaxWidthWrapper>
   </div>
   )
 }
