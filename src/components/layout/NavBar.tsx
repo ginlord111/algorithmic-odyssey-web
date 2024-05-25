@@ -1,19 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { cn } from "@nextui-org/react";
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  Button,
-} from "@nextui-org/react";
+import { Navbar, NavbarContent, NavbarItem, Button } from "@nextui-org/react";
 import Link from "next/link";
-import { Menu } from 'lucide-react';
-import MaxWidthWrapper from "./MaxWidthWrapper";
+import { Menu } from "lucide-react";
+import DarkModeButton from "./DarkModeButton";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
-
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -27,17 +20,20 @@ export default function NavBar() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [isScrolled]);
   return (
     <Navbar
       className={cn(
-        "bg-transparent bg-opacity-70  backdrop-filter backdrop-blur-sm absolute z-50 text-white font-bold",
-        { fixed: isScrolled }
+        "bg-transparent bg-opacity-70 transition backdrop-filter backdrop-blur-sm absolute z-10 text-white font-bold border-b-1 border-[#cbd5e11a]",
+        { "fixed bg-[#414d69] dark:bg-[#1b1b1f]  ": isScrolled }
       )}
       maxWidth="xl"
     >
       <NavbarContent>
-        <p className="font-bold text-xl mr-16">LOGO</p>
+        <Link href="/">
+          <p className="font-bold text-xl mr-16">LOGO</p>
+        </Link>
+
         <div className="hidden sm:flex gap-10">
           <NavbarItem>
             <Link href="#" className="text-xl">
@@ -45,8 +41,8 @@ export default function NavBar() {
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link href="#" className="text-xl">
-              Community
+            <Link href="/forum" className="text-xl">
+              Forum
             </Link>
           </NavbarItem>
           <NavbarItem>
@@ -62,8 +58,8 @@ export default function NavBar() {
         </div>
       </NavbarContent>
       <NavbarContent justify="end" className="flex gap-10">
-      <NavbarItem  className="md:hidden flex">
-      <Menu />
+        <NavbarItem className="md:hidden flex">
+          <Menu />
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
           <Link href="#" className="text-xl">
@@ -77,12 +73,17 @@ export default function NavBar() {
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
           <Button
+          color="default"
+          variant="faded"
             as={Link}
             href="#"
             className="text-red-500 p-6 font-bold border-3 text-md border-black mr-4"
           >
             Download now
           </Button>
+        </NavbarItem>
+        <NavbarItem>
+    <DarkModeButton />
         </NavbarItem>
       </NavbarContent>
     </Navbar>
