@@ -39,7 +39,7 @@ export async function GET(req:NextRequest):Promise<any> {
       lastCursor: newCursor !== undefined ? newCursor : null,
       hasNextPage: nextForum.length>0
     }
-   }
+   } 
     return NextResponse.json({data}, {status:200});
   } catch (error) {
     console.error('Error fetching forums:', error);
