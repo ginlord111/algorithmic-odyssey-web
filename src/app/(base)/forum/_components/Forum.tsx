@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useEffect,Fragment } from "react";
 import { useInView } from "react-intersection-observer";
 import ForumContainer from "@/components/forum/ForumContainer";
@@ -39,14 +39,13 @@ const Forums = () => {
     },
   });
   const { ref, inView } = useInView();
-  const { data: session, status } = useSession();
   useEffect(() => {
     // if the last element is in view and there is a next page, fetch the next page
-    if (inView && hasNextPage) {
+    if (inView || hasNextPage) {
       fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, inView]);
-  console.log(session?.user.id, "USER ID")
+  console.log(hasNextPage, "DATAAA")
   return (
     <div>
       <Header />
