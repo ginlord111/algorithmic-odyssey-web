@@ -6,24 +6,28 @@
 
 generator client {
   provider = "prisma-client-js"
+  // previewFeatures = [ "multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // schemas  = ["users", "forums", "accounts", "sessions"]
 }
 
-
 model User {
- id               String         @id @default(cuid())
- userId           String?        
- username         String         @unique
-email             String?        @unique
-emailVerified     DateTime?
-userImage         String?
- accounts          Account[]
-  sessions           Session[]
- @@map("user")
+  id            String    @id @default(cuid())
+  userId        String?
+  username      String    @unique
+  email         String?   @unique
+  emailVerified DateTime?
+  userImage     String?
+  accounts      Account[]
+  sessions      Session[]
+  forums         Forum[]
+
+  @@unique([id, username])
+  @@map("user")
 }
 
 model Account {
@@ -43,11 +47,9 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  // @@schema("users")
- @@map("account")
-
+  //@@("users")
+  @@map("accounts")
 }
-
 
 model Session {
   id           String   @id @default(cuid())
@@ -56,15 +58,18 @@ model Session {
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
- @@map("session")
+  @@map("sessions")
 }
 
-model Forum{
-id                  String         @id @default(cuid())
-userId              String
-authorUsername      String
-forumImage          String
-title               String
-caption             String?
- createdAt          DateTime        @default(now())
+model Forum {
+  id             String   @id @default(cuid())
+  userId         String
+  authorUsername String
+  forumImage     String?
+  title          String
+  caption        String?
+  user           User     @relation(fields: [userId, authorUsername], references: [id, username])
+  createdAt      DateTime   @default(now())
+
+  @@map("forums")
 }

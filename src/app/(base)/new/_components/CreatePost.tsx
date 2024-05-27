@@ -3,7 +3,7 @@ import Tiptap from '@/app/(base)/new/_components/Tiptap'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import React from 'react'
+import React, { useState } from 'react'
 import {
     Form,
     FormControl,
@@ -17,24 +17,36 @@ import {
 import MaxWidthWrapper from '@/components/layout/MaxWidthWrapper'
 import { Button } from '@/components/ui/button'
 const CreatePost = () => {
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  
     const formSchema = z.object({
         title: z.string().min(2, {
-          message: "Username must be at least 2 characters.",
+          message: "Title must be at least 2 characters.",
         }),
-        description:z.string().min(2, {
-          message:"kekw"
-        })
+        caption:z.optional(z.string())
       })
       const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         mode:"onChange",
         defaultValues: {
           title: "",
-          description:"",
+          caption:"DSADSA",
         },
       });
       function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+        const formData = new FormData();
+        // formData.append("upload_preset","qyqo8wev")
+        if(imageFile && values.caption === ""){
+          formData.append("image", imageFile)
+        }
+        else{
+          formData.append("caption", JSON.stringify(values.caption))
+        }
+       formData.append("title",  JSON.stringify(values.title))
+         fetch(`api/forum`, {
+          method:"POST",
+          body:formData,
+        })
       }
   return (
     <div className='h-screen relative mt-20'>  
@@ -60,12 +72,12 @@ const CreatePost = () => {
 
 <FormField
         control={form.control}
-        name="description"
+        name="caption"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Caption</FormLabel>
             <FormControl>
-<Tiptap  name ={field.name} onChange={field.onChange} />
+<Tiptap  name ={field.name} onChange={field.onChange} setImageFile={setImageFile} />
             </FormControl>
             {/* <FormDescription>
               This is your public display name.
@@ -74,7 +86,7 @@ const CreatePost = () => {
           </FormItem>
         )}
       />
-      <Button type="submit"  className='w-full font-bold text-lg text-white'>Submit</Button>
+      <Button type="submit"  className='w-full font-bold text-lg text-white'>Create Post</Button>
     </form>
   </Form>
   </MaxWidthWrapper>
