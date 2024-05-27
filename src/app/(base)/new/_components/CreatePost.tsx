@@ -83,7 +83,7 @@ const CreatePost = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Caption</FormLabel>
-                  <FormControl>
+                  <FormControl >
                     <Tiptap
                       name={field.name}
                       onChange={field.onChange}
@@ -100,11 +100,10 @@ const CreatePost = () => {
             <Button
               type="submit"
               className="w-full font-bold text-lg text-white"
-              disabled={form.formState.isLoading }
+              disabled={form.formState.isSubmitting }
             >
-              {" "}
-              {form.formState.isLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+              {form.formState.isSubmitting ? (
+                <Loader2 className="w-7 h-7 animate-spin" />
               ) : (
                 <span>Create Post</span>
               )}

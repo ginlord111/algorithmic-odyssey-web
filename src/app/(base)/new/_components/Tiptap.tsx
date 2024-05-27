@@ -16,7 +16,9 @@ const Tiptap = ({
 }) => {
 
   const editor = useEditor({
-    extensions: [StarterKit.configure(),Image],
+    extensions: [StarterKit.configure(),Image.configure({HTMLAttributes:{
+      class:"w-fit h-fit flex items-center"
+    }})],
     content: ``,
     editorProps:{
       attributes:{

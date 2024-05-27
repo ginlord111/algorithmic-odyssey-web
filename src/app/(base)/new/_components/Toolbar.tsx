@@ -54,7 +54,7 @@ const Toolbar = ({editor,setImageFile}: { editor: Editor | null, setImageFile:Di
         onChange={(event) => {
           if(!event.target.files) return ;
           const file = event.target.files[0];
-          setImageFile(file)
+          setImageFile(file);
             editor
           .commands.setImage({src:URL.createObjectURL(file)})
         }}
