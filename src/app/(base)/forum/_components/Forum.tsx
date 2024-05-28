@@ -48,8 +48,8 @@ const Forums = () => {
   console.log(hasNextPage, "DATAAA")
   return (
     <div>
-      <Header />
-      <MaxWidthWrapper className="flex justify-center">
+      
+      <MaxWidthWrapper className="flex justify-center border-l-1 border-gray-400">
         <div className="flex flex-col">
         {/* TODO: MOVE THIS BUTTON TO THE NAVBAR OR IN SIDEBAR*/}
           <Link href="/new" className="flex items-center justify-center mt-5">

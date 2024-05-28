@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Forum } from "@prisma/client";
 import timeDiff from "@/utils/timeCalc";
 import ForumButtons from "./ForumButtons";
+import { useRouter } from "next/navigation";
 const ForumContainer = ({
   id,
   userId,
@@ -14,6 +15,7 @@ const ForumContainer = ({
   caption,
   createdAt,
 }: Forum) => {
+  const router = useRouter()
   const timeDiffCalc = useMemo(() => {
     return timeDiff(createdAt);
   }, [createdAt]);
@@ -21,7 +23,9 @@ const ForumContainer = ({
     <div className="relative pt-20 mx-[200px]">
       <div className="h-fit w-full pb-[10px]  border-b-1 border-muted-foreground">
         <div className="flex flex-col items-start w-full">
-          <div className="flex flex-row gap-2 justify-start text-xs ">
+          <div className="flex flex-row gap-2 justify-start text-xs cursor-pointer "
+          onClick={()=>router.push(`user/${authorUsername}`)}
+          >
             <Avatar
               showFallback
               src="https://images.unsplash.com/broken"
