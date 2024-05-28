@@ -56,7 +56,7 @@ const CreatePost = () => {
     });
   }
   return (
-    <div className="h-screen relative mt-20">
+    <div className="h-fit mt-20">
       <MaxWidthWrapper>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
