@@ -1,30 +1,23 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  // previewFeatures = [ "multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  // schemas  = ["users", "forums", "accounts", "sessions"]
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String      @id @default(cuid())
   userId        String?
-  username      String    @unique
-  email         String?   @unique
+  username      String      @unique
+  email         String?     @unique
   emailVerified DateTime?
   userImage     String?
   accounts      Account[]
+  ForumLike     ForumLike[]
+  forums        Forum[]
   sessions      Session[]
-  forums         Forum[]
 
   @@unique([id, username])
   @@map("user")
@@ -36,18 +29,16 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  //@@("users")
   @@map("accounts")
 }
 
@@ -62,14 +53,25 @@ model Session {
 }
 
 model Forum {
-  id             String   @id @default(cuid())
+  id             String      @id @default(cuid())
   userId         String
   authorUsername String
   forumImage     String?
   title          String
   caption        String?
-  user           User     @relation(fields: [userId, authorUsername], references: [id, username])
-  createdAt      DateTime   @default(now())
+  createdAt      DateTime    @default(now())
+  forumLikes     ForumLike[]
+  user           User        @relation(fields: [userId, authorUsername], references: [id, username])
 
   @@map("forums")
+}
+
+model ForumLike {
+  id      String @id @default(cuid())
+  userId  String
+  forumId String
+  forums  Forum  @relation(fields: [forumId], references: [id], onDelete: Cascade)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("forumLike")
 }

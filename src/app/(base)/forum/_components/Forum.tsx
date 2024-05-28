@@ -45,7 +45,7 @@ const Forums = () => {
       fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, inView]);
-  console.log(hasNextPage, "DATAAA")
+  console.log(data?.pages, "DATAAA")
   return (
     <div>
       
@@ -59,7 +59,7 @@ const Forums = () => {
             data.pages.map(
               (page) =>
                 page.data &&
-                page.data.map((forum: Forum) => (
+                page.data.map((forum: Forum & {_count:{forumLikes:number}}) => (
                   <div key={forum.userId} ref={ref}>
                     <ForumContainer {...forum} />
                   </div>

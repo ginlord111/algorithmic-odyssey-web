@@ -19,6 +19,13 @@ export async function GET(req: NextRequest): Promise<any> {
         },
         take: 1,
       }),
+      include:{
+        _count:{
+    select:{
+      forumLikes:true,
+    }
+        }
+      }
     });
     console.log(forums, "CURSOR")
     if (forums.length === 0) {
