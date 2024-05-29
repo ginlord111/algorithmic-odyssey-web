@@ -10,7 +10,7 @@ import ForumSkeleton from "@/components/forum/ForumSkeleton";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-const Forums = () => {
+const Forums = ({userLikes}:{userLikes:string[]}) => {
   const getForums = async ({ cursor }: { cursor: string }) => {
     const params = new URLSearchParams({
       cursor: cursor,
@@ -49,7 +49,7 @@ const Forums = () => {
   return (
     <div>
       
-      <MaxWidthWrapper className="flex justify-center border-l-1 border-gray-400 ">
+      <MaxWidthWrapper className="flex justify-center  "> {/*border-l-1 border-gray-400*/}
         <div className="flex flex-col">
         {/* TODO: MOVE THIS BUTTON TO THE NAVBAR OR IN SIDEBAR*/}
           <Link href="/new" className="flex items-center justify-center mt-5">
@@ -61,7 +61,7 @@ const Forums = () => {
                 page.data &&
                 page.data.map((forum: Forum & {_count:{forumLikes:number}}) => (
                   <div key={forum.userId} ref={ref}>
-                    <ForumContainer {...forum} />
+                    <ForumContainer {...forum} userLikes={userLikes} />
                   </div>
                 ))
             )

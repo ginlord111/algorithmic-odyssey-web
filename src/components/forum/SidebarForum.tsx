@@ -6,7 +6,7 @@ const SidebarForum = () => {
     <div className='absolute h-screen w-[300px]'>
         <div className='mt-20 px-10  flex flex-col '>
         <Link href="/new">
-            Create Post
+            {/* Create Post */}
         </Link>
         </div>
     </div>

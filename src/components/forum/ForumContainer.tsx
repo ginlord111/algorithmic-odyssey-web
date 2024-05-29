@@ -15,10 +15,12 @@ const ForumContainer = ({
   caption,
   createdAt,
   _count,
+  userLikes
 }: Forum & {
-  _count?:{
+  _count:{
     forumLikes:number;
-  }
+  },
+  userLikes:string[]
 }) => {
   const router = useRouter()
   const timeDiffCalc = useMemo(() => {
@@ -58,7 +60,7 @@ const ForumContainer = ({
         />
       </div>
           )}
-          <ForumButtons likes={_count?.forumLikes} id={id}/>
+          <ForumButtons likes={_count.forumLikes} forumId={id} userLikes={userLikes}/>
         </div>
       </div>
     </div>
