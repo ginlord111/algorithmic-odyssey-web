@@ -1,15 +1,30 @@
 import prisma from "@/db";
 import { authOptions } from "@/utils/authOptions";
+import { ForumLike } from "@prisma/client";
 import { NextApiRequest } from "next";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
 export async function POST(req: NextRequest) {
   try {
     const { id, forumLike } = await req.json();
     const session = await getServerSession(authOptions);
-    console.log(forumLike, "FORUM LIKEEEE")
-    if (forumLike) {
+    console.log(session?.user.id, "THIS IS MY ID")
+    console.log(id, "THIS IS FORUM")
+    const isAlreadyLiked = await prisma.forumLike.findMany({
+      where:{
+        AND:[
+          {
+            userId:session?.user.id
+          },
+          {
+            forumId:id
+          }
+        ]
+      }
+    })
+    console.log(isAlreadyLiked, "IS ALREADY LIKE")
+    let userLikes:string[] = []
+    if (isAlreadyLiked.length>0) {
       const forumLike = await prisma.forumLike.findFirst({
         where: {
           forumId: id,
@@ -21,12 +36,8 @@ export async function POST(req: NextRequest) {
           id: forumLike?.id,
         },
       });
-      revalidatePath("/forum")
-      if (deleteLike)
-        return NextResponse.json(
-          { message: "Succes  Unlike" },
-          { status: 200 }
-        );
+  
+
     } else {
       const postLike = await prisma.forumLike.create({
         data: {
@@ -42,12 +53,23 @@ export async function POST(req: NextRequest) {
           },
         },
       });
-      revalidatePath("/forum")
-      if (postLike)
-        return NextResponse.json({ message: "Succes Like" }, { status: 200 });
+  
     }
+  if(isAlreadyLiked)  return NextResponse.json({isAlreadyLiked}, { status: 200 });
+  return null
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: error }, { status: 200 });
   }
+}
+
+
+export async function GET(){
+  const session = await getServerSession(authOptions)
+  const userLikes:ForumLike[] = await prisma.forumLike.findMany({
+      where:{
+          userId:session?.user.id
+      },
+  })
+  if(userLikes) return NextResponse.json({userLikes}, {status:200})
 }

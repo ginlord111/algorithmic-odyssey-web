@@ -4,13 +4,14 @@ import { useInView } from "react-intersection-observer";
 import ForumContainer from "@/components/forum/ForumContainer";
 import Header from "@/components/layout/Header";
 import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper";
-import { Forum } from "@prisma/client";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { Forum, ForumLike } from "@prisma/client";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ForumSkeleton from "@/components/forum/ForumSkeleton";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-const Forums = ({userLikes}:{userLikes:string[]}) => {
+import { getUserForumLike } from "@/actions/get-forum-likes";
+const Forums = () => {
   const getForums = async ({ cursor }: { cursor: string }) => {
     const params = new URLSearchParams({
       cursor: cursor,
@@ -20,7 +21,19 @@ const Forums = ({userLikes}:{userLikes:string[]}) => {
     const data = await response.data;
     return data;
   };
-  const {
+
+  const fetchLikeForums = async () => {
+    const response = await fetch("api/like")
+    const data:any = await response.json()
+    return data.userLikes
+  }
+
+  const {data:userLikes, error} = useQuery({
+    queryKey:["user-likes"],
+    queryFn:fetchLikeForums,
+
+  })
+    const {
     data,
     isSuccess,
     isPending,
@@ -59,8 +72,8 @@ const Forums = ({userLikes}:{userLikes:string[]}) => {
             data.pages.map(
               (page) =>
                 page.data &&
-                page.data.map((forum: Forum & {_count:{forumLikes:number}}) => (
-                  <div key={forum.userId} ref={ref}>
+                page.data.map((forum: Forum & {_count:{forumLikes:number}}, index:number) => (
+                  <div key={index} ref={ref}>
                     <ForumContainer {...forum} userLikes={userLikes} />
                   </div>
                 ))

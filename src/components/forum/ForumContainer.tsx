@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { Avatar } from "@nextui-org/react";
 import { Card, CardBody, CardFooter } from "@nextui-org/react";
 import Image from "next/image";
-import { Forum } from "@prisma/client";
+import { Forum, ForumLike } from "@prisma/client";
 import timeDiff from "@/utils/timeCalc";
 import ForumButtons from "./ForumButtons";
 import { useRouter } from "next/navigation";
@@ -20,7 +20,7 @@ const ForumContainer = ({
   _count:{
     forumLikes:number;
   },
-  userLikes:string[]
+  userLikes:ForumLike[]
 }) => {
   const router = useRouter()
   const timeDiffCalc = useMemo(() => {
