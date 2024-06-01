@@ -4,6 +4,7 @@ import { ThumbsUp, MessageSquareText } from "lucide-react";
 import { Button } from "@nextui-org/react";
 import { isForumLike } from "@/helper/is-forum-like";
 import { ForumLike } from "@prisma/client";
+import { signIn, useSession } from "next-auth/react";
 const ForumButtons = ({
   likes,
   forumId,
@@ -14,11 +15,15 @@ const ForumButtons = ({
   userLikes: ForumLike[];
 }) => {
   const [isClick, setIsClick] = useState<boolean | null>(null);
-  const [likesIncr, setLikesIncr] = useState<number>(likes);
+  const [likeCount, setLikesCount] = useState<number>(likes);
   const [likeForum, setLikForum] = useState<boolean>();
+  const { data: session, status, update } = useSession()
   const handleLike = async (id: string) => {
     if (!id) return;
-
+    /// if user is not authenitcated redirect to sign in
+      if(!session?.user.id){
+        signIn()
+      }
     try {
       const response = await fetch("api/like", {
         method: "POST",
@@ -30,7 +35,7 @@ const ForumButtons = ({
 
       const data = await response.json();
       const { isAlreadyLiked } = data;
-      setLikesIncr((like) => (isAlreadyLiked.length > 0 ? like - 1 : like + 1));
+      setLikesCount((like) => (isAlreadyLiked.length > 0 ? like - 1 : like + 1));
       setIsClick((active) =>
         isAlreadyLiked.length > 0 ? (active = false) : (active = true)
       );
@@ -54,7 +59,7 @@ const ForumButtons = ({
         className="p-1"
       >
         <ThumbsUp className="h-6 w-6 mr-1" />
-        <span className="font-bold text-[15px] ">{likesIncr}</span>
+        <span className="font-bold text-[15px] ">{likeCount}</span>
       </Button>
       <Button isIconOnly size="md" className="p-1">
         <MessageSquareText className="h-6 w-6 mr-1" />

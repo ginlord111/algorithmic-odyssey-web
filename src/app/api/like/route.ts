@@ -9,8 +9,6 @@ export async function POST(req: NextRequest) {
   try {
     const { id, forumLike } = await req.json();
     const session = await getServerSession(authOptions);
-    console.log(session?.user.id, "THIS IS MY ID")
-    console.log(id, "THIS IS FORUM")
     const isAlreadyLiked = await prisma.forumLike.findMany({
       where:{
         AND:[
@@ -24,7 +22,6 @@ export async function POST(req: NextRequest) {
       }
     })
     console.log(isAlreadyLiked, "IS ALREADY LIKE")
-    let userLikes:string[] = []
     if (isAlreadyLiked.length>0) {
       const forumLike = await prisma.forumLike.findFirst({
         where: {
