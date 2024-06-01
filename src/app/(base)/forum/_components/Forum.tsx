@@ -58,7 +58,6 @@ const Forums = () => {
       fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, inView]);
-  console.log(data?.pages, "DATAAA")
   return (
     <div>
       

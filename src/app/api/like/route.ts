@@ -3,6 +3,7 @@ import { authOptions } from "@/utils/authOptions";
 import { ForumLike } from "@prisma/client";
 import { NextApiRequest } from "next";
 import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
@@ -55,7 +56,11 @@ export async function POST(req: NextRequest) {
       });
   
     }
-  if(isAlreadyLiked)  return NextResponse.json({isAlreadyLiked}, { status: 200 });
+  if(isAlreadyLiked) {
+    revalidatePath("/forum")
+    return NextResponse.json({isAlreadyLiked}, { status: 200 });
+  }
+  revalidatePath("/forum")
   return null
   } catch (error) {
     console.log(error);

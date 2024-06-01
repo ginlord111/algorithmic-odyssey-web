@@ -4,58 +4,53 @@ import { ThumbsUp, MessageSquareText } from "lucide-react";
 import { Button } from "@nextui-org/react";
 import { isForumLike } from "@/helper/is-forum-like";
 import { ForumLike } from "@prisma/client";
-
 const ForumButtons = ({
   likes,
   forumId,
-  userLikes =[],
+  userLikes = [],
 }: {
   likes: number;
   forumId: string;
   userLikes: ForumLike[];
 }) => {
-  const [isClick, setIsClick] = useState<boolean>(false);
+  const [isClick, setIsClick] = useState<boolean | null>(null);
   const [likesIncr, setLikesIncr] = useState<number>(likes);
   const [likeForum, setLikForum] = useState<boolean>();
-  const [newUserLike, setNewUserLike] = useState<ForumLike[]>()
   const handleLike = async (id: string) => {
-    setIsClick((active) => !active);
-    setLikesIncr((like) => likeForum ? like - 1 : like + 1);
-
     if (!id) return;
 
     try {
-        const response = await fetch("api/like", {
-            method: "POST",
-            body: JSON.stringify({ id, forumLike: likeForum }),
-        });
-          if(response.status === 400){
-            return;
-          }
+      const response = await fetch("api/like", {
+        method: "POST",
+        body: JSON.stringify({ id, forumLike: likeForum }),
+      });
+      if (response.status === 400) {
+        return;
+      }
 
-        const data = await response.json();
-        const {isAlreadyLiked} = data
-        setNewUserLike(isAlreadyLiked)
-        console.log(data, "is already likye")
-       
-    
+      const data = await response.json();
+      const { isAlreadyLiked } = data;
+      setLikesIncr((like) => (isAlreadyLiked.length > 0 ? like - 1 : like + 1));
+      setIsClick((active) =>
+        isAlreadyLiked.length > 0 ? (active = false) : (active = true)
+      );
     } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
+      console.error("There was a problem with the fetch operation:", error);
     }
-};
+  };
+
   useEffect(() => {
-    console.log(newUserLike, "NW USER LIKE")
-    const temp = isForumLike(newUserLike ?? userLikes, forumId);
+    const temp = isForumLike(userLikes, forumId);
     setLikForum(temp);
-    console.log(temp, "LIKE FORUM")
-  }, [likeForum, userLikes, forumId, likes, newUserLike]);
+  }, [userLikes]);
+
   return (
     <div className="flex flex-row gap-4 mt-4">
       <Button
         isIconOnly
         size="md"
         onClick={() => handleLike(forumId)}
-        color={likeForum || isClick ? "success" : "default"}
+        color={isClick ?? likeForum ? "success" : "default"}
         className="p-1"
       >
         <ThumbsUp className="h-6 w-6 mr-1" />
