@@ -25,14 +25,14 @@ const ProfilePage = ({
     <div className="relative">
       <div className="flex flex-row ">
         <div className="absolute w-[150px] h-[150px] top-[-50px]">
-          {/* <Image 
-      src={userImage as string}
+          <Image 
+      src="https://res.cloudinary.com/dv6qpahip/image/upload/v1717251171/algorithmic-oddysey/bt8yiy4rt2agbgtwfqv4.jpg"
       alt="User Profile Picturee"
       fill
       className="object-cover rounded-full border-3 border-white"
       priority
       loading="eager"
-      /> */}
+      />
         </div>
         <div className=" relative w-full mt-2 mx-[200px]">
           <div className="flex flex-col ">

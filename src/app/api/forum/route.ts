@@ -5,6 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { uploadCloudinary } from "@/lib/cloudinary";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
+import { revalidatePath } from "next/cache";
 export async function GET(req: NextRequest): Promise<any> {
 
   try {
@@ -105,6 +106,7 @@ try {
       title: true,
     },
   });
+  revalidatePath("/forum", "page")
   return NextResponse.json({message:"SUCCESFULLY ADDED"}, {status:200})
 } catch (error) {
   return NextResponse.json({message:"SERVER ERROR"}, {status:500})
