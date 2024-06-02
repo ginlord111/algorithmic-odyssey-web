@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({isAlreadyLiked}, { status: 200 });
   }
   revalidatePath("/forum")
-  return null
+  return NextResponse.json({ message: 'Like created successfully' }, { status: 201 }); 
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: error }, { status: 200 });

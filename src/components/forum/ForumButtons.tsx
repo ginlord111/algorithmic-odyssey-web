@@ -35,6 +35,7 @@ const ForumButtons = ({
 
       const data = await response.json();
       const { isAlreadyLiked } = data;
+      console.log(data, "DATAAA")
       setLikesCount((like) => (isAlreadyLiked.length > 0 ? like - 1 : like + 1));
       setIsClick((active) =>
         isAlreadyLiked.length > 0 ? (active = false) : (active = true)

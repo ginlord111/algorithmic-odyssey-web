@@ -28,7 +28,6 @@ export async function GET(req: NextRequest): Promise<any> {
         }
       }
     });
-    console.log(forums, "CURSOR")
     if (forums.length === 0) {
       return NextResponse.json(
         {
@@ -89,7 +88,7 @@ export async function POST(req: NextRequest) {
   console.log(title, "TITLE");
  
 try {
-  const createForum = await prisma.forum.create({
+  await prisma.forum.create({
     data: {
       caption: captions ?? null,
       title: title,
