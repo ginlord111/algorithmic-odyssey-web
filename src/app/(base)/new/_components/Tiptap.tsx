@@ -2,33 +2,38 @@
 
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { Fragment } from "react";
+import { Fragment, SetStateAction, Dispatch } from "react";
 import Toolbar from "./Toolbar";
 import Image from '@tiptap/extension-image'
 const Tiptap = ({
   name,
   onChange,
+  setImageFile,
 }: {
   name: string;
   onChange: (richText: string) => void;
+  setImageFile:Dispatch<SetStateAction<File|null>>;
 }) => {
+
   const editor = useEditor({
-    extensions: [StarterKit.configure(),Image],
-    content:`${name}   <img src="" />`,
+    extensions: [StarterKit.configure(),Image.configure({HTMLAttributes:{
+      class:"w-fit h-fit flex items-center"
+    }})],
+    content: ``,
     editorProps:{
       attributes:{
-        class:"rounded-md  min-h-[150px] !border-transparent"
+        class:"rounded-md  min-h-[150px] !border-transparent focus:outline-none"
       },
     },
     onUpdate({editor}){
-      onChange(editor.getHTML()),
-      console.log(editor.getHTML(), "CONTNT")
+      onChange(editor.getText())
     }
   });
 
+
   return (
     <Fragment>
-      <Toolbar editor={editor}/>
+      <Toolbar editor={editor} setImageFile={setImageFile}/>
       <EditorContent editor={editor} className="border-2 border-black rounded-md p-3"/>
     </Fragment>
   );

@@ -4,6 +4,7 @@ import Link from "next/link";
 import MaxWidthWrapper from "../layout/MaxWidthWrapper";
 import { Card, CardHeader, CardBody } from "@nextui-org/react";
 import { Car } from "lucide-react";
+import Header from "../layout/Header";
 
 const LandingPage = () => {
   const imageAbout = [
@@ -57,14 +58,7 @@ const LandingPage = () => {
   ];
   return (
     <div className="relative">
-      <div className="md:h-[70vh] h-[100vh] relative flex flex-col">
-        <Image
-          src="https://img.itch.zone/aW1hZ2UvOTMyNjc3LzU0NzM5MjMuZ2lm/347x500/dFxgtd.gif"
-          alt="Animated GIF"
-          className="brightness-50 object-cover"
-          fill
-          priority
-        />
+      <Header className="md:h-[70vh] h-[100vh] relative flex flex-col">
         <div className=" mx-auto w-full max-w-screen-xl px-2.5 md:px-20 relative flex flex-col justify-center md:items-start items-center h-full gap-5 text-center md:text-start">
           <div className="font-bold md:text-[60px] text-[30px] max-w-2xl text-[#FFFFF5DB]">
             Unlock Algorithm Skills with Every Level
@@ -84,7 +78,7 @@ const LandingPage = () => {
             </Link>
           </div>
         </div>
-      </div>
+      </Header>
       <div className="relative  h-fit p-4">
         <div className="pt-20">
           <MaxWidthWrapper>
@@ -139,32 +133,32 @@ const LandingPage = () => {
       <div className="relative mt-[150px]">
         <MaxWidthWrapper>
           <h2 className="text-4xl tracking-wide font-bold pb-16">TITLE</h2>
-          <div className="grid md:grid-cols-3 grid-cols-1 gap-10">   
-          {cardsInfo.map((card, index) => (
-            <Card
-              className="bg-transparent w-[350px] h-[480px] flex flex-col z-[1]"
-              key={index}
-            >
-              <CardHeader className="p-0">
-                <div className="relative  w-full h-[200px]">
-                  <Image
-                    src={card.image}
-                    alt="IMAGE"
-                    fill
-                    className="rounded-md object-cover"
-                  />
-                </div>
-              </CardHeader>
-              <CardBody className="bg-[#414d69]">
-                <div className="py-4 flex flex-col items-start gap-3">
-                  <h3 className="font-bold tracking-wide text-2xl h-fit text-white">
-                    {card.title}
-                  </h3>
-                  <p className="text-md text-gray-400">{card.desc}</p>
-                </div>
-              </CardBody>
-            </Card>
-          ))}
+          <div className="grid md:grid-cols-3 grid-cols-1 gap-10">
+            {cardsInfo.map((card, index) => (
+              <Card
+                className="bg-transparent w-[350px] h-[480px] flex flex-col z-[1]"
+                key={index}
+              >
+                <CardHeader className="p-0">
+                  <div className="relative  w-full h-[200px]">
+                    <Image
+                      src={card.image}
+                      alt="IMAGE"
+                      fill
+                      className="rounded-md object-cover"
+                    />
+                  </div>
+                </CardHeader>
+                <CardBody className="bg-[#414d69]">
+                  <div className="py-4 flex flex-col items-start gap-3">
+                    <h3 className="font-bold tracking-wide text-2xl h-fit text-white">
+                      {card.title}
+                    </h3>
+                    <p className="text-md text-gray-400">{card.desc}</p>
+                  </div>
+                </CardBody>
+              </Card>
+            ))}
           </div>
         </MaxWidthWrapper>
       </div>

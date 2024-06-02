@@ -3,11 +3,11 @@ import { Editor } from "@tiptap/react";
 import React from "react";
 import { Toggle } from "@/components/ui/toggle";
 import { Heading2, Bold, Italic, Image } from "lucide-react";
-import { useRef } from "react";
-import { Input } from "@nextui-org/react";
-const Toolbar = ({ editor }: { editor: Editor | null }) => {
+import { useRef, Dispatch, SetStateAction } from "react";
+const Toolbar = ({editor,setImageFile}: { editor: Editor | null, setImageFile:Dispatch<SetStateAction<File|null>>}) => {
   const fileBtn = useRef<HTMLInputElement>(null);
   if (!editor) return;
+
   return (
     <div className="border border-input bg-transparent rounded">
       <Toggle
@@ -46,22 +46,17 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
       >
         <Image />
       </Toggle>
-      <Input
-        type="file"
+      <input
+      type="file"
         ref={fileBtn}
         // accept="image/*"
         style={{ display: "none" }}
         onChange={(event) => {
-          if (!event.target.files) return;
+          if(!event.target.files) return ;
           const file = event.target.files[0];
-      console.log(file, "FILESSS")
-          if (file) {
+          setImageFile(file);
             editor
-              .chain()
-              .focus()
-              .setImage({ src: URL.createObjectURL(file) })
-              .run();
-          }
+          .commands.setImage({src:URL.createObjectURL(file)})
         }}
       />
     </div>

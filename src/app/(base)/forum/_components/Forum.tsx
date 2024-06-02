@@ -1,15 +1,16 @@
-"use client";
+"use client"
 import React, { useEffect,Fragment } from "react";
 import { useInView } from "react-intersection-observer";
 import ForumContainer from "@/components/forum/ForumContainer";
 import Header from "@/components/layout/Header";
 import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper";
-import { Forum } from "@prisma/client";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { Forum, ForumLike } from "@prisma/client";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ForumSkeleton from "@/components/forum/ForumSkeleton";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { getUserForumLike } from "@/actions/get-forum-likes";
 const Forums = () => {
   const getForums = async ({ cursor }: { cursor: string }) => {
     const params = new URLSearchParams({
@@ -20,7 +21,19 @@ const Forums = () => {
     const data = await response.data;
     return data;
   };
-  const {
+
+  const fetchLikeForums = async () => {
+    const response = await fetch("api/like")
+    const data:any = await response.json()
+    return data.userLikes
+  }
+
+  const {data:userLikes, error} = useQuery({
+    queryKey:["user-likes"],
+    queryFn:fetchLikeForums,
+
+  })
+    const {
     data,
     isSuccess,
     isPending,
@@ -39,20 +52,18 @@ const Forums = () => {
     },
   });
   const { ref, inView } = useInView();
-  const { data: session, status } = useSession();
   useEffect(() => {
     // if the last element is in view and there is a next page, fetch the next page
-    if (inView && hasNextPage) {
+    if (inView || hasNextPage) {
       fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, inView]);
-  console.log(session?.user.id, "USER ID")
   return (
     <div>
-      <Header />
-      <MaxWidthWrapper className="flex justify-center">
+      
+      <MaxWidthWrapper className="flex justify-center  "> {/*border-l-1 border-gray-400*/}
         <div className="flex flex-col">
-        {/* TODO: MOVE THIS BUTTON TO THE NAVBAR */}
+        {/* TODO: MOVE THIS BUTTON TO THE NAVBAR OR IN SIDEBAR*/}
           <Link href="/new" className="flex items-center justify-center mt-5">
           <Button >Create Post</Button> 
           </Link>
@@ -60,9 +71,9 @@ const Forums = () => {
             data.pages.map(
               (page) =>
                 page.data &&
-                page.data.map((forum: Forum) => (
-                  <div key={forum.userId} ref={ref}>
-                    <ForumContainer {...forum} />
+                page.data.map((forum: Forum & {_count:{forumLikes:number}}, index:number) => (
+                  <div key={index} ref={ref}>
+                    <ForumContainer {...forum} userLikes={userLikes} />
                   </div>
                 ))
             )
