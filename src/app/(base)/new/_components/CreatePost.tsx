@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 const CreatePost = () => {
   const router = useRouter();
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -49,12 +50,13 @@ const CreatePost = () => {
       method: "POST",
       body: formData,
     }).then((data) => {
-      console.log(data, "DATAAA");
       if (data.ok) {
+        toast.success("Post created successfully")
         router.push("/forum");
       }
     });
   }
+
   return (
     <div className="h-fit mt-20">
       <MaxWidthWrapper>
@@ -102,7 +104,7 @@ const CreatePost = () => {
               className="w-full font-bold text-lg text-white"
               disabled={form.formState.isSubmitting }
             >
-              {form.formState.isSubmitting ? (
+              {true ? (
                 <Loader2 className="w-7 h-7 animate-spin" />
               ) : (
                 <span>Create Post</span>
