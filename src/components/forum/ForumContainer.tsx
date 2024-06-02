@@ -27,7 +27,7 @@ const ForumContainer = ({
     return timeDiff(createdAt);
   }, [createdAt]);
   return (
-    <div className="relative pt-20 mx-[200px]">
+    <div className="relative pt-20 md:mx-[200px] mx-0">
       <div className="h-fit w-full pb-[10px]  border-b-1 border-muted-foreground">
         <div className="flex flex-col items-start w-full">
           <div className="flex flex-row gap-2 justify-start text-xs cursor-pointer "
