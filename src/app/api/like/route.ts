@@ -23,15 +23,12 @@ export async function POST(req: NextRequest) {
     })
     console.log(isAlreadyLiked, "IS ALREADY LIKE")
     if (isAlreadyLiked.length>0) {
-      const forumLike = await prisma.forumLike.findFirst({
-        where: {
-          forumId: id,
-          userId: session?.user.id,
-        },
-      });
+      const forumLikeId:string = isAlreadyLiked[isAlreadyLiked.length -1].id
       const deleteLike = await prisma.forumLike.delete({
         where: {
-          id: forumLike?.id,
+          id:forumLikeId,
+          forumId: id,
+          userId:session?.user.id
         },
       });
   
@@ -53,6 +50,7 @@ export async function POST(req: NextRequest) {
       });
   
     }
+    console.log(isAlreadyLiked, "IS ALREADY LIKD")
   if(isAlreadyLiked) {
     revalidatePath("/forum")
     return NextResponse.json({isAlreadyLiked}, { status: 200 });
