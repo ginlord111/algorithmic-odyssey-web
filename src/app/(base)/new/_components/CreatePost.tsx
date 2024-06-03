@@ -104,7 +104,7 @@ const CreatePost = () => {
               className="w-full font-bold text-lg text-white"
               disabled={form.formState.isSubmitting }
             >
-              {true ? (
+              {form.formState.isLoading || form.formState.isSubmitting ? (
                 <Loader2 className="w-7 h-7 animate-spin" />
               ) : (
                 <span>Create Post</span>
