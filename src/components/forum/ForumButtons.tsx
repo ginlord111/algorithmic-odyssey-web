@@ -17,7 +17,7 @@ const ForumButtons = ({
   const [isClick, setIsClick] = useState<boolean | null>(null);
   const [likeCount, setLikesCount] = useState<number>(likes);
   const [likeForum, setLikForum] = useState<boolean>();
-  const { data: session, status, update } = useSession()
+  const { data: session } = useSession()
   const handleLike = async (id: string) => {
     if (!id) return;
     /// if user is not authenitcated redirect to sign in
@@ -27,7 +27,7 @@ const ForumButtons = ({
     try {
       const response = await fetch("api/like", {
         method: "POST",
-        body: JSON.stringify({ id, forumLike: likeForum }),
+        body: JSON.stringify({ id}),
       });
       if (response.status === 400) {
         return;
@@ -35,7 +35,6 @@ const ForumButtons = ({
 
       const data = await response.json();
       const { isAlreadyLiked } = data;
-      console.log(data, "DATAAA")
       setLikesCount((like) => (isAlreadyLiked.length > 0 ? like - 1 : like + 1));
       setIsClick((active) =>
         isAlreadyLiked.length > 0 ? (active = false) : (active = true)

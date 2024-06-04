@@ -1,14 +1,14 @@
 import prisma from "@/db";
 import { authOptions } from "@/utils/authOptions";
 import { ForumLike } from "@prisma/client";
-import { NextApiRequest } from "next";
 import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
-    const { id, forumLike } = await req.json();
+    const { id } = await req.json();
     const session = await getServerSession(authOptions);
+    /// TODO: REFACTOR THIS CODEE: THE CLIENT MUST HANDLE THE IS ALREADY LIKE TO SPEEDUP THE QUERY
     const isAlreadyLiked = await prisma.forumLike.findMany({
       where:{
         AND:[
@@ -21,7 +21,6 @@ export async function POST(req: NextRequest) {
         ]
       }
     })
-    console.log(isAlreadyLiked, "IS ALREADY LIKE")
     if (isAlreadyLiked.length>0) {
       const forumLikeId:string = isAlreadyLiked[isAlreadyLiked.length -1].id
       const deleteLike = await prisma.forumLike.delete({
@@ -34,7 +33,7 @@ export async function POST(req: NextRequest) {
   
 
     } else {
-      const postLike = await prisma.forumLike.create({
+       await prisma.forumLike.create({
         data: {
           user: {
             connect: {
@@ -50,7 +49,6 @@ export async function POST(req: NextRequest) {
       });
   
     }
-    console.log(isAlreadyLiked, "IS ALREADY LIKD")
   if(isAlreadyLiked) {
     revalidatePath("/forum")
     return NextResponse.json({isAlreadyLiked}, { status: 200 });

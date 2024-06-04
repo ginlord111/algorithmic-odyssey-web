@@ -1,16 +1,13 @@
 "use client"
-import React, { useEffect,Fragment } from "react";
+import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import ForumContainer from "@/components/forum/ForumContainer";
-import Header from "@/components/layout/Header";
 import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper";
-import { Forum, ForumLike } from "@prisma/client";
+import { Forum,  } from "@prisma/client";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ForumSkeleton from "@/components/forum/ForumSkeleton";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getUserForumLike } from "@/actions/get-forum-likes";
 const Forums = () => {
   const getForums = async ({ cursor }: { cursor: string }) => {
     const params = new URLSearchParams({

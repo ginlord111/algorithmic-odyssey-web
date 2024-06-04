@@ -35,9 +35,9 @@ callbacks: {
       return {
         ...session,
         user: {
-          ...session.user, // Preserve existing session user data (if any)
-          id: token.sub, // Ensure ID is a string
-          // Add other desired user properties here (optional)
+          ...session.user, 
+          id: token.sub, 
+
         },
       };
     },

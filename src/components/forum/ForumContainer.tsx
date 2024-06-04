@@ -57,6 +57,7 @@ const ForumContainer = ({
           width={520}
           height={400}
           unoptimized={true}
+          priority
         />
       </div>
           )}
