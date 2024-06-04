@@ -8,6 +8,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ForumSkeleton from "@/components/forum/ForumSkeleton";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {Divider} from "@nextui-org/divider";
 const Forums = () => {
   const getForums = async ({ cursor }: { cursor: string }) => {
     const params = new URLSearchParams({
@@ -79,9 +80,16 @@ const Forums = () => {
           )}
           {isFetchingNextPage && <ForumSkeleton />}
           {!hasNextPage && !isPending && !isLoading && (
-            <div className="font-bold py-4 flex items-center w-full text-center justify-center">
-              -------------No more post-------------
-            </div>
+             <div className="relative mt-10 mx-[130px]">
+             <div className="flex items-center inset-0 absolute ">
+               <span className=" border-t w-full border-1 border-gray-500"> </span>
+             </div>
+             <div className="relative flex justify-center items-center  font-bold">
+               <span className="text-muted-foreground text-md px-3 bg-[#eff1f5]">
+                 No more posts
+               </span>
+             </div>
+           </div>
           )}
         </div>
       </MaxWidthWrapper>

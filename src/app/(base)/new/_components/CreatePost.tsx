@@ -52,6 +52,7 @@ const CreatePost = () => {
     }).then((data) => {
       if (data.ok) {
         toast.success("Post created successfully")
+        router.refresh()
         router.push("/forum");
       }
     });

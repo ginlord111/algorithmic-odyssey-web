@@ -49,11 +49,11 @@ const ForumContainer = ({
           </div>
           <div className="text-sm text-black dark:text-white tracking-wide">{caption}</div>
           {forumImage && (
-        <div className="relative w-full max-w-md md:max-w-lg lg:max-w-xl">
+        <div className="relative w-full max-w-md md:max-w-lg">
         <Image
           src={forumImage}
           alt="Animated GIF"
-          className="rounded-md mt-2 w-full h-auto"
+          className="rounded-md mt-2 w-full h-auto" /// adjust the photo size here
           width={520}
           height={400}
           unoptimized={true}
