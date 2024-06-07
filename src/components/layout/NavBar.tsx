@@ -5,8 +5,10 @@ import { Navbar, NavbarContent, NavbarItem, Button } from "@nextui-org/react";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import DarkModeButton from "./DarkModeButton";
+import { useSession } from "next-auth/react";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const { data: session } = useSession()
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -68,9 +70,16 @@ export default function NavBar() {
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
           <Link href="#" className="text-xl">
-            Docs
+           Docs
           </Link>
         </NavbarItem>
+        {session?.user.id && (
+            <NavbarItem className="hidden lg:flex">
+            <Link href="#" className="text-xl">
+             Profile
+            </Link>
+          </NavbarItem>
+        )}
         <NavbarItem className="hidden lg:flex">
           <Button
           color="default"

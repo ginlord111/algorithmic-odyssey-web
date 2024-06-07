@@ -1,7 +1,6 @@
 import prisma from "@/db";
 import { Forum } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
 import { uploadCloudinary } from "@/lib/cloudinary";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
@@ -28,7 +27,6 @@ export async function GET(req: NextRequest): Promise<any> {
         }
       }
     });
-    console.log(forums, "CURSOR")
     if (forums.length === 0) {
       return NextResponse.json(
         {
@@ -89,7 +87,7 @@ export async function POST(req: NextRequest) {
   console.log(title, "TITLE");
  
 try {
-  const createForum = await prisma.forum.create({
+  await prisma.forum.create({
     data: {
       caption: captions ?? null,
       title: title,
@@ -109,6 +107,6 @@ try {
   revalidatePath("/forum", "page")
   return NextResponse.json({message:"SUCCESFULLY ADDED"}, {status:200})
 } catch (error) {
-  return NextResponse.json({message:"SERVER ERROR"}, {status:500})
+  return NextResponse.json({message:error}, {status:500})
 }
 }

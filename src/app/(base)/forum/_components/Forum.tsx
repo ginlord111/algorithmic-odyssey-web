@@ -1,16 +1,13 @@
 "use client"
-import React, { useEffect,Fragment } from "react";
+import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import ForumContainer from "@/components/forum/ForumContainer";
-import Header from "@/components/layout/Header";
 import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper";
-import { Forum, ForumLike } from "@prisma/client";
+import { Forum,  } from "@prisma/client";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ForumSkeleton from "@/components/forum/ForumSkeleton";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getUserForumLike } from "@/actions/get-forum-likes";
 const Forums = () => {
   const getForums = async ({ cursor }: { cursor: string }) => {
     const params = new URLSearchParams({
@@ -31,7 +28,6 @@ const Forums = () => {
   const {data:userLikes, error} = useQuery({
     queryKey:["user-likes"],
     queryFn:fetchLikeForums,
-
   })
     const {
     data,
@@ -82,9 +78,16 @@ const Forums = () => {
           )}
           {isFetchingNextPage && <ForumSkeleton />}
           {!hasNextPage && !isPending && !isLoading && (
-            <div className="font-bold py-4 flex items-center w-full text-center justify-center">
-              -------------No more post-------------
-            </div>
+             <div className="relative mt-10 mx-[130px]">
+             <div className="flex items-center inset-0 absolute ">
+               <span className=" border-t w-full border-1 border-gray-500"> </span>
+             </div>
+             <div className="relative flex justify-center items-center  font-bold">
+               <span className="text-muted-foreground text-md px-3 bg-[#eff1f5]">
+                 No more posts
+               </span>
+             </div>
+           </div>
           )}
         </div>
       </MaxWidthWrapper>
