@@ -11,7 +11,7 @@ export default function RootLayout({
   return (
     <Fragment>
       <Header/>
-      <MaxWidthWrapper className="h-screen"> {children}</MaxWidthWrapper>
+      <MaxWidthWrapper > {children}</MaxWidthWrapper>
     </Fragment>
   );
 }

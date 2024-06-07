@@ -6,6 +6,7 @@ import { Forum, ForumLike } from "@prisma/client";
 import timeDiff from "@/utils/timeCalc";
 import ForumButtons from "./ForumButtons";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 const ForumContainer = ({
   id,
   authorUsername,
@@ -14,12 +15,14 @@ const ForumContainer = ({
   caption,
   createdAt,
   _count,
-  userLikes
+  userLikes,
+  className,
 }: Forum & {
   _count:{
     forumLikes:number;
   },
-  userLikes?:ForumLike[]
+  userLikes?:ForumLike[],
+  className?:string,
 }) => {
   const timeDiffCalc = useMemo(() => {
     return timeDiff(createdAt);
@@ -55,7 +58,7 @@ const ForumContainer = ({
         <Image
           src={forumImage}
           alt="Animated GIF"
-          className="rounded-md mt-2 w-full h-auto" /// adjust the photo size here
+          className={cn("rounded-md mt-2 w-full h-auto" , className)}/// adjust the photo size here
           width={520}
           height={400}
           unoptimized={true}
@@ -64,7 +67,7 @@ const ForumContainer = ({
         </Link>
       </div>
           )}
-          <ForumButtons likes={_count.forumLikes} forumId={id} userLikes={userLikes}/>
+          <ForumButtons likes={_count.forumLikes} forumId={id} userLikes={userLikes} route={`user/${authorUsername}/comments/${title}`}/>
         </div>
       </div>
     </div>

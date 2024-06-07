@@ -29,7 +29,7 @@ const CommentPage = async({ params }: { params: {username:string, title: string 
 
   return (
   <Fragment>
-    <ForumContainer {...forum}/>
+    <ForumContainer {...forum} className='w-full h-fit flex'/>
     <CommentsTextbox />
   </Fragment>
   )

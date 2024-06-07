@@ -5,14 +5,17 @@ import { Button } from "@nextui-org/react";
 import { isForumLike } from "@/helper/is-forum-like";
 import { ForumLike } from "@prisma/client";
 import { signIn, useSession } from "next-auth/react";
+import Link from "next/link";
 const ForumButtons = ({
   likes,
   forumId,
   userLikes = [],
+  route,
 }: {
   likes: number;
   forumId: string;
   userLikes?: ForumLike[];
+  route:string,
 }) => {
   const [isClick, setIsClick] = useState<boolean | null>(null);
   const [likeCount, setLikesCount] = useState<number>(likes);
@@ -61,10 +64,12 @@ const ForumButtons = ({
         <ThumbsUp className="h-6 w-6 mr-1" />
         <span className="font-bold text-[15px] ">{likeCount}</span>
       </Button>
+      <Link href={route}> 
       <Button isIconOnly size="md" className="p-1">
         <MessageSquareText className="h-6 w-6 mr-1" />
         <span className="font-bold text-[15px] ">0</span>
       </Button>
+      </Link>
     </div>
   );
 };

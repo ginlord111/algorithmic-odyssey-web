@@ -43,7 +43,7 @@ const CommentsTextbox = () => {
                   <Input
                     placeholder="Add a comment"
                     {...field}
-                    className="hover:bg-transparent !border-transparent focus:!outline-none focus:ring-0 bg-none focus:underline-offset-0 hover:!border-none"
+                    className="hover:bg-transparent !border-transparent focus:!outline-none  focus:underline-offset-0 hover:!border-none"
                     variant="flat"
                     onClick={() => setShowBtn((prev) => prev=true)}
                   />
