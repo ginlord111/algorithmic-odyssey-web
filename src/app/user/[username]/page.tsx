@@ -1,5 +1,5 @@
 import React from 'react'
-import ProfilePage from '../_components/ProfilePage'
+import ProfilePage from './_components/ProfilePage'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/utils/authOptions'
 import prisma from '@/db'

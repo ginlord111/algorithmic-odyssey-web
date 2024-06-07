@@ -9,7 +9,6 @@ import { Loader2 } from "lucide-react";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,43 +18,35 @@ import { Input } from "@/components/ui/input";
 import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { postFormSchema } from "@/types/form-types";
 const CreatePost = () => {
   const router = useRouter();
   const [imageFile, setImageFile] = useState<File | null>(null);
-
-  const formSchema = z.object({
-    title: z.string().min(2, {
-      message: "Title must be at least 2 characters.",
-    }),
-    caption: z.optional(z.string()),
-  });
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof postFormSchema>>({
+    resolver: zodResolver(postFormSchema),
     mode: "onChange",
     defaultValues: {
       title: "",
       caption: "DSADSA",
     },
   });
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof postFormSchema>) {
     const formData = new FormData();
-    // formData.append("upload_preset","qyqo8wev")
+    /// IF THERE IS NO IMAGE THEN THE CAPTION IS TEXT
     if (imageFile && values.caption === "") {
       formData.append("image", imageFile);
     } else {
       formData.append("caption", JSON.stringify(values.caption));
     }
     formData.append("title", JSON.stringify(values.title));
-    fetch(`api/forum`, {
+    const response = await fetch(`api/forum`, {
       method: "POST",
       body: formData,
-    }).then((data) => {
-      if (data.ok) {
-        toast.success("Post created successfully")
-        router.refresh()
-        router.push("/forum");
-      }
     });
+    if (response.ok) {
+      toast.success("Post created successfully");
+      return router.push("/forum");
+    }
   }
 
   return (
@@ -72,9 +63,6 @@ const CreatePost = () => {
                   <FormControl>
                     <Input placeholder="Your title here" {...field} />
                   </FormControl>
-                  {/* <FormDescription>
-              This is your public display name.
-            </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -86,7 +74,7 @@ const CreatePost = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Caption</FormLabel>
-                  <FormControl >
+                  <FormControl>
                     <Tiptap
                       name={field.name}
                       onChange={field.onChange}
@@ -103,7 +91,7 @@ const CreatePost = () => {
             <Button
               type="submit"
               className="w-full font-bold text-lg text-white"
-              disabled={form.formState.isSubmitting }
+              disabled={form.formState.isSubmitting}
             >
               {form.formState.isLoading || form.formState.isSubmitting ? (
                 <Loader2 className="w-7 h-7 animate-spin" />

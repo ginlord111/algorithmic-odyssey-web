@@ -12,7 +12,7 @@ const ForumButtons = ({
 }: {
   likes: number;
   forumId: string;
-  userLikes: ForumLike[];
+  userLikes?: ForumLike[];
 }) => {
   const [isClick, setIsClick] = useState<boolean | null>(null);
   const [likeCount, setLikesCount] = useState<number>(likes);

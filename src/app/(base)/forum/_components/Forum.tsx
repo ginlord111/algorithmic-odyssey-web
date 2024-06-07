@@ -8,7 +8,6 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ForumSkeleton from "@/components/forum/ForumSkeleton";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {Divider} from "@nextui-org/divider";
 const Forums = () => {
   const getForums = async ({ cursor }: { cursor: string }) => {
     const params = new URLSearchParams({
@@ -29,7 +28,6 @@ const Forums = () => {
   const {data:userLikes, error} = useQuery({
     queryKey:["user-likes"],
     queryFn:fetchLikeForums,
-
   })
     const {
     data,

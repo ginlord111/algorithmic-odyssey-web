@@ -1,38 +1,52 @@
-import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper";
-import { Button } from "@/components/ui/button";
+"use client"
+import { Button as ButtonShadCn } from "@/components/ui/button";
 import {
   Instagram,
   Twitter,
   Facebook,
   Github,
-  Youtube,
-  Mail,
+  Settings,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+DropdownMenuItem,
+  DropdownMenuTrigger,
+DropdownMenuLabel,
+DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { signOut, useSession } from "next-auth/react";
 
 const ProfilePage = ({
   email,
   username,
-  userImage,
 }: {
   email: string | null;
   username: string;
   userImage: string | null;
 }) => {
+  const {data:session} = useSession()
+const router = useRouter()
+  const handleSignOut = () => {
+    router.push("/")
+    signOut();
+  }
   return (
     <div className="relative">
       <div className="flex flex-row ">
         <div className="absolute w-[150px] h-[150px] top-[-50px]">
-          <Image 
-      src="https://res.cloudinary.com/dv6qpahip/image/upload/v1717251171/algorithmic-oddysey/bt8yiy4rt2agbgtwfqv4.jpg"
-      alt="User Profile Picturee"
-      fill
-      className="object-cover rounded-full border-3 border-white"
-      priority
-      loading="eager"
-      />
+          <Image
+            src="https://res.cloudinary.com/dv6qpahip/image/upload/v1717251171/algorithmic-oddysey/bt8yiy4rt2agbgtwfqv4.jpg"
+            alt="User Profile Picturee"
+            fill
+            className="object-cover rounded-full border-3 border-white"
+            priority
+            loading="eager"
+          />
         </div>
         <div className=" relative w-full mt-2 mx-[200px]">
           <div className="flex flex-col ">
@@ -67,24 +81,38 @@ const ProfilePage = ({
           </div>
           <div className="mt-10 flex flex-row">
             <Link href="#">
-              <Button variant="link" className="font-bold">
+              <ButtonShadCn variant="link" className="font-bold">
                 Overview
-              </Button>
+              </ButtonShadCn>
             </Link>
 
             <Link href="#">
-              <Button variant="link" className="font-bold">
+              <ButtonShadCn variant="link" className="font-bold">
                 Post
-              </Button>
+              </ButtonShadCn>
             </Link>
 
             <Link href="#">
-              <Button variant="link" className="font-bold">
+              <ButtonShadCn variant="link" className="font-bold">
                 Game
-              </Button>
+              </ButtonShadCn>
             </Link>
           </div>
         </div>
+{session?.user.email === email && (
+        <DropdownMenu  >
+        <DropdownMenuTrigger  className="h-fit mt-10" asChild>
+      <ButtonShadCn variant="ghost" className="border-transparent">
+        <Settings />
+      </ButtonShadCn>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Settings</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={handleSignOut}>Log out</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+)}
       </div>
     </div>
   );
