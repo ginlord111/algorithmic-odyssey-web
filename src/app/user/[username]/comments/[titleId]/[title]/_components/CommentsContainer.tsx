@@ -40,11 +40,14 @@ const CommentsContainer = ({
   async function onSubmit(values: z.infer<typeof commentFormSchema>) {
     try {
       const { comment } = values;
-      const response = await fetch("/api/forum/comment", {
+     await fetch("/api/forum/comment", {
         method: "POST",
         body: JSON.stringify({ comment, forumId }),
       });
       queryClient.invalidateQueries({queryKey:['forum-comment']})
+      setShowBtn((prev) => (prev = false));
+      form.reset()
+      // TODO: CONSIDRING INSTALL ZUSTAND TO MANAGE THE COUNT COMMENTS HERE 
     } catch (error) {
       console.log(error);
     }

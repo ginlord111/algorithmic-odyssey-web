@@ -1,17 +1,14 @@
 import { forumLike } from '@/actions/forum-like'
 import ForumContainer from '@/components/forum/ForumContainer'
 import prisma from '@/db'
-import { Forum, ForumComment } from '@prisma/client'
+import { Forum, ForumComment, ForumLike } from '@prisma/client'
 import React, { Fragment } from 'react'
 import CommentsContainer from './_components/CommentsContainer'
-interface likeCountProps{
-  _count:{
-    forumLike:number
-  }
-}
+import { authOptions } from '@/utils/authOptions'
+import { getServerSession } from 'next-auth'
 const CommentPage = async({ params }: { params: {username:string, title: string,titleId:string } })=> {
   const {username, title, titleId} = params
-
+  const session = await getServerSession(authOptions)
   const forum:Forum &{_count:{forumLikes:number}}= (await prisma.forum.findFirst({
     where:{
       authorUsername:decodeURIComponent(username),
@@ -21,22 +18,23 @@ const CommentPage = async({ params }: { params: {username:string, title: string,
     include:{
       _count:{
         select:{
-          forumLikes:true
+          forumLikes:true,
+          comments:true,
         }
       }
     }
   }))!
 
-  // const comments = await prisma.forumComment.findMany({
-  //   where:{
-  //     forumId:forum.id
-  //   }
-  // })
+  const userLikes:ForumLike[] = await prisma.forumLike.findMany({
+      where:{
+          userId:session?.user.id
+      },
+  })
 
 
   return (
   <Fragment>
-    <ForumContainer {...forum} className='w-full h-fit flex'/>
+    <ForumContainer {...forum} className='w-full h-fit flex' userLikes={userLikes}/>
     <CommentsContainer forumId={forum.id}  />
   </Fragment>
   )

@@ -19,7 +19,7 @@ const Forums = () => {
     return data;
   };
 
-  const fetchLikeForums = async () => {
+  const userLikeForums = async () => {
     const response = await fetch("api/forum/like")
     const data:any = await response.json()
     return data.userLikes
@@ -27,7 +27,7 @@ const Forums = () => {
  
   const {data:userLikes, error} = useQuery({
     queryKey:["user-likes"],
-    queryFn:fetchLikeForums,
+    queryFn:userLikeForums,
   })
     const {
     data,

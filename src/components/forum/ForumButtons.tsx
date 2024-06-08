@@ -31,7 +31,7 @@ const ForumButtons = ({
         signIn()
       }
     try {
-      const response = await fetch("api/forum/like", {
+      const response = await fetch("/api/forum/like", {
         method: "POST",
         body: JSON.stringify({ id}),
       });
