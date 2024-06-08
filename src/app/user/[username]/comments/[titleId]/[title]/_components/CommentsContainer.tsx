@@ -23,6 +23,7 @@ const CommentsContainer = ({
   forumId: string;
 }) => {
   const [showBtn, setShowBtn] = useState<boolean>(false);
+  const [hideComment, setHideComment] = useState<boolean>(false);
   const queryClient = useQueryClient()
   const form = useForm<z.infer<typeof commentFormSchema>>({
     resolver: zodResolver(commentFormSchema),
@@ -64,7 +65,7 @@ const CommentsContainer = ({
     return comments;
   };
 
-  const { data: forumComment, error, isFetching, isRefetching, isLoading } = useQuery({
+  const { data: forumComment, isFetching, isRefetching, isLoading } = useQuery({
     queryKey: ["forum-comment"],
     queryFn: revalidateComments,
   });
@@ -111,13 +112,24 @@ const CommentsContainer = ({
               </FormItem>
             )}
           />
+            <div className="flex items-end justify-end h-fit">
+       <Button
+       variant="link"
+       className="h-fit text-sm w-fit underline"
+       type="button"
+       onClick={()=>setHideComment((prev)=> !prev)}
+       >
+        {hideComment ? <span>Show comments</span> : <span>Hide comments</span>}
+       </Button>
+      </div>
         </form>
       </Form>
+    
       {forumComment &&
         forumComment.length > 0 &&
         forumComment.map((comment: ForumComment) => (
           <Fragment key={comment.id}>
-            <CommentsList {...comment} />
+            <CommentsList {...comment} hideComment={hideComment}/>
           </Fragment>
         ))}
         {isFetching || isLoading || isRefetching && (
