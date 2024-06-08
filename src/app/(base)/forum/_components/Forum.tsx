@@ -20,11 +20,11 @@ const Forums = () => {
   };
 
   const fetchLikeForums = async () => {
-    const response = await fetch("api/like")
+    const response = await fetch("api/forum/like")
     const data:any = await response.json()
     return data.userLikes
   }
-
+ 
   const {data:userLikes, error} = useQuery({
     queryKey:["user-likes"],
     queryFn:fetchLikeForums,
@@ -67,7 +67,7 @@ const Forums = () => {
             data.pages.map(
               (page) =>
                 page.data &&
-                page.data.map((forum: Forum & {_count:{forumLikes:number}}, index:number) => (
+                page.data.map((forum: Forum & {_count:{forumLikes:number,comments:number}}, index:number) => (
                   <div key={index} ref={ref}>
                     <ForumContainer {...forum} userLikes={userLikes} />
                   </div>

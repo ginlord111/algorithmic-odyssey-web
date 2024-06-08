@@ -23,6 +23,7 @@ export async function GET(req: NextRequest): Promise<any> {
         _count:{
     select:{
       forumLikes:true,
+      comments:true,
     }
         }
       }
@@ -83,14 +84,21 @@ export async function POST(req: NextRequest) {
   }
   const captions = JSON.parse(body.get("caption") as string);
   const title = JSON.parse(body.get("title") as string);
-  console.log(imageUpload, "image upload");
-  console.log(title, "TITLE");
- 
+  /// FOR TITLE ID RANDOM STRING
+  function generateRandomString(length = 8) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+  }
 try {
   await prisma.forum.create({
     data: {
       caption: captions ?? null,
       title: title,
+      titleId:generateRandomString(),
       forumImage: imageUpload?.secure_url ?? null,
       user: {
         connect: {

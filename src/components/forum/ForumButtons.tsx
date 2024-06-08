@@ -11,14 +11,17 @@ const ForumButtons = ({
   forumId,
   userLikes = [],
   route,
+  comments
 }: {
   likes: number;
   forumId: string;
   userLikes?: ForumLike[];
   route:string,
+  comments:number,
 }) => {
   const [isClick, setIsClick] = useState<boolean | null>(null);
   const [likeCount, setLikesCount] = useState<number>(likes);
+  const [commentCount , setCommentCount] = useState<number>(comments)
   const [likeForum, setLikForum] = useState<boolean>();
   const { data: session } = useSession()
   const handleLike = async (id: string) => {
@@ -28,7 +31,7 @@ const ForumButtons = ({
         signIn()
       }
     try {
-      const response = await fetch("api/like", {
+      const response = await fetch("api/forum/like", {
         method: "POST",
         body: JSON.stringify({ id}),
       });
@@ -67,7 +70,7 @@ const ForumButtons = ({
       <Link href={route}> 
       <Button isIconOnly size="md" className="p-1">
         <MessageSquareText className="h-6 w-6 mr-1" />
-        <span className="font-bold text-[15px] ">0</span>
+        <span className="font-bold text-[15px] ">{commentCount}</span>
       </Button>
       </Link>
     </div>

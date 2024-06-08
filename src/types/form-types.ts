@@ -3,6 +3,8 @@ import { z } from "zod";
 export const commentFormSchema = z.object({
     comment: z.string().max(100, {
       message: "Comment is maximum of 100 characters",
+    }).min(1, {
+      message: "Comment should not be blank",
     }),
   })
 

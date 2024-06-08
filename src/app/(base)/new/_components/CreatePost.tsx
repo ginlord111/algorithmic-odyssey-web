@@ -44,8 +44,8 @@ const CreatePost = () => {
       body: formData,
     });
     if (response.ok) {
+      router.push("/forum")
       toast.success("Post created successfully");
-      return router.push("/forum");
     }
   }
 
