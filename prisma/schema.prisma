@@ -8,17 +8,19 @@ datasource db {
 }
 
 model User {
-  id            String      @id @default(cuid())
+  id            String         @id @default(cuid())
   userId        String?
-  username      String      @unique
-  email         String?     @unique
+  username      String         @unique
+  email         String?        @unique
   emailVerified DateTime?
   userImage     String?
   accounts      Account[]
+  comments      ForumComment[]
   ForumLike     ForumLike[]
   forums        Forum[]
   sessions      Session[]
 
+  @@unique([id, username, userImage])
   @@unique([id, username])
   @@map("user")
 }
@@ -53,15 +55,17 @@ model Session {
 }
 
 model Forum {
-  id             String      @id @default(cuid())
+  id             String         @id @default(cuid())
   userId         String
   authorUsername String
   forumImage     String?
   title          String
   caption        String?
-  createdAt      DateTime    @default(now())
+  createdAt      DateTime       @default(now())
+  titleId        String         @unique
+  comments       ForumComment[]
   forumLikes     ForumLike[]
-  user           User        @relation(fields: [userId, authorUsername], references: [id, username])
+  user           User           @relation(fields: [userId, authorUsername],references: [id, username], onDelete: Cascade)
 
   @@map("forums")
 }
@@ -74,4 +78,18 @@ model ForumLike {
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("forumLike")
+}
+
+model ForumComment {
+  id        String   @id @default(cuid())
+  comment   String
+  userId    String
+  userImage String
+  username  String
+  forumId   String
+  forum     Forum    @relation(fields: [forumId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId, userImage, username], references: [id, userImage, username], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@map("forumComments")
 }

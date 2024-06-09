@@ -10,7 +10,7 @@ export async function GET(req: NextRequest): Promise<any> {
   try {
     const url = new URL(req.url);
     const cursor = url.searchParams.get("cursor");
-
+    const sort = url.searchParams.get("sort")
     const forums = await prisma.forum.findMany({
       ...(cursor && {
         skip: 1,
@@ -23,8 +23,12 @@ export async function GET(req: NextRequest): Promise<any> {
         _count:{
     select:{
       forumLikes:true,
+      comments:true,
     }
         }
+      },
+      orderBy:{
+        createdAt: sort === "newest" ? "desc" : sort === "oldest" ? "asc" : "desc", // SORTING POST  I SET THE NEWEST SORT FOR THE DEFAULT HERE
       }
     });
     if (forums.length === 0) {
@@ -49,7 +53,6 @@ export async function GET(req: NextRequest): Promise<any> {
       take: 1,
       skip: 1,
     });
-    console.log(newCursor, "FORUMSSS") /// HERE IS THE ERROR
     const data = {
       data: forums,
       metaData: {
@@ -83,14 +86,21 @@ export async function POST(req: NextRequest) {
   }
   const captions = JSON.parse(body.get("caption") as string);
   const title = JSON.parse(body.get("title") as string);
-  console.log(imageUpload, "image upload");
-  console.log(title, "TITLE");
- 
+  /// FOR TITLE ID RANDOM STRING
+  function generateRandomString(length = 8) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+  }
 try {
   await prisma.forum.create({
     data: {
       caption: captions ?? null,
       title: title,
+      titleId:generateRandomString(),
       forumImage: imageUpload?.secure_url ?? null,
       user: {
         connect: {

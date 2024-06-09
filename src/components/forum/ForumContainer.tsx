@@ -7,6 +7,8 @@ import timeDiff from "@/utils/timeCalc";
 import ForumButtons from "./ForumButtons";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
+
 const ForumContainer = ({
   id,
   authorUsername,
@@ -17,13 +19,16 @@ const ForumContainer = ({
   _count,
   userLikes,
   className,
+  titleId,
 }: Forum & {
   _count:{
     forumLikes:number;
+    comments?:number;
   },
   userLikes?:ForumLike[],
   className?:string,
 }) => {
+  const pathname = usePathname()
   const timeDiffCalc = useMemo(() => {
     return timeDiff(createdAt);
   }, [createdAt]);
@@ -54,12 +59,12 @@ const ForumContainer = ({
           {forumImage && (
         <div className="relative w-full max-w-md md:max-w-lg"
         >
-          <Link href={`user/${authorUsername}/comments/${title}`}> 
+          <Link href={`user/${authorUsername}/comments/${titleId}/${title}`}> 
         <Image
           src={forumImage}
           alt="Animated GIF"
-          className={cn("rounded-md mt-2 w-full h-auto" , className)}/// adjust the photo size here
-          width={520}
+          className={cn("rounded-md mt-2 w-full h-auto" , pathname!=="/forum" && className)}/// adjust the photo size here // TODO : FIX THIS DYNAMIC CLASSNAME
+          width={320}
           height={400}
           unoptimized={true}
           priority
@@ -67,7 +72,9 @@ const ForumContainer = ({
         </Link>
       </div>
           )}
-          <ForumButtons likes={_count.forumLikes} forumId={id} userLikes={userLikes} route={`user/${authorUsername}/comments/${title}`}/>
+          <ForumButtons likes={_count.forumLikes} forumId={id} userLikes={userLikes} route={`user/${authorUsername}/comments/${titleId}/${title}`}
+            comments={_count.comments as number}
+          />
         </div>
       </div>
     </div>
