@@ -44,6 +44,7 @@ const router = useRouter()
             alt="User Profile Picturee"
             className="object-cover rounded-full border-3 border-white"
             priority
+            fill
             loading="eager"
           />
         </div>
