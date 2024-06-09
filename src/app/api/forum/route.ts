@@ -10,7 +10,7 @@ export async function GET(req: NextRequest): Promise<any> {
   try {
     const url = new URL(req.url);
     const cursor = url.searchParams.get("cursor");
-
+    const sort = url.searchParams.get("sort")
     const forums = await prisma.forum.findMany({
       ...(cursor && {
         skip: 1,
@@ -26,6 +26,9 @@ export async function GET(req: NextRequest): Promise<any> {
       comments:true,
     }
         }
+      },
+      orderBy:{
+        createdAt: sort === "newest" ? "desc" : sort === "oldest" ? "asc" : "desc", // SORTING POST  I SET THE NEWEST SORT FOR THE DEFAULT HERE
       }
     });
     if (forums.length === 0) {
@@ -50,7 +53,6 @@ export async function GET(req: NextRequest): Promise<any> {
       take: 1,
       skip: 1,
     });
-    console.log(newCursor, "FORUMSSS") /// HERE IS THE ERROR
     const data = {
       data: forums,
       metaData: {

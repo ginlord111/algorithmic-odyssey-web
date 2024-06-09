@@ -42,7 +42,6 @@ const router = useRouter()
           <Image
             src="https://res.cloudinary.com/dv6qpahip/image/upload/v1717251171/algorithmic-oddysey/bt8yiy4rt2agbgtwfqv4.jpg"
             alt="User Profile Picturee"
-            fill
             className="object-cover rounded-full border-3 border-white"
             priority
             loading="eager"

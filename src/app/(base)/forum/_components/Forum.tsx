@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import ForumContainer from "@/components/forum/ForumContainer";
 import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper";
@@ -8,10 +8,16 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ForumSkeleton from "@/components/forum/ForumSkeleton";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 const Forums = () => {
+  const searchParams = useSearchParams()
+  const {replace,refresh} = useRouter()
+  const pathname = usePathname()
+  const [sortAs, setSortAs] = useState<"oldest" | "newest">(searchParams.get("sort") as "newest" | "oldest")
   const getForums = async ({ cursor }: { cursor: string }) => {
     const params = new URLSearchParams({
       cursor: cursor,
+      sort:sortAs,
     });
     const forum = await fetch(`api/forum?${params}`);
     const response = await forum.json();
@@ -29,6 +35,7 @@ const Forums = () => {
     queryKey:["user-likes"],
     queryFn:userLikeForums,
   })
+
     const {
     data,
     isSuccess,
@@ -37,6 +44,7 @@ const Forums = () => {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    refetch,
   } = useInfiniteQuery({
     initialPageParam: "",
     queryKey: ["forums"],
@@ -47,7 +55,15 @@ const Forums = () => {
         : undefined;
     },
   });
+  
   const { ref, inView } = useInView();
+  useEffect(()=>{
+    if(!sortAs){
+      setSortAs("newest")
+    }
+    replace(`${pathname}?sort=${sortAs}`);
+    refetch();
+  }, [sortAs,setSortAs])
   useEffect(() => {
     // if the last element is in view and there is a next page, fetch the next page
     if (inView || hasNextPage) {
@@ -63,6 +79,20 @@ const Forums = () => {
           <Link href="/new" className="flex items-center justify-center mt-5">
           <Button >Create Post</Button> 
           </Link>
+          <div className="flex items-end w-full justify-end ">
+            <Button variant="link"
+            onClick={()=>setSortAs((prev) => prev ="oldest")}
+            className={`${sortAs === "oldest"  &&   'underline'}`}
+            >
+              Oldest
+            </Button>
+            <Button variant="link"
+             onClick={()=>setSortAs((prev) => prev ="newest")}
+             className={`${sortAs === "newest"  &&   'underline'}`}
+            >
+              Newest
+            </Button>
+          </div>
           {isSuccess && !isPending && !isLoading ? (
             data.pages.map(
               (page) =>
