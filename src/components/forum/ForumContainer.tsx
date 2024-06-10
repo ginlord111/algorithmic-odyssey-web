@@ -1,4 +1,3 @@
-"use client"
 import React, { useMemo } from "react";
 import { Avatar } from "@nextui-org/react";
 import Image from "next/image";
@@ -7,8 +6,6 @@ import timeDiff from "@/utils/timeCalc";
 import ForumButtons from "./ForumButtons";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
-
 const ForumContainer = ({
   id,
   authorUsername,
@@ -18,7 +15,6 @@ const ForumContainer = ({
   createdAt,
   _count,
   userLikes,
-  className,
   titleId,
 }: Forum & {
   _count:{
@@ -26,9 +22,7 @@ const ForumContainer = ({
     comments?:number;
   },
   userLikes?:ForumLike[],
-  className?:string,
 }) => {
-  const pathname = usePathname()
   const timeDiffCalc = useMemo(() => {
     return timeDiff(createdAt);
   }, [createdAt]);
@@ -63,7 +57,7 @@ const ForumContainer = ({
         <Image
           src={forumImage}
           alt="Animated GIF"
-          className={cn("rounded-md mt-2 w-full h-auto" , pathname!=="/forum" && className)}/// adjust the photo size here // TODO : FIX THIS DYNAMIC CLASSNAME
+          className={cn("rounded-md mt-2 w-full h-auto")}/// adjust the photo size here // TODO : FIX THIS DYNAMIC CLASSNAME
           width={320}
           height={400}
           unoptimized={true}

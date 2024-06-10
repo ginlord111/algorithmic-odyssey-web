@@ -10,7 +10,7 @@ export async function GET(req: NextRequest): Promise<any> {
   try {
     const url = new URL(req.url);
     const cursor = url.searchParams.get("cursor");
-    const sort = url.searchParams.get("sort")
+    const sort =  url.searchParams.get("sort")
     const forums = await prisma.forum.findMany({
       ...(cursor && {
         skip: 1,
@@ -53,8 +53,8 @@ export async function GET(req: NextRequest): Promise<any> {
       take: 1,
       skip: 1,
     });
-    const data = {
-      data: forums,
+    const data =  {
+      data:  forums,
       metaData: {
         lastCursor: newCursor !== undefined ? newCursor : null,
         hasNextPage: nextForum.length > 0,

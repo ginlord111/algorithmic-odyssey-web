@@ -31,11 +31,10 @@ const Forums = () => {
     return data.userLikes
   }
  
-  const {data:userLikes, error} = useQuery({
+  const {data:userLikes, error,refetch:refetchUserLikes} = useQuery({
     queryKey:["user-likes"],
     queryFn:userLikeForums,
   })
-
     const {
     data,
     isSuccess,
@@ -44,6 +43,7 @@ const Forums = () => {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isRefetching,
     refetch,
   } = useInfiniteQuery({
     initialPageParam: "",
@@ -59,17 +59,20 @@ const Forums = () => {
   const { ref, inView } = useInView();
   useEffect(()=>{
     if(!sortAs){
-      setSortAs("newest")
+      setSortAs(searchParams.get("sort") as "newest" || "oldest")
     }
-    replace(`${pathname}?sort=${sortAs}`);
-    refetch();
-  }, [sortAs,setSortAs])
+    replace(`${pathname}?sort=${sortAs ?? "newest"}`, {
+      scroll:false
+    });
+    refetch()
+  refetchUserLikes;
+  }, [sortAs,setSortAs,pathname,replace, refetchUserLikes])
   useEffect(() => {
     // if the last element is in view and there is a next page, fetch the next page
-    if (inView || hasNextPage) {
+    if (inView && hasNextPage && !isRefetching) {
       fetchNextPage();
     }
-  }, [fetchNextPage, hasNextPage, inView]);
+  }, [fetchNextPage, hasNextPage, inView,isRefetching]);
   return (
     <div>
       
@@ -93,13 +96,13 @@ const Forums = () => {
               Newest
             </Button>
           </div>
-          {isSuccess && !isPending && !isLoading ? (
+          {isSuccess && !isPending && !isLoading && !isRefetching ? (
             data.pages.map(
               (page) =>
                 page.data &&
                 page.data.map((forum: Forum & {_count:{forumLikes:number,comments:number}}, index:number) => (
                   <div key={index} ref={ref}>
-                    <ForumContainer {...forum} userLikes={userLikes} />
+                    <ForumContainer {...forum} userLikes={userLikes}  />
                   </div>
                 ))
             )

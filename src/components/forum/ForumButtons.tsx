@@ -11,7 +11,7 @@ const ForumButtons = ({
   forumId,
   userLikes = [],
   route,
-  comments
+  comments,
 }: {
   likes: number;
   forumId: string;
@@ -40,7 +40,7 @@ const ForumButtons = ({
       }
 
       const data = await response.json();
-      const { isAlreadyLiked } = data;
+      const { isAlreadyLiked } =  data;
       setLikesCount((like) => (isAlreadyLiked.length > 0 ? like - 1 : like + 1));
       setIsClick((active) =>
         isAlreadyLiked.length > 0 ? (active = false) : (active = true)
@@ -54,6 +54,7 @@ const ForumButtons = ({
     const temp = isForumLike(userLikes, forumId);
     setLikForum(temp);
   }, [userLikes]);
+
 
   return (
     <div className="flex flex-row gap-4 mt-4">
