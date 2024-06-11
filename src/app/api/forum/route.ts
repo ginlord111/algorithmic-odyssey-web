@@ -18,6 +18,7 @@ export async function GET(req: NextRequest): Promise<any> {
         },
         take: 1,
       }),
+      /// take :1  OPTIONAL: THIS IS FOR FORUM POSTS TO RENDER ONE BY ONE
       include: {
         _count: {
           select: {
@@ -26,19 +27,19 @@ export async function GET(req: NextRequest): Promise<any> {
           },
         },
       },
-      orderBy: {
-        /// SORT THE FORUM, DEFAULT IS THE NEWEST SORT
-        ...(sort === "popular"
-          ? {
-              forumLikes: {
-                _count: "desc",
-              },
-            }
-          : {
-              createdAt:
-                sort === "newest" ? "desc" : sort === "oldest" ? "asc" : "desc",
-            }),
-      },
+        orderBy: {
+          ...(sort ==="popular" 
+            ? {
+                forumLikes: {
+                  _count: "desc",
+                },
+                
+              }
+            : {
+                createdAt: sort === "newest" ? "desc" : "asc", /// IF SORT IS ON NEWEST RETURN DESC
+              }),
+        },
+
     });
     if (forums.length === 0) {
       return NextResponse.json(

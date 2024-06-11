@@ -28,7 +28,7 @@ const ForumButtons = ({
     if (!id) return;
     /// if user is not authenitcated redirect to sign in
       if(!session?.user.id){
-        signIn()
+        return signIn()
       }
     try {
       const response = await fetch("/api/forum/like", {

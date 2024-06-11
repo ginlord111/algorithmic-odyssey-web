@@ -79,6 +79,7 @@ const Forums = () => {
       fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, inView, isRefetching]);
+  console.log(data, "THIS IS DATA FORUM")
   return (
     <div>
       <MaxWidthWrapper className="flex justify-center  ">
