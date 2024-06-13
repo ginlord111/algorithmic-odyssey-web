@@ -53,7 +53,7 @@ const ForumButtons = ({
   useEffect(() => {
     const temp = isForumLike(userLikes, forumId);
     setLikForum(temp);
-  }, [userLikes]);
+  }, [userLikes,forumId]);
 
 
   return (

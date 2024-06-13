@@ -13,7 +13,7 @@ const Forums = () => {
   const searchParams = useSearchParams();
   const { replace} = useRouter();
   const pathname = usePathname();
-  const [sortAs, setSortAs] = useState<"oldest" | "newest" | "popular">(
+  const [sortAs, setSortAs] = useState<string>(
     searchParams.get("sort") as "newest" | "oldest" | "popular"
   );
   const getForums = async ({ cursor }: { cursor: string }) => {
@@ -62,18 +62,16 @@ const Forums = () => {
         : undefined;
     },
   });
+  console.log(sortAs, "SORT AS")
 
   const { ref, inView } = useInView();
   useEffect(() => {
-    if (!sortAs) {
-      setSortAs((searchParams.get("sort") as "newest" || "oldest" || "popular"));
-    }
     replace(`${pathname}?sort=${sortAs ?? "newest"}`, {
       scroll: false,
     });
     refetch();
     refetchUserLikes();
-  }, [sortAs, setSortAs, pathname, replace, refetchUserLikes]);
+  }, [sortAs, setSortAs, pathname, replace, refetchUserLikes,refetch,searchParams]);
   useEffect(() => {
     // if the last element is in view and there is a next page, fetch the next page
     if (inView && hasNextPage && !isFetching) {
