@@ -34,7 +34,7 @@ if(session?.user.id){
 }
   return (
   <Fragment>
-    <ForumContainer {...forum} userLikes={userLikes}/>
+    <ForumContainer {...forum} userLikes={userLikes} className='lg:mx-[200px]'/>
     <CommentsContainer forumId={forum.id}  />
   </Fragment>
   )

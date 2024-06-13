@@ -16,18 +16,20 @@ const ForumContainer = ({
   _count,
   userLikes,
   titleId,
+  className,
 }: Forum & {
   _count:{
     forumLikes:number;
     comments?:number;
   },
   userLikes?:ForumLike[],
+  className?:string,
 }) => {
   const timeDiffCalc = useMemo(() => {
     return timeDiff(createdAt);
   }, [createdAt]);
   return (
-    <div className="relative pt-20 md:mx-[200px] mx-0">
+    <div className={cn("relative pt-20 lg:mx-[300px] md:mx-[100px] mx-0 max-w-xl overflow-hidden w-full",className)}>
       <div className="h-fit w-full pb-[10px]  border-b-1 border-muted-foreground">
         <div className="flex flex-col items-start w-full">
           <div className="flex flex-row gap-2 justify-start text-xs cursor-pointer "
@@ -51,7 +53,7 @@ const ForumContainer = ({
           </div>
           <div className="text-sm text-black dark:text-white tracking-wide">{caption}</div>
           {forumImage && (
-        <div className="relative w-full max-w-md md:max-w-lg"
+        <div className="relative w-full max-w-md md:max-w-xl overflow-hidden"
         >
           <Link href={`user/${authorUsername}/comments/${titleId}/${title}`}> 
         <Image
@@ -61,7 +63,7 @@ const ForumContainer = ({
           width={320}
           height={400}
           unoptimized={true}
-          priority
+          loading="lazy"
         />
         </Link>
       </div>

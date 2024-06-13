@@ -50,6 +50,7 @@ const Forums = () => {
     fetchNextPage,
     isFetchingNextPage,
     isRefetching,
+    isFetching,
     refetch,
   } = useInfiniteQuery({
     initialPageParam: "",
@@ -75,22 +76,20 @@ const Forums = () => {
   }, [sortAs, setSortAs, pathname, replace, refetchUserLikes]);
   useEffect(() => {
     // if the last element is in view and there is a next page, fetch the next page
-    if (inView && hasNextPage && !isRefetching) {
+    if (inView && hasNextPage && !isFetching) {
       fetchNextPage();
     }
-  }, [fetchNextPage, hasNextPage, inView, isRefetching]);
-  console.log(data, "THIS IS DATA FORUM")
+  }, [fetchNextPage, hasNextPage, inView, isFetching]);
   return (
     <div>
-      <MaxWidthWrapper className="flex justify-center  ">
-        {" "}
+      <MaxWidthWrapper>
         {/*border-l-1 border-gray-400*/}
         <div className="flex flex-col">
           {/* TODO: MOVE THIS BUTTON TO THE NAVBAR OR IN SIDEBAR*/}
           <Link href="/new" className="flex items-center justify-center mt-5">
             <Button>Create Post</Button>
           </Link>
-          <div className="flex items-end w-full justify-end ">
+          <div className="flex items-end w-full lg:justify-end justify-center ">
             <Button
               variant="link"
               onClick={() => setSortAs((prev) => (prev = "popular"))}
@@ -138,11 +137,10 @@ const Forums = () => {
             <div className="relative mt-10 mx-[130px]">
               <div className="flex items-center inset-0 absolute ">
                 <span className=" border-t w-full border-1 border-gray-500">
-                  {" "}
                 </span>
               </div>
               <div className="relative flex justify-center items-center  font-bold">
-                <span className="text-muted-foreground text-md px-3 bg-[#eff1f5]">
+                <span className="text-muted-foreground text-md px-3 bg-[#eff1f5] whitespace-nowrap">
                   No more posts
                 </span>
               </div>

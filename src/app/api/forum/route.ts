@@ -16,9 +16,9 @@ export async function GET(req: NextRequest): Promise<any> {
         cursor: {
           id: cursor,
         },
-        take: 1,
-      }),
-      /// take :1  OPTIONAL: THIS IS FOR FORUM POSTS TO RENDER ONE BY ONE
+
+        }),
+
       include: {
         _count: {
           select: {
@@ -27,18 +27,26 @@ export async function GET(req: NextRequest): Promise<any> {
           },
         },
       },
-        orderBy: {
-          ...(sort ==="popular" 
-            ? {
+      // if the forum have the same numnber of like, added a second criteria for sorting which is the createdAt here
+      //@ts-ignore  /// temporary ignoring the error here
+      orderBy: [
+        ...(sort === "popular"
+          ? [
+              {
                 forumLikes: {
                   _count: "desc",
                 },
-                
-              }
-            : {
-                createdAt: sort === "newest" ? "desc" : "asc", /// IF SORT IS ON NEWEST RETURN DESC
-              }),
-        },
+              },
+              {
+                createdAt: "desc", // Secondary sort criterion
+              },
+            ]
+          : [
+              {
+                createdAt: sort === "newest" ? "desc" : "asc",
+              },
+            ]),
+      ],
 
     });
     if (forums.length === 0) {
@@ -55,7 +63,6 @@ export async function GET(req: NextRequest): Promise<any> {
     }
     const lastForum: Forum = forums[forums.length - 1];
     const newCursor = lastForum.id;
-
     const nextForum = await prisma.forum.findMany({
       cursor: {
         id: newCursor,
@@ -79,12 +86,6 @@ export async function GET(req: NextRequest): Promise<any> {
     );
   }
 }
-
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);

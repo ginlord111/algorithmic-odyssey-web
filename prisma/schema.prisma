@@ -1,10 +1,12 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["accounts", "forums", "sessions", "users"]
 }
 
 model User {
@@ -15,14 +17,14 @@ model User {
   emailVerified DateTime?
   userImage     String?
   accounts      Account[]
+  forums        Forum[]
   comments      ForumComment[]
   ForumLike     ForumLike[]
-  forums        Forum[]
   sessions      Session[]
 
   @@unique([id, username, userImage])
   @@unique([id, username])
-  @@map("user")
+  @@schema("users")
 }
 
 model Account {
@@ -41,7 +43,7 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@map("accounts")
+  @@schema("accounts")
 }
 
 model Session {
@@ -51,7 +53,7 @@ model Session {
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("sessions")
+  @@schema("sessions")
 }
 
 model Forum {
@@ -63,11 +65,11 @@ model Forum {
   caption        String?
   createdAt      DateTime       @default(now())
   titleId        String         @unique
+  user           User           @relation(fields: [userId, authorUsername], references: [id, username], onDelete: Cascade)
   comments       ForumComment[]
   forumLikes     ForumLike[]
-  user           User           @relation(fields: [userId, authorUsername],references: [id, username], onDelete: Cascade)
 
-  @@map("forums")
+  @@schema("forums")
 }
 
 model ForumLike {
@@ -77,7 +79,7 @@ model ForumLike {
   forums  Forum  @relation(fields: [forumId], references: [id], onDelete: Cascade)
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("forumLike")
+  @@schema("forums")
 }
 
 model ForumComment {
@@ -87,9 +89,9 @@ model ForumComment {
   userImage String
   username  String
   forumId   String
+  createdAt DateTime @default(now())
   forum     Forum    @relation(fields: [forumId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId, userImage, username], references: [id, userImage, username], onDelete: Cascade)
-  createdAt DateTime @default(now())
 
-  @@map("forumComments")
+  @@schema("forums")
 }
