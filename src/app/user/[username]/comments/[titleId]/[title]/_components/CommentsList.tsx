@@ -9,6 +9,7 @@ const CommentsList = ({
   username,
   createdAt,
   hideComment,
+  userImage
 }:ForumComment & {
   hideComment:boolean;
 }) => {
@@ -21,8 +22,8 @@ const CommentsList = ({
         <div>
           <Avatar
             showFallback
-            src="https://images.unsplash.com/broken"
-            size="sm"
+            src={userImage}
+            size="md"
           />
         </div>
         <div className="flex flex-col bg-[#e6e6e6] items-start p-2 rounded-md px-3 w-full">

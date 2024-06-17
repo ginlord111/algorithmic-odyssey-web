@@ -6,9 +6,8 @@ import Link from "next/link";
 import { Menu } from "lucide-react";
 import DarkModeButton from "./DarkModeButton";
 import { useSession } from "next-auth/react";
-import { fetchUserProfile } from "@/actions/get-user-profile";
-import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import userInfo from "@/app/hooks/getUserInfo";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -27,14 +26,10 @@ export default function NavBar() {
     };
   }, [isScrolled]);
 
-  const getUserProfile = async () => {
-    const user = await fetchUserProfile();
-    return user as string;
-  };
-  const { data: userName } = useQuery({
-    queryKey: ["get-user-profile"],
-    queryFn: getUserProfile,
-  });
+  const {fetchUser, user} = userInfo()
+  useEffect(()=>{
+    fetchUser()
+  },[session?.user.id])
   const router = useRouter();
   return (
     <Navbar
@@ -86,10 +81,10 @@ export default function NavBar() {
             Docs
           </Link>
         </NavbarItem>
-        {session?.user.id && (
+        {user?.id && (
           <NavbarItem
             className="hidden lg:flex text-xl"
-            onClick={() => router.push(`user/${userName}`)}
+            onClick={() => router.push(`user/${user?.username as string}`)}
           >
             Profile
           </NavbarItem>

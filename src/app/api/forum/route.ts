@@ -18,7 +18,7 @@ export async function GET(req: NextRequest): Promise<any> {
         },
 
         }),
-
+        take:1,
       include: {
         _count: {
           select: {
@@ -55,7 +55,7 @@ export async function GET(req: NextRequest): Promise<any> {
           data: [],
           metaData: {
             lastCursor: null,
-            nextQuery: false,
+            hasNextPage: false,
           },
         },
         { status: 200 }

@@ -17,6 +17,7 @@ const ForumContainer = ({
   userLikes,
   titleId,
   className,
+  userImage
 }: Forum & {
   _count:{
     forumLikes:number;
@@ -34,15 +35,16 @@ const ForumContainer = ({
         <div className="flex flex-col items-start w-full">
           <div className="flex flex-row gap-2 justify-start text-xs cursor-pointer "
          
-          >
+          > 
+          {/**TODO: ADD USER IMAGE IN FORUM SCHEMA */}
             <Link href={`user/${authorUsername}`} className="flex gap-2"> 
             <Avatar
               showFallback
-              src="https://images.unsplash.com/broken"
-              size="sm"
+              src={userImage}
+              size="md"
             />
             <div className="flex flex-col">
-              <p className=" tracking-wide ">{authorUsername}</p>
+              <p className=" tracking-wide text-black font-semibold text-md">{authorUsername}</p>
               {/* <strong className='pl-1'>.</strong> */}
               <p className="text-gray-500 ">{timeDiffCalc}</p>
             </div>

@@ -15,3 +15,13 @@ export const commentFormSchema = z.object({
     }),
     caption: z.optional(z.string()),
   });
+
+
+  export const accountDetailsFormSchema = z.object({
+    username:z.string().min(5, {
+      message:"Username must be atleast 5 characters"
+    }),
+
+  })
+
+

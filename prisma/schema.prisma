@@ -60,12 +60,13 @@ model Forum {
   id             String         @id @default(cuid())
   userId         String
   authorUsername String
+  userImage      String
   forumImage     String?
   title          String
   caption        String?
   createdAt      DateTime       @default(now())
   titleId        String         @unique
-  user           User           @relation(fields: [userId, authorUsername], references: [id, username], onDelete: Cascade)
+  user           User           @relation(fields: [userId, authorUsername,userImage], references: [id, username,userImage], onDelete: Cascade)
   comments       ForumComment[]
   forumLikes     ForumLike[]
 

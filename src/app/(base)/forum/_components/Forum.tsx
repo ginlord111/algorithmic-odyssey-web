@@ -62,15 +62,18 @@ const Forums = () => {
         : undefined;
     },
   });
-  console.log(sortAs, "SORT AS")
-
   const { ref, inView } = useInView();
   useEffect(() => {
-    replace(`${pathname}?sort=${sortAs ?? "newest"}`, {
+   
+    replace(`${pathname}?sort=${sortAs ?? "oldest"}`, {
       scroll: false,
     });
+    if(!sortAs){
+      setSortAs(searchParams.get("sort") as "newest" | "oldest" | "popular")
+     }
     refetch();
     refetchUserLikes();
+
   }, [sortAs, setSortAs, pathname, replace, refetchUserLikes,refetch,searchParams]);
   useEffect(() => {
     // if the last element is in view and there is a next page, fetch the next page
@@ -78,6 +81,7 @@ const Forums = () => {
       fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, inView, isFetching]);
+
   return (
     <div>
       <MaxWidthWrapper>
