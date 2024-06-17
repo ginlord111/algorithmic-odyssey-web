@@ -6,18 +6,10 @@ import prisma from '@/db'
 import { User } from '@prisma/client'
 const Profile = async({params}:{params:{username:string}}) => {
   const {username} = params
-  const session = getServerSession(authOptions)
   const user = await prisma.user.findUnique({
     where:{
-      username:username
+      username:decodeURIComponent(username)
     },
-    select:{
-      email:true,
-      username:true,
-      userImage:true,
-      id:true,
-       /// THIS IS TEMPORARY FIELD WILL ADD SOONER
-    }
   })
   if(!user)return;
   return (

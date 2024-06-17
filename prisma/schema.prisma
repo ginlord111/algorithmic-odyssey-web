@@ -21,9 +21,14 @@ model User {
   comments      ForumComment[]
   ForumLike     ForumLike[]
   sessions      Session[]
+  facebook      String?
+  twitter       String?
+  github        String?
+  instagram     String?
 
-  @@unique([id, username, userImage])
-  @@unique([id, username])
+
+  @@unique([id, username, userImage,facebook,twitter,github,instagram])
+  @@unique([id, username,userImage])
   @@schema("users")
 }
 

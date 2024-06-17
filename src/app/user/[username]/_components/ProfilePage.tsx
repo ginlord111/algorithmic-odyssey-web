@@ -25,7 +25,7 @@ import {
 import { signOut, useSession } from "next-auth/react";
 import AccountDetails from "./AccountDetails";
 import { Button } from "@nextui-org/react";
-const ProfilePage = ({ username,id,email,userImage }: User ) => {
+const ProfilePage = ({ username,id,email,userImage,facebook,instagram,github,twitter }: User ) => {
   const [userProfile, setUserProfile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { data: session } = useSession();
@@ -113,25 +113,25 @@ const ProfilePage = ({ username,id,email,userImage }: User ) => {
               <div className="flex gap-1">
                 <Facebook className="w-5 h-5" />
                 <span className="text-sm text-muted-foreground tracking-wide">
-                  @username
+               {`${facebook ? `@${facebook}` : '@username'}`}
                 </span>
               </div>
               <div className="flex gap-1">
                 <Twitter className="w-5 h-5" />
                 <span className="text-sm text-muted-foreground tracking-wide">
-                  @username
+                {`${twitter ? `@${twitter}` : '@username'}`}
                 </span>
               </div>
               <div className="flex gap-1">
                 <Github className="w-5 h-5" />
                 <span className="text-sm text-muted-foreground tracking-wide">
-                  @username
+                {`${github ? `@${github}` : '@username'}`}
                 </span>
               </div>
               <div className="flex gap-1">
                 <Instagram className="w-5 h-5" />
                 <span className="text-sm text-muted-foreground tracking-wide">
-                  @username
+                {`${instagram ? `@${instagram}` : '@username'}`}
                 </span>
               </div>
             </div>

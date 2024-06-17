@@ -18,10 +18,24 @@ export const commentFormSchema = z.object({
 
 
   export const accountDetailsFormSchema = z.object({
-    username:z.string().min(5, {
+    username:z.optional(z.string().min(5, {
       message:"Username must be atleast 5 characters"
-    }),
-
+    })),
+    facebook:z.optional(z.string().min(5, {
+      message:"facebook Username must be atleast 5 characters"
+    })),
+    github:z.optional(z.string().min(5, {
+      message:"Github Username must be atleast 5 characters"
+    })),
+    instagram:z.optional(z.string().min(5, {
+      message:"Instagram Username must be atleast 5 characters"
+    })),
+    twitter:z.optional(z.string().min(5, {
+      message:"twitter username must be atleast 5 characters"
+    })),
+    mobileNum:z.optional(z.number().min(5, {
+      message:"twitter username must be atleast 5 characters"
+    })),
   })
 
 
