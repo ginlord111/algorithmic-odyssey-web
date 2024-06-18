@@ -57,6 +57,8 @@ const Toolbar = ({editor,setImageFile}: { editor: Editor | null, setImageFile:Di
           setImageFile(file);
             editor
           .commands.setImage({src:URL.createObjectURL(file)})
+        
+         
         }}
       />
     </div>

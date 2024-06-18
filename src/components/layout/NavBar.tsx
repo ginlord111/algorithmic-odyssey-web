@@ -5,10 +5,14 @@ import { Navbar, NavbarContent, NavbarItem, Button } from "@nextui-org/react";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import DarkModeButton from "./DarkModeButton";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
+import userInfo from "@/app/hooks/getUserInfo";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
-  const { data: session } = useSession()
+  const { data: session } = useSession();
+  const pathname = usePathname()
+  const router = useRouter();
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -23,10 +27,15 @@ export default function NavBar() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [isScrolled]);
+
+  const {fetchUser, user} = userInfo()
+  useEffect(()=>{
+    fetchUser()
+  },[session?.user.id, fetchUser,pathname])
   return (
     <Navbar
       className={cn(
-        "bg-transparent bg-opacity-70 transition backdrop-filter backdrop-blur-sm absolute z-10 text-white font-bold border-b-1 border-[#cbd5e11a]",
+        "cursor-pointer bg-transparent bg-opacity-70 transition backdrop-filter backdrop-blur-sm absolute z-10 text-white font-bold border-b-1 border-[#cbd5e11a]",
         { "fixed bg-[#414d69] dark:bg-[#1b1b1f]  ": isScrolled }
       )}
       maxWidth="xl"
@@ -70,20 +79,28 @@ export default function NavBar() {
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
           <Link href="#" className="text-xl">
-           Docs
+            Docs
           </Link>
         </NavbarItem>
-        {session?.user.id && (
-            <NavbarItem className="hidden lg:flex">
-            <Link href="#" className="text-xl">
-             Profile
-            </Link>
+        {user?.id ? (
+          <NavbarItem
+            className="hidden lg:flex text-xl"
+            onClick={() => router.push(`user/${user?.username as string}`)}
+          >
+            Profile
           </NavbarItem>
+        ) : (
+          <NavbarItem
+          className="hidden lg:flex text-xl"
+          onClick={() => signIn()}
+        >
+          Login
+        </NavbarItem>
         )}
         <NavbarItem className="hidden lg:flex">
           <Button
-          color="default"
-          variant="faded"
+            color="default"
+            variant="faded"
             as={Link}
             href="#"
             className="text-red-500 p-6 font-bold border-3 text-md border-black mr-4"
@@ -92,7 +109,7 @@ export default function NavBar() {
           </Button>
         </NavbarItem>
         <NavbarItem>
-    <DarkModeButton />
+          <DarkModeButton />
         </NavbarItem>
       </NavbarContent>
     </Navbar>

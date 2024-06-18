@@ -9,6 +9,7 @@ import { getServerSession } from 'next-auth'
 const CommentPage = async({ params }: { params: {username:string, title: string,titleId:string } })=> {
   const {username, title, titleId} = params
   const session = await getServerSession(authOptions)
+  let userLikes:ForumLike[] = [];
   const forum:Forum &{_count:{forumLikes:number}}= (await prisma.forum.findFirst({
     where:{
       authorUsername:decodeURIComponent(username),
@@ -24,17 +25,16 @@ const CommentPage = async({ params }: { params: {username:string, title: string,
       }
     }
   }))!
-
-  const userLikes:ForumLike[] = await prisma.forumLike.findMany({
-      where:{
-          userId:session?.user.id
-      },
-  })
-
-
+if(session?.user.id){
+   userLikes = await prisma.forumLike.findMany({
+    where:{
+        userId:session?.user.id
+    },
+})
+}
   return (
   <Fragment>
-    <ForumContainer {...forum} className='w-full h-fit flex' userLikes={userLikes}/>
+    <ForumContainer {...forum} userLikes={userLikes} className='lg:mx-[200px]'/>
     <CommentsContainer forumId={forum.id}  />
   </Fragment>
   )

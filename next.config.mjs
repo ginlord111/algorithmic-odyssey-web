@@ -16,7 +16,7 @@ const nextConfig = {
                 hostname: 'res.cloudinary.com',
               },
               {
-                protocol: 'http',
+                protocol: 'https',
                 hostname: 'images.unsplash.com',
                pathname :'/broken'
               },

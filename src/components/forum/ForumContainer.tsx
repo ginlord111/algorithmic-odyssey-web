@@ -1,4 +1,3 @@
-"use client"
 import React, { useMemo } from "react";
 import { Avatar } from "@nextui-org/react";
 import Image from "next/image";
@@ -7,8 +6,6 @@ import timeDiff from "@/utils/timeCalc";
 import ForumButtons from "./ForumButtons";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
-
 const ForumContainer = ({
   id,
   authorUsername,
@@ -18,8 +15,9 @@ const ForumContainer = ({
   createdAt,
   _count,
   userLikes,
-  className,
   titleId,
+  className,
+  userImage
 }: Forum & {
   _count:{
     forumLikes:number;
@@ -28,25 +26,25 @@ const ForumContainer = ({
   userLikes?:ForumLike[],
   className?:string,
 }) => {
-  const pathname = usePathname()
   const timeDiffCalc = useMemo(() => {
     return timeDiff(createdAt);
   }, [createdAt]);
   return (
-    <div className="relative pt-20 md:mx-[200px] mx-0">
+    <div className={cn("relative pt-20 lg:mx-[300px] md:mx-[100px] mx-0 max-w-xl overflow-hidden w-full",className)}>
       <div className="h-fit w-full pb-[10px]  border-b-1 border-muted-foreground">
         <div className="flex flex-col items-start w-full">
           <div className="flex flex-row gap-2 justify-start text-xs cursor-pointer "
          
-          >
+          > 
+          {/**TODO: ADD USER IMAGE IN FORUM SCHEMA */}
             <Link href={`user/${authorUsername}`} className="flex gap-2"> 
             <Avatar
               showFallback
-              src="https://images.unsplash.com/broken"
-              size="sm"
+              src={userImage}
+              size="md"
             />
             <div className="flex flex-col">
-              <p className=" tracking-wide ">{authorUsername}</p>
+              <p className=" tracking-wide text-black font-semibold text-md">{authorUsername}</p>
               {/* <strong className='pl-1'>.</strong> */}
               <p className="text-gray-500 ">{timeDiffCalc}</p>
             </div>
@@ -57,17 +55,17 @@ const ForumContainer = ({
           </div>
           <div className="text-sm text-black dark:text-white tracking-wide">{caption}</div>
           {forumImage && (
-        <div className="relative w-full max-w-md md:max-w-lg"
+        <div className="relative w-full max-w-md md:max-w-xl overflow-hidden"
         >
           <Link href={`user/${authorUsername}/comments/${titleId}/${title}`}> 
         <Image
           src={forumImage}
           alt="Animated GIF"
-          className={cn("rounded-md mt-2 w-full h-auto" , pathname!=="/forum" && className)}/// adjust the photo size here // TODO : FIX THIS DYNAMIC CLASSNAME
+          className={cn("rounded-md mt-2 w-full h-auto")}/// adjust the photo size here // TODO : FIX THIS DYNAMIC CLASSNAME
           width={320}
           height={400}
           unoptimized={true}
-          priority
+          loading="lazy"
         />
         </Link>
       </div>

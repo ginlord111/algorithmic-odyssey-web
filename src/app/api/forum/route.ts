@@ -6,30 +6,48 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 import { revalidatePath } from "next/cache";
 export async function GET(req: NextRequest): Promise<any> {
-
   try {
     const url = new URL(req.url);
     const cursor = url.searchParams.get("cursor");
-    const sort = url.searchParams.get("sort")
+    const sort = url.searchParams.get("sort");
     const forums = await prisma.forum.findMany({
       ...(cursor && {
         skip: 1,
         cursor: {
           id: cursor,
         },
-        take: 1,
-      }),
-      include:{
-        _count:{
-    select:{
-      forumLikes:true,
-      comments:true,
-    }
-        }
+
+        }),
+        take:1,
+      include: {
+        _count: {
+          select: {
+            forumLikes: true,
+            comments: true,
+          },
+        },
       },
-      orderBy:{
-        createdAt: sort === "newest" ? "desc" : sort === "oldest" ? "asc" : "desc", // SORTING POST  I SET THE NEWEST SORT FOR THE DEFAULT HERE
-      }
+      // if the forum have the same numnber of like, added a second criteria for sorting which is the createdAt here
+      //@ts-ignore  /// temporary ignoring the error here
+      orderBy: [
+        ...(sort === "popular"
+          ? [
+              {
+                forumLikes: {
+                  _count: "desc",
+                },
+              },
+              {
+                createdAt: "desc", // Secondary sort criterion
+              },
+            ]
+          : [
+              {
+                createdAt: sort === "newest" ? "desc" : "asc",
+              },
+            ]),
+      ],
+
     });
     if (forums.length === 0) {
       return NextResponse.json(
@@ -37,7 +55,7 @@ export async function GET(req: NextRequest): Promise<any> {
           data: [],
           metaData: {
             lastCursor: null,
-            nextQuery: false,
+            hasNextPage: false,
           },
         },
         { status: 200 }
@@ -45,7 +63,6 @@ export async function GET(req: NextRequest): Promise<any> {
     }
     const lastForum: Forum = forums[forums.length - 1];
     const newCursor = lastForum.id;
-
     const nextForum = await prisma.forum.findMany({
       cursor: {
         id: newCursor,
@@ -70,53 +87,50 @@ export async function GET(req: NextRequest): Promise<any> {
   }
 }
 
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
-
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  let imageUpload:any
+  let imageUpload: any;
   const body = await req.formData();
   const image = body.get("image") as unknown as File;
-  if(image){
-     imageUpload = await uploadCloudinary(image, "algorithmic-oddysey");
+  if (image) {
+    imageUpload = await uploadCloudinary(image, "algorithmic-oddysey");
   }
   const captions = JSON.parse(body.get("caption") as string);
   const title = JSON.parse(body.get("title") as string);
   /// FOR TITLE ID RANDOM STRING
   function generateRandomString(length = 8) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
     for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
+      result += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
     }
     return result;
   }
-try {
-  await prisma.forum.create({
-    data: {
-      caption: captions ?? null,
-      title: title,
-      titleId:generateRandomString(),
-      forumImage: imageUpload?.secure_url ?? null,
-      user: {
-        connect: {
-          id: session?.user.id,
+  try {
+    await prisma.forum.create({
+      data: {
+        caption: captions ?? null,
+        title: title,
+        titleId: generateRandomString(),
+        forumImage: imageUpload?.secure_url ?? null,
+        user: {
+          connect: {
+            id: session?.user.id,
+          },
         },
       },
-    },
-    select: {
-      caption: true,
-      forumImage: true,
-      title: true,
-    },
-  });
-  revalidatePath("/forum", "page")
-  return NextResponse.json({message:"SUCCESFULLY ADDED"}, {status:200})
-} catch (error) {
-  return NextResponse.json({message:error}, {status:500})
-}
+      select: {
+        caption: true,
+        forumImage: true,
+        title: true,
+      },
+    });
+    revalidatePath("/forum", "page");
+    return NextResponse.json({ message: "SUCCESFULLY ADDED" }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error }, { status: 500 });
+  }
 }

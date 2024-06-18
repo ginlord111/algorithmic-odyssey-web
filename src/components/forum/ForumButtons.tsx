@@ -11,7 +11,7 @@ const ForumButtons = ({
   forumId,
   userLikes = [],
   route,
-  comments
+  comments,
 }: {
   likes: number;
   forumId: string;
@@ -28,7 +28,7 @@ const ForumButtons = ({
     if (!id) return;
     /// if user is not authenitcated redirect to sign in
       if(!session?.user.id){
-        signIn()
+        return signIn()
       }
     try {
       const response = await fetch("/api/forum/like", {
@@ -40,7 +40,7 @@ const ForumButtons = ({
       }
 
       const data = await response.json();
-      const { isAlreadyLiked } = data;
+      const { isAlreadyLiked } =  data;
       setLikesCount((like) => (isAlreadyLiked.length > 0 ? like - 1 : like + 1));
       setIsClick((active) =>
         isAlreadyLiked.length > 0 ? (active = false) : (active = true)
@@ -53,7 +53,8 @@ const ForumButtons = ({
   useEffect(() => {
     const temp = isForumLike(userLikes, forumId);
     setLikForum(temp);
-  }, [userLikes]);
+  }, [userLikes,forumId]);
+
 
   return (
     <div className="flex flex-row gap-4 mt-4">
