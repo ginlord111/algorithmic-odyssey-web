@@ -37,7 +37,7 @@ const ForumContainer = ({
          
           > 
           {/**TODO: ADD USER IMAGE IN FORUM SCHEMA */}
-            <Link href={`user/${authorUsername}`} className="flex gap-2"> 
+            <Link href={`/user/${authorUsername}`} className="flex gap-2"> 
             <Avatar
               showFallback
               src={userImage}
@@ -57,7 +57,7 @@ const ForumContainer = ({
           {forumImage && (
         <div className="relative w-full max-w-md md:max-w-xl overflow-hidden"
         >
-          <Link href={`user/${authorUsername}/comments/${titleId}/${title}`}> 
+          <Link href={`/forum/${authorUsername}/comments/${titleId}/${title}`}> 
         <Image
           src={forumImage}
           alt="Animated GIF"
@@ -70,7 +70,7 @@ const ForumContainer = ({
         </Link>
       </div>
           )}
-          <ForumButtons likes={_count.forumLikes} forumId={id} userLikes={userLikes} route={`user/${authorUsername}/comments/${titleId}/${title}`}
+          <ForumButtons likes={_count.forumLikes} forumId={id} userLikes={userLikes} route={`/forum/${authorUsername}/comments/${titleId}/${title}`}
             comments={_count.comments as number}
           />
         </div>

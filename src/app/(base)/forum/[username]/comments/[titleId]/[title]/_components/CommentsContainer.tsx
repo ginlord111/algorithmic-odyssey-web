@@ -72,7 +72,7 @@ const CommentsContainer = ({ forumId }: { forumId: string }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 relative pt-5 lg:mx-[200px] mx-0"
+          className="space-y-8 relative pt-5 lg:mx-[200px] md:mx-[100px] mx-0 max-w-xl overflow-hidden w-full"
         >
           <FormField
             control={form.control}

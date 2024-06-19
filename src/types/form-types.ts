@@ -15,10 +15,9 @@ export const commentFormSchema = z.object({
     }),
     caption: z.optional(z.string()),
   });
-
-
+const noSpecialCharRegex:RegExp = /^[a-zA-Z0-9 _-]*$/; // REGEX FOR USER TO NOT PUT ANY SPEICAL CHARACTERS IN USERNAME
   export const accountDetailsFormSchema = z.object({
-    username:z.optional(z.string().min(5, {
+    username:z.optional(z.string().regex(noSpecialCharRegex, "Username cannot contain special characters").min(5, {
       message:"Username must be atleast 5 characters"
     })),
     facebook:z.optional(z.string().min(5, {
@@ -36,6 +35,7 @@ export const commentFormSchema = z.object({
     mobileNum:z.optional(z.number().min(5, {
       message:"twitter username must be atleast 5 characters"
     })),
+
   })
 
 

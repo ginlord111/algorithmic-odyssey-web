@@ -41,6 +41,17 @@ const AccountDetails = () => {
       toast.success("Edit profile successfully");
     }
   }
+  const setDefaultValuesForm  = {
+    username:user?.username,
+    facebook:user?.username as string,
+    github:user?.github as string,
+    instagram:user?.instagram as string,
+    twitter:user?.twitter as string
+  }
+  const handleCancelEdit = () => {
+  setEdit((prev) => (prev ? (prev = false) : (prev = true)));
+  accountDetailsForm.reset(setDefaultValuesForm)
+  }
   return (
     <div className="mt-10 lg:pl-[200px] pl-0">
       <Form {...accountDetailsForm}>
@@ -167,8 +178,7 @@ const AccountDetails = () => {
                   : "bg-blue-600 hover:!bg-blue-600 "
               }`}
               type="button"
-              onClick={() =>
-                setEdit((prev) => (prev ? (prev = false) : (prev = true)))
+              onClick={()=>handleCancelEdit()
               }
             >
               {edit ? "Cancel" : "Edit"}

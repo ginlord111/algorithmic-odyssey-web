@@ -19,7 +19,7 @@ model User {
   accounts      Account[]
   forums        Forum[]
   comments      ForumComment[]
-  ForumLike     ForumLike[]
+  forumLikes     ForumLike[]
   sessions      Session[]
   facebook      String?
   twitter       String?

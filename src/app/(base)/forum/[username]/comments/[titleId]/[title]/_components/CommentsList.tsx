@@ -17,7 +17,7 @@ const CommentsList = ({
     return timeDiff(createdAt);
   }, [createdAt]);
   return (
-    <div className={`relative space-y-8  pt-5 md:mx-[200px] mx-0 ${hideComment && 'hidden'} `}>
+    <div className={`relative space-y-8  pt-5 lg:mx-[200px] md:mx-[100px] mx-0 max-w-xl overflow-hidden w-full ${hideComment && 'hidden'} `}>
       <div className="flex border-b-2 border-b-gray-300 pb-3 gap-2 items-start ">
         <div>
           <Avatar

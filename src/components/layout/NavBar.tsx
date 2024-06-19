@@ -85,7 +85,7 @@ export default function NavBar() {
         {user?.id ? (
           <NavbarItem
             className="hidden lg:flex text-xl"
-            onClick={() => router.push(`user/${user?.username as string}`)}
+            onClick={() => router.push(`/user/${user?.username as string}`)}
           >
             Profile
           </NavbarItem>
