@@ -1,22 +1,24 @@
-import React from 'react'
-import ProfilePage from './_components/ProfilePage'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/utils/authOptions'
-import prisma from '@/db'
-import { User } from '@prisma/client'
-const Profile = async({params}:{params:{username:string}}) => {
-  const {username} = params
-  const user = await prisma.user.findUnique({
-    where:{
-      username:decodeURIComponent(username)
-    },
-  })
-  if(!user)return;
-  return (
-    <div>
-      <ProfilePage {...user as User}/>
-    </div>
-  )
-}
+import { authOptions } from "@/utils/authOptions";
+import { getServerSession } from "next-auth";
+import React from "react";
+import AccountDetails from "./_components/AccountDetails";
+import prisma from "@/db";
 
-export default Profile
+const Page = async ({ params }: { params: { username: string } }) => {
+  const session = await getServerSession(authOptions);
+  const { username } = params;
+  const user = await prisma.user.findUnique({
+    where: {
+      username: decodeURIComponent(username),
+    },
+    select: {
+      id: true,
+    },
+  });
+  if (!user) return;
+
+  /// TODO: RENDER ELSE CONDITION HERE FOR THE USER DETAILS
+  return <div>{session?.user.id === user.id && <AccountDetails />}</div>;
+};
+
+export default Page;

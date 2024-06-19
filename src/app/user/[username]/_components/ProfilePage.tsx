@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, {  useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,25 +23,34 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "next-auth/react";
-import AccountDetails from "./AccountDetails";
 import { Button } from "@nextui-org/react";
-const ProfilePage = ({ username,id,email,userImage,facebook,instagram,github,twitter }: User ) => {
+const ProfilePage = ({
+  username,
+  id,
+  email,
+  userImage,
+  facebook,
+  instagram,
+  github,
+  twitter,
+}: User) => {
   const [userProfile, setUserProfile] = useState<File | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const { data: session } = useSession();
+  const pathname = usePathname();
+  const currentTab = pathname.split("/").slice(-1)[0];
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { data: session } = useSession();
   const fileRef = useRef<HTMLInputElement>(null);
   const handleSignOut = () => {
     return signOut();
   };
 
-
-  useEffect(()=>{
+  useEffect(() => {
     const changeProfile = async () => {
       if (!userProfile) {
         return;
       }
-      setIsLoading((prev) => prev= true)
+      setIsLoading((prev) => (prev = true));
       const formData = new FormData();
       formData.append("profile", userProfile);
       formData.append("userId", session?.user.id as string);
@@ -51,13 +60,21 @@ const ProfilePage = ({ username,id,email,userImage,facebook,instagram,github,twi
       });
       const result = await response.json();
       setUserProfile(null);
-      setIsLoading((prev)=>prev=false)
+      setIsLoading((prev) => (prev = false));
       router.refresh();
       return result.profile;
     };
-    changeProfile()
-  },[userProfile,session?.user.id])
- 
+    changeProfile();
+  }, [userProfile, session?.user.id]);
+
+  useEffect(() => {
+    if (session?.user.id === id) {
+      router.push(`/user/${username}`);
+    } else {
+      router.push(`/user/${username}/posts`);
+    }
+  }, []);
+
   return (
     <div className="relative">
       <div className="flex lg:flex-row flex-col lg:items-start items-center">
@@ -70,12 +87,12 @@ const ProfilePage = ({ username,id,email,userImage,facebook,instagram,github,twi
             fill
             loading="eager"
           />
-          {isLoading  && (
-              <div className="relative w-full h-full flex items-center justify-center">
-                <div className="absolute inset-0 bg-black bg-opacity-25 backdrop-blur-sm rounded-full"></div>
-                <Loader2 className="w-24 h-24 animate-spin z-10 text-white" />
-              </div>
-            )}
+          {isLoading && (
+            <div className="relative w-full h-full flex items-center justify-center">
+              <div className="absolute inset-0 bg-black bg-opacity-25 backdrop-blur-sm rounded-full"></div>
+              <Loader2 className="w-24 h-24 animate-spin z-10 text-white" />
+            </div>
+          )}
           {session?.user.id === id && (
             <div className="absolute top-[110px] left-[110px] w-fit">
               <input
@@ -113,38 +130,49 @@ const ProfilePage = ({ username,id,email,userImage,facebook,instagram,github,twi
               <div className="flex gap-1">
                 <Facebook className="w-5 h-5" />
                 <span className="text-sm text-muted-foreground tracking-wide">
-               {`${facebook ? `@${facebook}` : '@username'}`}
+                  {`${facebook ? `@${facebook}` : "@username"}`}
                 </span>
               </div>
               <div className="flex gap-1">
                 <Twitter className="w-5 h-5" />
                 <span className="text-sm text-muted-foreground tracking-wide">
-                {`${twitter ? `@${twitter}` : '@username'}`}
+                  {`${twitter ? `@${twitter}` : "@username"}`}
                 </span>
               </div>
               <div className="flex gap-1">
                 <Github className="w-5 h-5" />
                 <span className="text-sm text-muted-foreground tracking-wide">
-                {`${github ? `@${github}` : '@username'}`}
+                  {`${github ? `@${github}` : "@username"}`}
                 </span>
               </div>
               <div className="flex gap-1">
                 <Instagram className="w-5 h-5" />
                 <span className="text-sm text-muted-foreground tracking-wide">
-                {`${instagram ? `@${instagram}` : '@username'}`}
+                  {`${instagram ? `@${instagram}` : "@username"}`}
                 </span>
               </div>
             </div>
           </div>
           <div className="mt-10 flex flex-row lg:justify-start justify-center">
-            <Link href="#">
-              <ButtonShadCn variant="link" className="font-bold">
-                Account Details
-              </ButtonShadCn>
-            </Link>
-
-            <Link href="#">
-              <ButtonShadCn variant="link" className="font-bold">
+            {session?.user.id === id && (
+              <Link href={`/user/${username}`}>
+                <ButtonShadCn
+                  variant="link"
+                  className={`font-bold ${
+                    currentTab === username ? "underline" : ""
+                  }`}
+                >
+                  Account Details
+                </ButtonShadCn>
+              </Link>
+            )}
+            <Link href={`/user/${username}/posts/`}>
+              <ButtonShadCn
+                variant="link"
+                className={`font-bold ${
+                  currentTab === "posts" ? "underline" : ""
+                }`}
+              >
                 Post
               </ButtonShadCn>
             </Link>
@@ -173,10 +201,6 @@ const ProfilePage = ({ username,id,email,userImage,facebook,instagram,github,twi
           </DropdownMenu>
         )}
       </div>
-{session?.user.id === id && (
-  
-  <AccountDetails />
-)}
     </div>
   );
 };
