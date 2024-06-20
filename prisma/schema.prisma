@@ -6,8 +6,11 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["accounts", "forums", "sessions", "users"]
+  schemas  = ["accounts", "forums", "sessions", "users", "follow"]
 }
+
+
+//// TODO: CHANGE THE RELATION NAME FOR THE USER MODEL AND MAKE IT ALIGN BASED ON THEIR PURPOSES
 
 model User {
   id            String         @id @default(cuid())
@@ -19,16 +22,17 @@ model User {
   accounts      Account[]
   forums        Forum[]
   comments      ForumComment[]
-  forumLikes     ForumLike[]
+  forumLikes    ForumLike[]
   sessions      Session[]
+  follower     Follow[]       @relation("Followings")
+  following      Follow[]       @relation("Followers")
   facebook      String?
   twitter       String?
   github        String?
   instagram     String?
 
-
-  @@unique([id, username, userImage,facebook,twitter,github,instagram])
-  @@unique([id, username,userImage])
+  @@unique([id, username, userImage, facebook, twitter, github, instagram])
+  @@unique([id, username, userImage])
   @@schema("users")
 }
 
@@ -71,7 +75,7 @@ model Forum {
   caption        String?
   createdAt      DateTime       @default(now())
   titleId        String         @unique
-  user           User           @relation(fields: [userId, authorUsername,userImage], references: [id, username,userImage], onDelete: Cascade)
+  user           User           @relation(fields: [userId, authorUsername, userImage], references: [id, username, userImage], onDelete: Cascade)
   comments       ForumComment[]
   forumLikes     ForumLike[]
 
@@ -100,4 +104,16 @@ model ForumComment {
   user      User     @relation(fields: [userId, userImage, username], references: [id, userImage, username], onDelete: Cascade)
 
   @@schema("forums")
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  follower    User     @relation("Followers", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("Followings", fields: [followingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
+  @@schema("follow")
 }

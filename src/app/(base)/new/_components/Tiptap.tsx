@@ -27,6 +27,7 @@ const Tiptap = ({
     },
     onUpdate({editor}){
       onChange(editor.getText())
+      console.log(editor.getHTML(), "GET HTML")
     }
   });
 

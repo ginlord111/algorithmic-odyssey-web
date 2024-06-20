@@ -1,4 +1,3 @@
-import { forumLike } from '@/actions/forum-like'
 import ForumContainer from '@/components/forum/ForumContainer'
 import prisma from '@/db'
 import { Forum, ForumComment, ForumLike } from '@prisma/client'

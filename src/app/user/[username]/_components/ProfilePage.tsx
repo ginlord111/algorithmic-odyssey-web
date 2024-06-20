@@ -22,8 +22,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { signOut, useSession } from "next-auth/react";
+import {signOut, useSession } from "next-auth/react";
 import { Button } from "@nextui-org/react";
+import FollowBtn from "./FollowBtn";
 const ProfilePage = ({
   username,
   id,
@@ -44,7 +45,6 @@ const ProfilePage = ({
   const handleSignOut = () => {
     return signOut();
   };
-
   useEffect(() => {
     const changeProfile = async () => {
       if (!userProfile) {
@@ -184,7 +184,7 @@ const ProfilePage = ({
             </Link>
           </div>
         </div>
-        {session?.user.email === email && (
+        {session?.user.email === email ? (
           <DropdownMenu>
             <DropdownMenuTrigger className="h-fit mt-10" asChild>
               <ButtonShadCn variant="ghost" className="border-transparent">
@@ -199,6 +199,8 @@ const ProfilePage = ({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        ) : (
+          <FollowBtn followerId={session?.user.id} followingId={id}/>
         )}
       </div>
     </div>
