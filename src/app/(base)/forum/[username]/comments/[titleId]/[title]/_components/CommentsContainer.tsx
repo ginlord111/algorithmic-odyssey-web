@@ -135,12 +135,12 @@ const CommentsContainer = ({ forumId }: { forumId: string }) => {
           </Fragment>
         ))
       ) : (
-        <Loader2 className="h-10 w-full animate-spin flex items-center justify-center mt-5 " />
+        <Loader2 className="h-10 w-full animate-spin flex items-center justify-center mt-5 max-w-4xl " />
       )}
       {isFetching ||
         isLoading ||
         (isRefetching && (
-          <Loader2 className="h-10 w-full animate-spin flex items-center justify-center mt-5 " />
+          <Loader2 className="h-10 w-full animate-spin flex items-center justify-center mt-5 max-w-4xl " />
         ))}
     </div>
   );

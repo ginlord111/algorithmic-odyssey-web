@@ -11,13 +11,27 @@ export default async function RootLayout({children,params}: Readonly<{children: 
     where:{
       username:decodeURIComponent(username)
     },
+    include:{
+      follower:{
+        select:{
+          userFollowerImage:true
+        }
+      },
+      following:{
+        select:{
+            userFollowingImage:true,
+        }
+      }
+    }
   })
+
   if(!user)return;
+  const {follower, following} = user
   return (
     <Fragment>
       <Header/>
       <MaxWidthWrapper >
-      <ProfilePage {...user as User}/>
+      <ProfilePage {...user as User} followerImages={follower} followingImages={following}/>
           {children}
       </MaxWidthWrapper>
     </Fragment>

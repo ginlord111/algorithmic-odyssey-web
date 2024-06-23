@@ -27,6 +27,7 @@ export async function GET(req: NextRequest): Promise<any> {
           },
         },
       },
+      //TODO: ADD A ONE MORE SORT HERE FOR FOLLOWING USER SORT
       // if the forum have the same numnber of like, added a second criteria for sorting which is the createdAt here
       //@ts-ignore  /// temporary ignoring the error here
       orderBy: [
