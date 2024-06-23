@@ -69,6 +69,7 @@ export default function NavBar() {
         </div>
       </NavbarContent>
       <NavbarContent justify="end" className="flex gap-10">
+         {/* FOR MOBILE  */}
         <NavbarItem className="md:hidden flex">
           <Menu />
         </NavbarItem>

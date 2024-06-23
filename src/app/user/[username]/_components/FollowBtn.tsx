@@ -1,32 +1,21 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@nextui-org/react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { UserPlus, UserX } from "lucide-react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 const FollowBtn = ({
-  followerId,
   followingId,
+  className,
 }: {
-  followerId: string | undefined;
   followingId: string;
+  className?: string;
 }) => {
-  const queryClient = useQueryClient();
-  const fetchUserFollowings = async () => {
-    const response = await fetch("/api/follow");
-    if (response.ok && response.status == 200) {
-      const data = await response.json();
-      const { followings } = data;
-      return followings.some((kekw: any) => kekw.followingId === followingId);
-    }
-
-    return false;
-  };
-  console.log(followerId, followingId, "FOLLOWERS");
-  const { data: isFollowing } = useQuery({
-    queryKey: ["get-user-followings"],
-    queryFn: fetchUserFollowings,
-  });
+  const router = useRouter();
+  const { data: session } = useSession();
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const [revalidateFollow, setRevalidateFollow] = useState<boolean>(false);
+  const followerId = session?.user.id;
   const handleFollowUnfollowUser = async () => {
     // IF THERE IS NO USER SIGN IN return sign in
     if (!followerId) {
@@ -37,12 +26,37 @@ const FollowBtn = ({
       body: JSON.stringify({ followerId, followingId, isFollowing }),
     });
     if (response.ok) {
-      queryClient.invalidateQueries({ queryKey: ["get-user-followings"] });
+      setRevalidateFollow(true)
+      router.refresh();
     }
   };
-  console.log(isFollowing, "is followiungg");
+  // FOR RENDERING IF THE USER IS ALREADY FOLLOWED TO THE OTHER USER
+  useEffect(() => {
+    const isUserAlreadyFollowedFn = async () => {
+      if (followingId === session?.user.id) {
+        return;
+      }
+      const response = await fetch("/api/follow");
+      if (response.ok && response.status == 200) {
+        const data = await response.json();
+        const { followings } = data;
+        const isFollowed = followings.some(
+          (f: any) => f.followingId === followingId
+        );
+        setIsFollowing(isFollowed);
+      } else if (response.status === 400) {
+        setIsFollowing(false);
+      }
+      setRevalidateFollow(false)
+    };
+    isUserAlreadyFollowedFn();
+  }, [revalidateFollow]);
+  /// will return nothin if the current user is === the user targeting
+  if (followingId === session?.user.id) {
+    return;
+  }
   return (
-    <div className="mt-5">
+    <div className={`mt-5 ${className}`}>
       <Button
         className="bg-transparent font-semibold tracking-wide text-md flex items-center justify-center"
         variant="bordered"

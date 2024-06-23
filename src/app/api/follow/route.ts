@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
         );
       
     } else {
-      const followUser = await prisma.follow.create({
+     await prisma.follow.create({
         data: {
           follower: {
             connect: {
@@ -41,23 +41,16 @@ export async function POST(req: NextRequest) {
           },
         },
       });
-
-      if (followUser) {
         return NextResponse.json(
           { message: "Succesfully Followed User" },
           { status: 200 }
         );
-      }
+      
 
     }
-    return NextResponse.json(
-        { message: "Success query" },
-        { status: 200 }
-      );
   } catch (error) {
     console.log(error);
   }
-  return NextResponse
 }
 
 export async function GET() {

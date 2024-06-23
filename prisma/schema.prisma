@@ -9,7 +9,6 @@ datasource db {
   schemas  = ["accounts", "forums", "sessions", "users", "follow"]
 }
 
-
 //// TODO: CHANGE THE RELATION NAME FOR THE USER MODEL AND MAKE IT ALIGN BASED ON THEIR PURPOSES
 
 model User {
@@ -24,8 +23,8 @@ model User {
   comments      ForumComment[]
   forumLikes    ForumLike[]
   sessions      Session[]
-  follower     Follow[]       @relation("Followings")
-  following      Follow[]       @relation("Followers")
+  follower      Follow[]       @relation("Followings")
+  following     Follow[]       @relation("Followers")
   facebook      String?
   twitter       String?
   github        String?
@@ -33,6 +32,7 @@ model User {
 
   @@unique([id, username, userImage, facebook, twitter, github, instagram])
   @@unique([id, username, userImage])
+  @@unique([id, userImage])
   @@schema("users")
 }
 
@@ -107,13 +107,15 @@ model ForumComment {
 }
 
 model Follow {
-  id          String   @id @default(cuid())
-  followerId  String
-  followingId String
-  follower    User     @relation("Followers", fields: [followerId], references: [id], onDelete: Cascade)
-  following   User     @relation("Followings", fields: [followingId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
+  id                 String   @id @default(cuid())
+  followerId         String
+  followingId        String
+  userFollowerImage  String @unique
+  userFollowingImage String  @unique
+  follower           User     @relation("Followers", fields: [followerId, userFollowerImage], references: [id, userImage], onDelete: Cascade)
+  following          User     @relation("Followings", fields: [followingId, userFollowingImage], references: [id, userImage], onDelete: Cascade)
+  createdAt          DateTime @default(now())
 
-  @@unique([followerId, followingId])
+  @@unique([followerId, followingId ])
   @@schema("follow")
 }

@@ -25,6 +25,7 @@ import {
 import {signOut, useSession } from "next-auth/react";
 import { Button } from "@nextui-org/react";
 import FollowBtn from "./FollowBtn";
+import FollowingsList from "./FollowingsList";
 const ProfilePage = ({
   username,
   id,
@@ -34,7 +35,11 @@ const ProfilePage = ({
   instagram,
   github,
   twitter,
-}: User) => {
+  followerImages,
+  followingImages
+}: User &
+{followerImages:{userFollowerImage:string}[], followingImages:{userFollowingImage:string}[]}
+) => {
   const [userProfile, setUserProfile] = useState<File | null>(null);
   const pathname = usePathname();
   const currentTab = pathname.split("/").slice(-1)[0];
@@ -117,16 +122,16 @@ const ProfilePage = ({
             </div>
           )}
         </div>
-
         <div className=" relative w-full lg:mt-2 mx-[200px] mt-[120px]">
-          <div className="flex flex-col ">
-            <p className="lg:text-4xl text-xl font-bold lg:text-start text-center ">
+          <div className="flex flex-col">
+            <p className="lg:text-4xl text-xl font-bold lg:text-start text-center mb-2">
               {username}
             </p>
             <p className="text-muted-foreground lg:text-start text-center">
               {email}
             </p>
-            <div className="flex lg:flex-row flex-col gap-10 pt-5 cursor-pointer lg:items-start items-center">
+            <FollowingsList followerImages={followerImages} followingImages={followingImages}/>
+            <div className="flex lg:flex-row flex-col gap-10 pt-10 cursor-pointer lg:items-start items-center ">
               <div className="flex gap-1">
                 <Facebook className="w-5 h-5" />
                 <span className="text-sm text-muted-foreground tracking-wide">
@@ -200,7 +205,7 @@ const ProfilePage = ({
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <FollowBtn followerId={session?.user.id} followingId={id}/>
+          <FollowBtn  followingId={id} />
         )}
       </div>
     </div>

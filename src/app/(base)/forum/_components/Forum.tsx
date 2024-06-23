@@ -8,6 +8,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ForumSkeleton from "@/components/forum/ForumSkeleton";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import FollowBtn from "@/app/user/[username]/_components/FollowBtn";
 const Forums = () => {
   const searchParams = useSearchParams();
   const { replace,push } = useRouter();
@@ -98,7 +99,7 @@ const Forums = () => {
             onClick={()=>push("/new")}
             >Create Post</Button>
           </div>
-          <div className="flex items-end w-full lg:justify-end justify-center ">
+          <div className="flex items-end w-full lg:justify-center justify-center mt-7">
             <Button
               variant="link"
               onClick={() => setSortAs((prev) => (prev = "popular"))}
@@ -120,6 +121,13 @@ const Forums = () => {
             >
               Newest
             </Button>
+            <Button
+              variant="link"
+              // onClick={() => setSortAs((prev) => (prev = "newest"))}
+              // className={`${sortAs === "newest" && "underline"}`}
+            >
+              Following
+            </Button>
           </div>
           {isSuccess && !isPending && !isLoading && !isRefetching ? (
             data.pages.map(
@@ -133,7 +141,7 @@ const Forums = () => {
                     index: number
                   ) => (
                     <div key={index} ref={ref}>
-                      <ForumContainer {...forum} userLikes={userLikes} />
+                      <ForumContainer {...forum} userLikes={userLikes} followBtnComponent={<FollowBtn  followingId={forum.userId} className="mt-0"/>}/>
                     </div>
                   )
                 )

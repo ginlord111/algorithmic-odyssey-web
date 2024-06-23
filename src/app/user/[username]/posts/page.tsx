@@ -33,7 +33,7 @@ const UserPostsPage = async ({ params }: { params: { username: string } }) => {
         ) => {
           return(
             <Fragment key={forum.id} >
-               <ForumContainer {...forum} />
+               <ForumContainer {...forum}  className="lg:mx-[200px]"/>
             </Fragment>
           );
         }

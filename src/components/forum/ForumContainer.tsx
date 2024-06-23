@@ -17,7 +17,8 @@ const ForumContainer = ({
   userLikes,
   titleId,
   className,
-  userImage
+  userImage,
+  followBtnComponent,
 }: Forum & {
   _count:{
     forumLikes:number;
@@ -25,6 +26,7 @@ const ForumContainer = ({
   },
   userLikes?:ForumLike[],
   className?:string,
+  followBtnComponent?:React.JSX.Element
 }) => {
   const timeDiffCalc = useMemo(() => {
     return timeDiff(createdAt);
@@ -33,7 +35,7 @@ const ForumContainer = ({
     <div className={cn("relative pt-20 lg:mx-[300px] md:mx-[100px] mx-0 max-w-xl overflow-hidden w-full",className)}>
       <div className="h-fit w-full pb-[10px]  border-b-1 border-muted-foreground">
         <div className="flex flex-col items-start w-full">
-          <div className="flex flex-row gap-2 justify-start text-xs cursor-pointer "
+          <div className="flex flex-row gap-2 justify-start text-xs cursor-pointer w-full "
          
           > 
           {/**TODO: ADD USER IMAGE IN FORUM SCHEMA */}
@@ -49,6 +51,10 @@ const ForumContainer = ({
               <p className="text-gray-500 ">{timeDiffCalc}</p>
             </div>
             </Link>
+          {/* TODO: FETCH IF THE USER IS ALREADY FOLLOWING THE OTHER USER AND PASS IT ON AS PROPS HERE CHECH FORUM BTN USERLIKES PROPS FOR REFERENCE */}
+            <div className="ml-auto">
+              {followBtnComponent}
+            </div>
           </div>
           <div className="text-lg font-bold tracking-wider pt-5 title pb-2">
             {title}
