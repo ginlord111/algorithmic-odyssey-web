@@ -33,7 +33,7 @@ const FollowBtn = ({
   // FOR RENDERING IF THE USER IS ALREADY FOLLOWED TO THE OTHER USER
   useEffect(() => {
     const isUserAlreadyFollowedFn = async () => {
-      if (followingId === session?.user.id) {
+      if (followingId === session?.user.id || !session?.user.id ) {
         return;
       }
       const response = await fetch("/api/follow");
