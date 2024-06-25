@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   const session = await getServerSession(authOptions);
-  const userFollowings = await prisma.user.findFirst({
+  const userFollowings = await prisma.user.findUnique({
     where: {
       id: session?.user.id,
     },
@@ -67,6 +67,7 @@ export async function GET() {
       },
     },
   });
+  console.log(userFollowings, "SESION ")
   if (userFollowings && userFollowings.following.length > 0) {
     const followings = userFollowings.following;
     return NextResponse.json({ followings }, { status: 200 });
