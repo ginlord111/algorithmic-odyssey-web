@@ -19,6 +19,7 @@ const ForumContainer = ({
   className,
   userImage,
   followBtnComponent,
+  userId,
 }: Forum & {
   _count:{
     forumLikes:number;
@@ -46,7 +47,7 @@ const ForumContainer = ({
               size="md"
             />
             <div className="flex flex-col">
-              <p className=" tracking-wide text-black font-semibold text-md">{authorUsername}</p>
+              <p className=" tracking-wide font-semibold text-md">{authorUsername}</p>
               {/* <strong className='pl-1'>.</strong> */}
               <p className="text-gray-500 ">{timeDiffCalc}</p>
             </div>
@@ -78,6 +79,8 @@ const ForumContainer = ({
           )}
           <ForumButtons likes={_count.forumLikes} forumId={id} userLikes={userLikes} route={`/forum/${authorUsername}/comments/${titleId}/${title}`}
             comments={_count.comments as number}
+            postOwner={userId}
+
           />
         </div>
       </div>

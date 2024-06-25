@@ -42,3 +42,29 @@ export const fetchUserFollowing = async(userId:string) => {
     }
     return false
 }
+
+
+export const fetchUserNotification = async(userId:string) => {
+const notification = await prisma.notifications.findMany({
+    where:{
+        userId,
+    },
+    orderBy:{
+        createdAt:"desc"
+    }
+})
+if(!notification) return;
+return notification;
+}
+
+
+export const readNotification = async(id:string) =>{
+    await prisma.notifications.update({
+        where:{
+            id,
+        },
+        data:{
+            isRead:true
+        },
+    })
+}
