@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["accounts", "forums", "sessions", "users", "follow"]
+  schemas  = ["accounts", "forums", "sessions", "users", "follow", "notifications"]
 }
 
 //// TODO: CHANGE THE RELATION NAME FOR THE USER MODEL AND MAKE IT ALIGN BASED ON THEIR PURPOSES
@@ -29,7 +29,6 @@ model User {
   twitter       String?
   github        String?
   instagram     String?
-
   @@unique([id, username, userImage, facebook, twitter, github, instagram])
   @@unique([id, username, userImage])
   @@unique([id, userImage])
@@ -110,12 +109,25 @@ model Follow {
   id                 String   @id @default(cuid())
   followerId         String
   followingId        String
-  userFollowerImage  String @unique
-  userFollowingImage String  @unique
+  userFollowerImage  String   @unique
+  userFollowingImage String   @unique
   follower           User     @relation("Followers", fields: [followerId, userFollowerImage], references: [id, userImage], onDelete: Cascade)
   following          User     @relation("Followings", fields: [followingId, userFollowingImage], references: [id, userImage], onDelete: Cascade)
   createdAt          DateTime @default(now())
 
-  @@unique([followerId, followingId ])
+  @@unique([followerId, followingId])
   @@schema("follow")
+}
+
+model Notifications {
+  id         String @id @default(cuid())
+  userId     String
+  type       String
+  from       String
+  resourceId String
+  isRead     Boolean  @default(false)
+  fromUserImage String
+  fromUsername String
+  createdAt   DateTime @default(now())
+  @@schema("notifications")
 }

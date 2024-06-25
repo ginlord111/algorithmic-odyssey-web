@@ -1,17 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { cn } from "@nextui-org/react";
-import { Navbar, NavbarContent, NavbarItem, Button } from "@nextui-org/react";
+import { Avatar, cn } from "@nextui-org/react";
+import { Navbar, NavbarContent, NavbarItem, } from "@nextui-org/react";
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import { Menu,  } from "lucide-react";
 import DarkModeButton from "./DarkModeButton";
 import { signIn, useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
-import userInfo from "@/app/hooks/getUserInfo";
+import userInfo from "@/store/store";
+import Notification from "../notification/Notification";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const { data: session } = useSession();
-  const pathname = usePathname()
+  const pathname = usePathname();
   const router = useRouter();
   useEffect(() => {
     const handleScroll = () => {
@@ -28,54 +29,48 @@ export default function NavBar() {
     };
   }, [isScrolled]);
 
-  const {fetchUser, user} = userInfo()
-  useEffect(()=>{
-    fetchUser()
-  },[session?.user.id, fetchUser,pathname])
+  const { fetchUser, user } = userInfo();
+  useEffect(() => {
+    fetchUser();
+  }, [session?.user.id, fetchUser, pathname]);
+  /// TODO: WHEN OVERING THE USER AVATAR SHOW THE DROPDOWN OPTION FOR USER PROFILE , CREATE POST AND LOGOUT (PROLLY)
   return (
     <Navbar
       className={cn(
-        "cursor-pointer bg-transparent bg-opacity-70 transition backdrop-filter backdrop-blur-sm absolute z-10 text-white font-bold border-b-1 border-[#cbd5e11a]",
+        " px-10 cursor-pointer w-full  bg-transparent bg-opacity-70 transition backdrop-filter backdrop-blur-sm absolute z-10 text-white font-bold border-b-1 border-[#cbd5e11a]",
         { "fixed bg-[#414d69] dark:bg-[#1b1b1f]  ": isScrolled }
       )}
-      maxWidth="xl"
+      maxWidth="full"
     >
-      <NavbarContent>
+      <NavbarContent justify="start">
         <Link href="/">
           <p className="font-bold text-xl mr-16">LOGO</p>
         </Link>
-
-        <div className="hidden sm:flex gap-10">
-          <NavbarItem>
-            <Link href="#" className="text-xl">
-              Features
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link href="/forum" className="text-xl">
-              Forum
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link href="#" className="text-xl">
-              About
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link href="#" className="text-xl">
-              Socials
-            </Link>
-          </NavbarItem>
-        </div>
       </NavbarContent>
-      <NavbarContent justify="end" className="flex gap-10">
-         {/* FOR MOBILE  */}
-        <NavbarItem className="md:hidden flex">
-          <Menu />
+      <NavbarContent className="w-full hidden lg:flex gap-10" justify="center">
+        <NavbarItem>
+          <Link href="#" className="text-xl">
+            Features
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link href="/forum" className="text-xl">
+            Forum
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link href="#" className="text-xl">
+            About
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link href="#" className="text-xl">
+            Socials
+          </Link>
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
           <Link href="#" className="text-xl">
-            Contribute
+            Download
           </Link>
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
@@ -83,32 +78,32 @@ export default function NavBar() {
             Docs
           </Link>
         </NavbarItem>
+      </NavbarContent>
+      <NavbarContent justify="end">
+        {/* FOR MOBILE  */}
+        <NavbarItem className="md:hidden flex">
+          <Menu />
+        </NavbarItem>
         {user?.id ? (
-          <NavbarItem
-            className="hidden lg:flex text-xl"
-            onClick={() => router.push(`/user/${user?.username as string}`)}
-          >
-            Profile
-          </NavbarItem>
+          <>
+            <NavbarItem className="relative">
+          <Notification userId={user.id}/>
+            </NavbarItem>
+            <NavbarItem
+              className="hidden lg:flex text-xl"
+              onClick={() => router.push(`/user/${user?.username as string}`)}
+            >
+              <Avatar showFallback src={user.userImage as string} size="md" />
+            </NavbarItem>
+          </>
         ) : (
           <NavbarItem
-          className="hidden lg:flex text-xl"
-          onClick={() => signIn()}
-        >
-          Login
-        </NavbarItem>
-        )}
-        <NavbarItem className="hidden lg:flex">
-          <Button
-            color="default"
-            variant="faded"
-            as={Link}
-            href="#"
-            className="text-red-500 p-6 font-bold border-3 text-md border-black mr-4"
+            className="hidden lg:flex text-xl"
+            onClick={() => signIn()}
           >
-            Download now
-          </Button>
-        </NavbarItem>
+            Login
+          </NavbarItem>
+        )}
         <NavbarItem>
           <DarkModeButton />
         </NavbarItem>

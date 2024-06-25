@@ -17,10 +17,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ForumComment } from "@prisma/client";
 import CommentsList from "./CommentsList";
 import { Loader2 } from "lucide-react";
-const CommentsContainer = ({ forumId }: { forumId: string }) => {
+import { watchNotif } from "@/store/store";
+const CommentsContainer = ({ forumId,postOwner,title,titleId,postOwnerUsername }: { forumId: string,postOwner:string,title:string,titleId:string,postOwnerUsername:string}) => {
   const [showBtn, setShowBtn] = useState<boolean>(false);
   const [hideComment, setHideComment] = useState<boolean>(false);
   const queryClient = useQueryClient();
+  const {commentNotif} = watchNotif()
   const form = useForm<z.infer<typeof commentFormSchema>>({
     resolver: zodResolver(commentFormSchema),
     defaultValues: {
@@ -37,7 +39,7 @@ const CommentsContainer = ({ forumId }: { forumId: string }) => {
       const { comment } = values;
       await fetch("/api/forum/comment", {
         method: "POST",
-        body: JSON.stringify({ comment, forumId }),
+        body: JSON.stringify({ comment, forumId,postOwner,title,postOwnerUsername,titleId }),
       });
       queryClient.invalidateQueries({ queryKey: ["forum-comment"] });
       setShowBtn((prev) => (prev = false));

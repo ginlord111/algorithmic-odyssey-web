@@ -12,12 +12,14 @@ const ForumButtons = ({
   userLikes = [],
   route,
   comments,
+  postOwner,
 }: {
   likes: number;
   forumId: string;
   userLikes?: ForumLike[];
   route:string,
   comments:number,
+  postOwner:string,
 }) => {
   const [isClick, setIsClick] = useState<boolean | null>(null);
   const [likeCount, setLikesCount] = useState<number>(likes);
@@ -33,7 +35,7 @@ const ForumButtons = ({
     try {
       const response = await fetch("/api/forum/like", {
         method: "POST",
-        body: JSON.stringify({ id}),
+        body: JSON.stringify({ id,postOwner,route}),
       });
       if (response.status === 400) {
         return;
