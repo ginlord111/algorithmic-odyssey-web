@@ -28,7 +28,6 @@ export default function NavBar() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [isScrolled]);
-
   const { fetchUser, user } = userInfo();
   useEffect(() => {
     fetchUser();

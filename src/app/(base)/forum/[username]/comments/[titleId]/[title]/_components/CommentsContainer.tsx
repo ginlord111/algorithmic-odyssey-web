@@ -17,12 +17,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ForumComment } from "@prisma/client";
 import CommentsList from "./CommentsList";
 import { Loader2 } from "lucide-react";
-import { watchNotif } from "@/store/store";
+import { signIn, useSession } from "next-auth/react";
 const CommentsContainer = ({ forumId,postOwner,title,titleId,postOwnerUsername }: { forumId: string,postOwner:string,title:string,titleId:string,postOwnerUsername:string}) => {
   const [showBtn, setShowBtn] = useState<boolean>(false);
   const [hideComment, setHideComment] = useState<boolean>(false);
   const queryClient = useQueryClient();
-  const {commentNotif} = watchNotif()
+  const {data:session} = useSession()
   const form = useForm<z.infer<typeof commentFormSchema>>({
     resolver: zodResolver(commentFormSchema),
     defaultValues: {
@@ -36,6 +36,9 @@ const CommentsContainer = ({ forumId,postOwner,title,titleId,postOwnerUsername }
 
   async function onSubmit(values: z.infer<typeof commentFormSchema>) {
     try {
+        if(!session?.user.id){
+          return signIn()
+        }
       const { comment } = values;
       await fetch("/api/forum/comment", {
         method: "POST",

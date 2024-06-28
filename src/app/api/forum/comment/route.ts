@@ -28,6 +28,8 @@ try {
             id:session?.user.id
           },
     });
+      /// will not create the notification if the user comment his own post
+    if(session?.user.id !==postOwner){
     await prisma.notifications.create({
       data:{
         userId:postOwner,
@@ -38,6 +40,7 @@ try {
         fromUsername:user?.username as string
       }
     })
+  }
     return NextResponse.json({message:"Comment Succesfully"}, {status:200})
 } catch (error) {
   console.log(error)
