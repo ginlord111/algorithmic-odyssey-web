@@ -40,7 +40,7 @@ const AuthPage = () => {
             <>
               {/* <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader> */}
               <ModalBody>
-                <Card className="max-w-full w-[540px] h-[700px] ">
+                <Card className="max-w-full lg:w-[540px] lg:h-[700px] md:w-[440px] md:h-[600px] w-[340px] h-[500px] ">
                   <CardBody className="overflow-auto w-full ">
                     <Tabs
                       fullWidth-

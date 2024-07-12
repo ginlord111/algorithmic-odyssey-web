@@ -90,7 +90,9 @@ const SignInTab = ({
 
         <p className="text-center text-small">
           Need to create an account?{" "}
-          <Link size="sm" onPress={() => setSelected("sign-up")}>
+          <Link size="sm"
+          className="cursor-pointer hover:underline ml-1"
+          onPress={() => setSelected("sign-up")}>
             Sign up
           </Link>
         </p>
@@ -101,7 +103,7 @@ const SignInTab = ({
           {
           signInForm.formState.isLoading || signInForm.formState.isSubmitting ? (
             <Loader2 className="w-7 h-7 animate-spin" />
-          ) : (<span>Sign up</span>)
+          ) : (<span>Sign in</span>)
         }
           </Button>
         </div>
@@ -112,8 +114,11 @@ const SignInTab = ({
         </span>
         <Button
           onClick={async() => {
-            await signIn("github");
-            router.push('/')
+            await signIn("github",
+              {
+                callbackUrl:'/'
+              }
+            );
           }}
           className="px-10"
           variant="solid"

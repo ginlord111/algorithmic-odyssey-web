@@ -15,7 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Key, SetStateAction, Dispatch } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Github, Loader2, Mail } from "lucide-react";
+import { signIn } from "next-auth/react";
 const SignUpTab = ({setSelected}:{
     setSelected: Dispatch<SetStateAction<Key>>;
   }) => {
@@ -111,6 +112,27 @@ const SignUpTab = ({setSelected}:{
           ) : (<span>Sign up</span>)
         }</Button>
       </form>
+      <div className="flex flex-col items-center justify-center mt-7 space-y-3">
+        <span className="text-sm text-muted-foreground font-bold">Or sign up with</span>
+      <Button
+          onClick={async() => {
+            await signIn("github");
+            router.push('/')
+          }}
+          className="px-10"
+          variant="secondary"
+          
+          type="button"
+        >
+          <Github className="w-6 h-6" />
+        </Button>
+
+        <Button className="px-10" variant="secondary" 
+        type="button"
+        >
+          <Mail />
+        </Button>
+      </div>
     </Form>
   );
 };
