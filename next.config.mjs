@@ -21,7 +21,9 @@ const nextConfig = {
                pathname :'/broken'
               },
         ]
-    }
+    },
+
+
 };
 
 export default nextConfig;

@@ -68,3 +68,31 @@ export const readNotification = async(id:string) =>{
         },
     })
 }
+
+
+export const getUserCode = async(email:string) => {
+ const user =  await prisma.user.findFirst({
+        where:{
+        email,
+        },
+    })
+
+    if(user) return user.emailVerificationToken;
+
+    return null
+}
+
+export const verifyEmail = async (email:string) => {
+    const verifyEmailUser = await prisma.user.update({
+        where:{
+            email
+        },
+        data:{
+            emailVerificationToken:null,
+            isEmailVerified:true,
+        }
+    })
+
+    if(verifyEmailUser) return true;
+    return false;
+}
