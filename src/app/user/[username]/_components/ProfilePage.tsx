@@ -26,6 +26,7 @@ import {signOut, useSession } from "next-auth/react";
 import { Button } from "@nextui-org/react";
 import FollowBtn from "./FollowBtn";
 import FollowingsList from "./FollowingsList";
+import { toast } from "sonner";
 const ProfilePage = ({
   username,
   id,
@@ -47,8 +48,11 @@ const ProfilePage = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { data: session } = useSession();
   const fileRef = useRef<HTMLInputElement>(null);
-  const handleSignOut = () => {
-    return signOut();
+  const handleSignOut = async() => {
+  const data = await  signOut({redirect:false, callbackUrl:"/"})
+    router.push(data.url)
+    toast.success("Log out succesfully")
+  
   };
   useEffect(() => {
     const changeProfile = async () => {

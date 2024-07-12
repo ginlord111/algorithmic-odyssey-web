@@ -5,6 +5,7 @@ import { authOptions } from "@/utils/authOptions";
 export async function POST(req: NextRequest) {
   try {
     const { followerId, followingId, isFollowing } = await req.json();
+    console.log(isFollowing, "IS FOLLOWING")
     if (isFollowing) {
       const followId = await prisma.follow.findFirst({
         where: {

@@ -1,9 +1,12 @@
 import ForumContainer from "@/components/forum/ForumContainer";
 import prisma from "@/db";
-import { Forum } from "@prisma/client";
+import { authOptions } from "@/utils/authOptions";
+import { Forum, ForumLike } from "@prisma/client";
 import { Loader2 } from "lucide-react";
+import { getServerSession } from "next-auth";
 import React, { Fragment, Suspense } from "react";
 const UserPostsPage = async ({ params }: { params: { username: string } }) => {
+  const session = await getServerSession(authOptions)
   const { username } = params;
   const userPosts = await prisma.user.findUnique({
     where: {
@@ -21,8 +24,14 @@ const UserPostsPage = async ({ params }: { params: { username: string } }) => {
       },
     },
   });
-  if (!userPosts) return null;
+    if (!userPosts) return null;
   const { forums } = userPosts;
+  const userLikes: ForumLike[] = await prisma.forumLike.findMany({
+    where: {
+        userId:session?.user.id
+    },
+  });
+
   return (
     <Suspense fallback={<Loader2 className="h-16 w-16 animate-spin"/>}> 
     {forums.map(
@@ -33,7 +42,7 @@ const UserPostsPage = async ({ params }: { params: { username: string } }) => {
         ) => {
           return(
             <Fragment key={forum.id} >
-               <ForumContainer {...forum}  className="lg:mx-[200px]"/>
+               <ForumContainer {...forum}  className="lg:mx-[200px]" userLikes={userLikes}/>
             </Fragment>
           );
         }
