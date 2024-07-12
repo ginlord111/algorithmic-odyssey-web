@@ -47,7 +47,7 @@ const OTPComponent = () => {
         const isVerify = await verifyEmail(email as string);
         if (isVerify) {
           router.push("/auth");
-          toast.success("Sign up succesfully");
+          toast.success("Sign up succesfully, Now login your account");
         }
         else{
           return;

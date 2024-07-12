@@ -6,16 +6,27 @@ export async function POST(req: NextRequest) {
   try {
     const { email, username, password } = await req.json();
     console.log(email, " email")
-    const isEmailUnique = await prisma.user.findFirst({
+    const isEmailOrUsernameUnique = await prisma.user.findFirst({
       where:{
-        email,
+      OR:[
+        {
+          email,
+        },
+        {
+          username
+        }
+      ]
       }
     })
     // TODO : USER NAME MUST BE UNUQIE ALSO
 
-    if(isEmailUnique){
-      return NextResponse.json({error:"Email is already exist"}, {status:409})
+    if(isEmailOrUsernameUnique?.email === email){
+      return NextResponse.json({emailError:"Email is already exist"}, {status:409})
     }
+    if(isEmailOrUsernameUnique?.username ===username ){
+      return NextResponse.json({usernameError:"Username is already exist"}, {status:409})
+    }
+   
     const hashedPassword = await hashPassword(password)
        const defaultImage = 'https://res.cloudinary.com/dv6qpahip/image/upload/v1718451921/algorithmic-oddysey/cyftkayeh6c0hsuaihtc.png'
     const createUser = await prisma.user.create({

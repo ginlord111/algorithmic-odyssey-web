@@ -17,34 +17,43 @@ import { Key, SetStateAction, Dispatch } from "react";
 import { useRouter } from "next/navigation";
 import { Github, Loader2, Mail } from "lucide-react";
 import { signIn } from "next-auth/react";
-const SignUpTab = ({setSelected}:{
-    setSelected: Dispatch<SetStateAction<Key>>;
-  }) => {
-    const router = useRouter()
+interface signUpError{
+  emailError:string;
+  usernameError:string;
+}
+const SignUpTab = ({
+  setSelected,
+}: {
+  setSelected: Dispatch<SetStateAction<Key>>;
+}) => {
+  const router = useRouter();
   const signUpForm = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
     mode: "onSubmit",
   });
   async function onSubmit(data: z.infer<typeof signUpFormSchema>) {
-    const {email, password,username} = data
-
+    const { email, password, username } = data;
 
     /// SEND VERIFICATION CODE HERE
-    const res = await fetch('api/sign-up', {
-      method:'POST',
-      body:JSON.stringify({email,password,username})
+    const res = await fetch("api/sign-up", {
+      method: "POST",
+      body: JSON.stringify({ email, password, username }),
     });
-    if(!res.ok && res.status === 409){
-      const error = await res.json()
-      signUpForm.setError("email", {
-      message:error.error
-      })
+    if (!res.ok && res.status === 409) {
+      const error:signUpError = await res.json();
+      if (error.emailError) {
+        signUpForm.setError("email", {
+          message: error.emailError,
+        });
+      }
+     else if(error.usernameError){
+      signUpForm.setError("username", {
+        message: error.usernameError,
+      });
+     }
+    } else {
+      router.replace(`/otp?to=${email}`);
     }
-    else{
-      router.replace(`/otp?to=${email}`)
-    }
-
-    
   }
   return (
     <Form {...signUpForm}>
@@ -104,32 +113,33 @@ const SignUpTab = ({setSelected}:{
             </FormItem>
           )}
         />
-        <Button type="submit"
-        className="w-full"
-        > {
-          signUpForm.formState.isLoading || signUpForm.formState.isSubmitting ? (
+        <Button type="submit" className="w-full">
+          {" "}
+          {signUpForm.formState.isLoading ||
+          signUpForm.formState.isSubmitting ? (
             <Loader2 className="w-7 h-7 animate-spin" />
-          ) : (<span>Sign up</span>)
-        }</Button>
+          ) : (
+            <span>Sign up</span>
+          )}
+        </Button>
       </form>
       <div className="flex flex-col items-center justify-center mt-7 space-y-3">
-        <span className="text-sm text-muted-foreground font-bold">Or sign up with</span>
-      <Button
-          onClick={async() => {
+        <span className="text-sm text-muted-foreground font-bold">
+          Or sign up with
+        </span>
+        <Button
+          onClick={async () => {
             await signIn("github");
-            router.push('/')
+            router.push("/");
           }}
           className="px-10"
           variant="secondary"
-          
           type="button"
         >
           <Github className="w-6 h-6" />
         </Button>
 
-        <Button className="px-10" variant="secondary" 
-        type="button"
-        >
+        <Button className="px-10" variant="secondary" type="button">
           <Mail />
         </Button>
       </div>
