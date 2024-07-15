@@ -98,6 +98,7 @@ export async function POST(req: NextRequest) {
   }
   const captions = JSON.parse(body.get("caption") as string);
   const title = JSON.parse(body.get("title") as string);
+  const content = JSON.parse(body.get("content") as string)
   /// FOR TITLE ID RANDOM STRING
   function generateRandomString(length = 8) {
     const characters =
@@ -117,6 +118,7 @@ export async function POST(req: NextRequest) {
         title: title,
         titleId: generateRandomString(),
         forumImage: imageUpload?.secure_url ?? null,
+        content,
         user: {
           connect: {
             id: session?.user.id,

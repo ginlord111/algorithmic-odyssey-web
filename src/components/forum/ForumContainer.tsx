@@ -6,6 +6,9 @@ import timeDiff from "@/utils/timeCalc";
 import ForumButtons from "./ForumButtons";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import parse from "html-react-parser";
+import { generateHTML, JSONContent } from "@tiptap/react";
+import tiptapExtensions from "@/utils/tiptapExtension";
 const ForumContainer = ({
   id,
   authorUsername,
@@ -20,6 +23,7 @@ const ForumContainer = ({
   userImage,
   followBtnComponent,
   userId,
+content,
 }: Forum & {
   _count:{
     forumLikes:number;
@@ -32,6 +36,11 @@ const ForumContainer = ({
   const timeDiffCalc = useMemo(() => {
     return timeDiff(createdAt);
   }, [createdAt]);
+const extension = tiptapExtensions()
+let tempContent;
+  if(content){
+    tempContent = generateHTML(content as JSONContent, extension)
+  }
   return (
     <div className={cn("relative pt-20 lg:mx-[300px] md:mx-[100px] mx-0 max-w-xl overflow-hidden w-full",className)}>
       <div className="h-fit w-full pb-[10px]  border-b-1 border-muted-foreground">
@@ -60,7 +69,10 @@ const ForumContainer = ({
           <div className="text-lg font-bold tracking-wider pt-5 title pb-2">
             {title}
           </div>
-          <div className="text-sm text-black dark:text-white tracking-wide">{caption}</div>
+          {/* <div className="text-sm text-black dark:text-white tracking-wide">{caption}</div> */}
+          {content && (
+            <div className="text-sm text-black dark:text-white tracking-wide">{parse(`${tempContent}`)}</div>
+          )}
           {forumImage && (
         <div className="relative w-full max-w-md md:max-w-xl overflow-hidden"
         >
