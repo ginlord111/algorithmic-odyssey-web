@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import ForumContainer from "@/components/forum/ForumContainer";
 import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper";
@@ -56,6 +56,7 @@ const Forums = () => {
     initialPageParam: "",
     queryKey: ["forums"],
     queryFn: ({ pageParam = "" }) => getForums({ cursor: pageParam as string }),
+    refetchOnWindowFocus:false,
     getNextPageParam: (lastPage) => {
       return Object.keys(lastPage).length !== 0
         ? lastPage?.metaData.lastCursor
@@ -87,7 +88,7 @@ const Forums = () => {
       fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, inView, isFetching]);
-
+console.log(data?.pages, "DATA PAGES")
   return (
     <div>
       <MaxWidthWrapper>
@@ -140,14 +141,22 @@ const Forums = () => {
                     },
                     index: number
                   ) => (
-                    <div key={index} ref={ref}>
-                      <ForumContainer {...forum} userLikes={userLikes} followBtnComponent={<FollowBtn  followingId={forum.userId} className="mt-0"/>}/>
+                 <Fragment key={index}>
+                  {page.data.length === index +1 ? (
+                       <div key={index} ref={ref}>
+                       <ForumContainer {...forum} userLikes={userLikes} followBtnComponent={<FollowBtn  followingId={forum.userId} className="mt-0"/>}/>
+                     </div>
+                  ): (
+                    <div>
+                       <ForumContainer {...forum} userLikes={userLikes} followBtnComponent={<FollowBtn  followingId={forum.userId} className="mt-0"/>}/>
                     </div>
+                  )}
+                 </Fragment>
                   )
                 )
             )
           ) : (
-            <ForumSkeleton />
+            <ForumSkeleton/>
           )}
           {isFetchingNextPage && <ForumSkeleton />}
           {!hasNextPage && !isPending && !isLoading && (

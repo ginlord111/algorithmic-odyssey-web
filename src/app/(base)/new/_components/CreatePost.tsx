@@ -17,11 +17,13 @@ import {
 import { Input } from "@/components/ui/input";
 import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { postFormSchema } from "@/types/form-types";
+import { JSONContent } from "@tiptap/react";
+import { toast } from "sonner";
 const CreatePost = () => {
   const router = useRouter();
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [content, setContent] = useState<JSONContent | null>(null)
   const form = useForm<z.infer<typeof postFormSchema>>({
     resolver: zodResolver(postFormSchema),
     mode: "onChange",
@@ -32,11 +34,12 @@ const CreatePost = () => {
   });
   async function onSubmit(values: z.infer<typeof postFormSchema>) {
     const formData = new FormData();
-    /// IF THERE IS NO IMAGE THEN THE CAPTION IS TEXT
+    // / IF THERE IS NO IMAGE THEN THE CAPTION IS TEXT
     if (imageFile && values.caption === "") {
       formData.append("image", imageFile);
     } else {
       formData.append("caption", JSON.stringify(values.caption));
+      formData.append("content", JSON.stringify(content))
     }
     formData.append("title", JSON.stringify(values.title));
     const response = await fetch(`api/forum`, {
@@ -79,6 +82,7 @@ const CreatePost = () => {
                       name={field.name}
                       onChange={field.onChange}
                       setImageFile={setImageFile}
+                      setContent={setContent}
                     />
                   </FormControl>
                   {/* <FormDescription>

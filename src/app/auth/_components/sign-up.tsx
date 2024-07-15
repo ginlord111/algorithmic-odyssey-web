@@ -122,8 +122,7 @@ const SignUpTab = ({
             <span>Sign up</span>
           )}
         </Button>
-      </form>
-      <div className="flex flex-col items-center justify-center mt-7 space-y-3">
+        <div className="flex flex-col items-center justify-center mt-7 space-y-3">
         <span className="text-sm text-muted-foreground font-bold">
           Or sign up with
         </span>
@@ -143,6 +142,8 @@ const SignUpTab = ({
           <Mail />
         </Button>
       </div>
+      </form>
+   
     </Form>
   );
 };

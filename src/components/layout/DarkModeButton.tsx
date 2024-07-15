@@ -11,6 +11,7 @@ const DarkModeButton = () => {
       color="default"
       startContent={<Sun />}
       endContent={<Moon />}
+      className='transition'
     onValueChange={(isSelected)=>setTheme((theme)=>isSelected ? "dark" : "light")}
     >
     </Switch>

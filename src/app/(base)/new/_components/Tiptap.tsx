@@ -1,6 +1,6 @@
 "use client";
 
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, JSONContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Fragment, SetStateAction, Dispatch } from "react";
 import Toolbar from "./Toolbar";
@@ -9,10 +9,12 @@ const Tiptap = ({
   name,
   onChange,
   setImageFile,
+  setContent
 }: {
   name: string;
   onChange: (richText: string) => void;
   setImageFile:Dispatch<SetStateAction<File|null>>;
+  setContent:Dispatch<SetStateAction<JSONContent>>;
 }) => {
 
   const editor = useEditor({
@@ -27,7 +29,9 @@ const Tiptap = ({
     },
     onUpdate({editor}){
       onChange(editor.getText())
-      console.log(editor.getHTML(), "GET HTML")
+     setContent(editor.getJSON())
+  
+
     }
   });
 

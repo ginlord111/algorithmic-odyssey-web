@@ -75,6 +75,7 @@ model Forum {
   forumImage     String?
   title          String
   caption        String?
+  content        Json?
   createdAt      DateTime       @default(now())
   titleId        String         @unique
   user           User           @relation(fields: [userId, authorUsername, userImage], references: [id, username, userImage], onDelete: Cascade)
