@@ -147,7 +147,7 @@ console.log(data?.pages, "DATA PAGES")
                        <ForumContainer {...forum} userLikes={userLikes} followBtnComponent={<FollowBtn  followingId={forum.userId} className="mt-0"/>}/>
                      </div>
                   ): (
-                    <div key={index}>
+                    <div>
                        <ForumContainer {...forum} userLikes={userLikes} followBtnComponent={<FollowBtn  followingId={forum.userId} className="mt-0"/>}/>
                     </div>
                   )}
