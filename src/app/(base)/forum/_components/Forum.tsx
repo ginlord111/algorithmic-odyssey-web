@@ -141,7 +141,7 @@ console.log(data?.pages, "DATA PAGES")
                     },
                     index: number
                   ) => (
-                 <Fragment>
+                 <Fragment key={index}>
                   {page.data.length === index +1 ? (
                        <div key={index} ref={ref}>
                        <ForumContainer {...forum} userLikes={userLikes} followBtnComponent={<FollowBtn  followingId={forum.userId} className="mt-0"/>}/>
@@ -156,7 +156,7 @@ console.log(data?.pages, "DATA PAGES")
                 )
             )
           ) : (
-            <ForumSkeleton />
+            <ForumSkeleton/>
           )}
           {isFetchingNextPage && <ForumSkeleton />}
           {!hasNextPage && !isPending && !isLoading && (
