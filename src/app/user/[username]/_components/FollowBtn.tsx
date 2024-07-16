@@ -56,7 +56,7 @@ const FollowBtn = ({
     return;
   }
   return (
-    <div className={`mt-5 ${className}`}>
+    <div className={` ${className}`}>
       <Button
         className="bg-transparent font-semibold tracking-wide text-md flex items-center justify-center"
         variant="bordered"

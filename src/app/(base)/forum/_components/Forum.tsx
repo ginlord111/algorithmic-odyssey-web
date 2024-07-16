@@ -159,7 +159,7 @@ console.log(data?.pages, "DATA PAGES")
             <ForumSkeleton/>
           )}
           {isFetchingNextPage && <ForumSkeleton />}
-          {!hasNextPage && !isPending && !isLoading && (
+          {!hasNextPage && !isPending && !isLoading && !isFetching && (
             <div className="relative mt-10 mx-[130px]">
               <div className="flex items-center inset-0 absolute ">
                 <span className=" border-t w-full border-1 border-gray-500"></span>

@@ -45,7 +45,7 @@ let tempContent;
     <div className={cn("relative pt-20 lg:mx-[300px] md:mx-[100px] mx-0 max-w-xl overflow-hidden w-full",className)}>
       <div className="h-fit w-full pb-[10px]  border-b-1 border-muted-foreground">
         <div className="flex flex-col items-start w-full">
-          <div className="flex flex-row gap-2 justify-start text-xs cursor-pointer w-full "
+          <div className="flex flex-row gap-2 justify-between text-xs cursor-pointer w-full "
          
           > 
           {/**TODO: ADD USER IMAGE IN FORUM SCHEMA */}
@@ -62,7 +62,7 @@ let tempContent;
             </div>
             </Link>
           {/* TODO: FETCH IF THE USER IS ALREADY FOLLOWING THE OTHER USER AND PASS IT ON AS PROPS HERE CHECH FORUM BTN USERLIKES PROPS FOR REFERENCE */}
-            <div className="ml-auto">
+            <div className="flex justify-start items-start">
               {followBtnComponent}
             </div>
           </div>
