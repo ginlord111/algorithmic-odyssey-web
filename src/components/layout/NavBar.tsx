@@ -16,11 +16,14 @@ export default function NavBar() {
   const router = useRouter();
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
+      if (typeof window !== 'undefined') {
+        if (window.scrollY > 50) {
+          setIsScrolled(true);
+        } else {
+          setIsScrolled(false);
+        }
       }
+    
     };
 
     window.addEventListener("scroll", handleScroll);

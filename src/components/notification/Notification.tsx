@@ -36,7 +36,7 @@ const Notification = ({ userId }: { userId: string }) => {
           )}
         </div>
       </DropdownTrigger>
-      <DropdownMenu className="w-fit md:h-[700px] h-[200px] overflow-y-auto" aria-label="Dynamic Actions" items={notifs}
+      <DropdownMenu className="w-fit md:max-h-[700px] max-h-[200px] overflow-y-auto" aria-label="Dynamic Actions" items={notifs}
       emptyContent={<p>You got 0 notification</p>}
       >
       {/* {unReadNotif && (

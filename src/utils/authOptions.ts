@@ -54,21 +54,26 @@ providers:[
             email:profile.email,
             userImage:defaultImage, // DEFAULT IMAGE
             isEmailVerified:true,
-            
-
+            role:profile.role ?? "user"
         }
        }
     }),
  
 ],
 callbacks: {
+  jwt({user, token}){
+    if(user){
+      token.role = user.role
+    }
+    return token;
+  },
     session: async ({ session, token }) => {
       return {
         ...session,
         user: {
           ...session.user, 
           id: token.sub, 
-
+          role:token.role,
         },
       };
     },
