@@ -14,7 +14,6 @@ const ForumContainer = ({
   authorUsername,
   forumImage,
   title,
-  caption,
   createdAt,
   _count,
   userLikes,

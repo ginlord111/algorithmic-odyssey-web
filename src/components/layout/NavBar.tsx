@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Avatar, cn } from "@nextui-org/react";
-import { Navbar, NavbarContent, NavbarItem, } from "@nextui-org/react";
+import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import Link from "next/link";
-import { Menu,  } from "lucide-react";
+import { Menu } from "lucide-react";
 import DarkModeButton from "./DarkModeButton";
 import { signIn, useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
@@ -15,21 +15,19 @@ export default function NavBar() {
   const pathname = usePathname();
   const router = useRouter();
   useEffect(() => {
-    const handleScroll = () => {
-      if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
+      const handleScroll = () => {
         if (window.scrollY > 50) {
           setIsScrolled(true);
         } else {
           setIsScrolled(false);
         }
-      }
-    
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+      };
+      window.addEventListener("scroll", handleScroll);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }
   }, [isScrolled]);
   const { fetchUser, user } = userInfo();
   useEffect(() => {
@@ -89,7 +87,7 @@ export default function NavBar() {
         {user?.id ? (
           <>
             <NavbarItem className="relative">
-          <Notification userId={user.id}/>
+              <Notification userId={user.id} />
             </NavbarItem>
             <NavbarItem
               className="hidden lg:flex text-xl"
