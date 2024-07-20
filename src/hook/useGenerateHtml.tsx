@@ -3,7 +3,7 @@ import tiptapExtensions from "@/utils/tiptapExtension";
 import { generateHTML, JSONContent } from "@tiptap/react";
 import { useEffect, useState } from "react";
 
-export const generateHtmlContent = (content:JSONContent):string | null => {
+const generateHtmlContent = (content:JSONContent):string | null => {
     const [generatedContent, setGeneratedContent] = useState<string | null>(null);
     useEffect(() => {
         if (typeof window !== "undefined" && content) {
@@ -15,3 +15,6 @@ export const generateHtmlContent = (content:JSONContent):string | null => {
 
       return generatedContent
 }
+
+
+export default generateHtmlContent
