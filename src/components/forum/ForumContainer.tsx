@@ -8,7 +8,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import parse from "html-react-parser";
 import { JSONContent } from "@tiptap/react";
-import generateHtmlContent from "./generateHtmlContent";
+import GenerateHtmlContent from "./generateHtmlContent";
 const ForumContainer = ({
   id,
   authorUsername,
@@ -37,7 +37,7 @@ content,
   }, [createdAt]);
 let tempContent;
   if(content){
-    tempContent = generateHtmlContent(content as JSONContent)
+    tempContent = GenerateHtmlContent(content as JSONContent)
   }
   console.log(tempContent, "CONTET")
   return (
