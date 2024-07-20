@@ -1,3 +1,5 @@
+import { Forum, ForumLike } from "@prisma/client";
+
 export interface AccountDetail{
     username:string;
        email:string | null;
@@ -10,3 +12,14 @@ export interface AccountDetail{
     // mobileNum:number | null;
 
 }
+
+
+
+export interface ForumWithCount extends Forum {
+    _count: { forumLikes: number; comments?: number };
+  }
+  
+  export interface UserProfilePostsProps {
+    forums: ForumWithCount[];
+    userLikes: ForumLike[];
+  }

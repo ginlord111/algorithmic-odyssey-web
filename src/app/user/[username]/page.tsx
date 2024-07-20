@@ -16,7 +16,6 @@ const Page = async ({ params }: { params: { username: string } }) => {
     },
   });
   if (!user) return;
-
   /// TODO: RENDER ELSE CONDITION HERE FOR THE USER DETAILS
   return <div>{session?.user.id === user.id && <AccountDetails />}</div>;
 };

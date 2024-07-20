@@ -5,6 +5,8 @@ import { Forum, ForumLike } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { getServerSession } from "next-auth";
 import React, { Fragment, Suspense } from "react";
+import UserProfilePosts from "./_components/UserProfilePosts";
+import { ForumWithCount, UserProfilePostsProps } from "@/types/types";
 const UserPostsPage = async ({ params }: { params: { username: string } }) => {
   const session = await getServerSession(authOptions)
   const { username } = params;
@@ -14,6 +16,9 @@ const UserPostsPage = async ({ params }: { params: { username: string } }) => {
     },
     include: {
       forums: {
+        orderBy:{
+          createdAt:"desc"
+        },
         include: {
           _count: {
             select: {
@@ -34,19 +39,7 @@ const UserPostsPage = async ({ params }: { params: { username: string } }) => {
 
   return (
     <Suspense fallback={<Loader2 className="h-16 w-16 animate-spin"/>}> 
-    {forums.map(
-        (
-          forum: Forum & {
-            _count: { forumLikes: number };
-          }
-        ) => {
-          return(
-            <Fragment key={forum.id} >
-               <ForumContainer {...forum}  className="lg:mx-[200px]" userLikes={userLikes}/>
-            </Fragment>
-          );
-        }
-      )}
+<UserProfilePosts forums={forums} userLikes={userLikes}/>
       </Suspense>
     )
 };

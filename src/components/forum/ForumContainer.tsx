@@ -7,8 +7,8 @@ import ForumButtons from "./ForumButtons";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import parse from "html-react-parser";
-import { generateHTML, JSONContent } from "@tiptap/react";
-import tiptapExtensions from "@/utils/tiptapExtension";
+import { JSONContent } from "@tiptap/react";
+import { generateHtmlContent } from "@/hook/useGenerateHtml";
 const ForumContainer = ({
   id,
   authorUsername,
@@ -35,11 +35,11 @@ content,
   const timeDiffCalc = useMemo(() => {
     return timeDiff(createdAt);
   }, [createdAt]);
-const extension = tiptapExtensions()
 let tempContent;
   if(content){
-    tempContent = generateHTML(content as JSONContent, extension)
+    tempContent = generateHtmlContent(content as JSONContent)
   }
+  console.log(tempContent, "CONTET")
   return (
     <div className={cn("relative pt-20 lg:mx-[300px] md:mx-[100px] mx-0 max-w-xl overflow-hidden w-full",className)}>
       <div className="h-fit w-full pb-[10px]  border-b-1 border-muted-foreground">
@@ -69,7 +69,7 @@ let tempContent;
             {title}
           </div>
           {/* <div className="text-sm text-black dark:text-white tracking-wide">{caption}</div> */}
-          {content && (
+          {tempContent && (
             <div className="text-sm text-black dark:text-white tracking-wide">{parse(`${tempContent}`)}</div>
           )}
           {forumImage && (

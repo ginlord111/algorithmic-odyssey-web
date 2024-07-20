@@ -15,19 +15,21 @@ export default function NavBar() {
   const pathname = usePathname();
   const router = useRouter();
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const handleScroll = () => {
+    const handleScroll = () => {
+      if (typeof window !== 'undefined') {
         if (window.scrollY > 50) {
           setIsScrolled(true);
         } else {
           setIsScrolled(false);
         }
-      };
-      window.addEventListener("scroll", handleScroll);
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    }
+      }
+    
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, [isScrolled]);
   const { fetchUser, user } = userInfo();
   useEffect(() => {

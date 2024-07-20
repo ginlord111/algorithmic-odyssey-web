@@ -23,6 +23,7 @@ model User {
   forums        Forum[]
   comments      ForumComment[]
   forumLikes    ForumLike[]
+  role          String        @default("user")
   sessions      Session[]
   follower      Follow[]       @relation("Followings")
   following     Follow[]       @relation("Followers")
