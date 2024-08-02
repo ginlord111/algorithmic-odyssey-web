@@ -91,3 +91,21 @@ export const signInFormSchema = z.object({
     message: "Password must be atleast 6 characters",
   }),
 });
+
+
+
+export const classroomCodeForm = z.object({
+  code:z.string().min(6, {
+    message:"Code must be atleast 6 character"
+  })
+})
+
+export const createClassroomForm = z.object({
+  classroomName:z.string().min(6,{
+    message:"Classroom name must be atleast 6 characters"
+  }),
+  sectionName:z.string(),
+  classCode:z.string().min(6,{
+    message:"Classroom code must be atleast 6 characters and unique"
+  }),
+})

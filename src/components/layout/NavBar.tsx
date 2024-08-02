@@ -16,14 +16,13 @@ export default function NavBar() {
   const router = useRouter();
   useEffect(() => {
     const handleScroll = () => {
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         if (window.scrollY > 50) {
           setIsScrolled(true);
         } else {
           setIsScrolled(false);
         }
       }
-    
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -36,6 +35,40 @@ export default function NavBar() {
     fetchUser();
   }, [session?.user.id, fetchUser, pathname]);
   /// TODO: WHEN OVERING THE USER AVATAR SHOW THE DROPDOWN OPTION FOR USER PROFILE , CREATE POST AND LOGOUT (PROLLY)
+
+  const navItems = [
+
+    {
+      name: "Classroom",
+      href:"/classroom",
+      className: "",
+    },
+    {
+      name: "Forum",
+      href: "/forum",
+      className: "",
+    },
+    {
+      name: "About",
+      href: "/",
+      className: "",
+    },
+    {
+      name: "Socials",
+      href: "/",
+      className: "",
+    },
+    {
+      name: "Download",
+      href: "/",
+      className: "",
+    },
+    {
+      name: "Docs",
+      href: "/",
+      className: "",
+    },
+  ];
   return (
     <Navbar
       className={cn(
@@ -50,36 +83,13 @@ export default function NavBar() {
         </Link>
       </NavbarContent>
       <NavbarContent className="w-full hidden lg:flex gap-10" justify="center">
-        <NavbarItem>
-          <Link href="#" className="text-xl">
-            Features
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href="/forum" className="text-xl">
-            Forum
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href="#" className="text-xl">
-            About
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href="#" className="text-xl">
-            Socials
-          </Link>
-        </NavbarItem>
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#" className="text-xl">
-            Download
-          </Link>
-        </NavbarItem>
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#" className="text-xl">
-            Docs
-          </Link>
-        </NavbarItem>
+        {navItems.map((item, index) => (
+          <NavbarItem key={index}>
+            <Link href={item.href} className="text-xl">
+              {item.name}
+            </Link>
+          </NavbarItem>
+        ))}
       </NavbarContent>
       <NavbarContent justify="end">
         {/* FOR MOBILE  */}

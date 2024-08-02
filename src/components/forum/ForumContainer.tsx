@@ -8,7 +8,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import parse from "html-react-parser";
 import { JSONContent } from "@tiptap/react";
-import GenerateHtmlContent from "./GenerateHtmlContent";
+import GenerateHtmlContent from "./generateHtmlContent";
 const ForumContainer = ({
   id,
   authorUsername,
