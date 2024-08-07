@@ -9,6 +9,7 @@ import { signIn, useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import userInfo from "@/store/store";
 import Notification from "../notification/Notification";
+import path from "path";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -16,14 +17,13 @@ export default function NavBar() {
   const router = useRouter();
   useEffect(() => {
     const handleScroll = () => {
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         if (window.scrollY > 50) {
           setIsScrolled(true);
         } else {
           setIsScrolled(false);
         }
       }
-    
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -32,10 +32,44 @@ export default function NavBar() {
     };
   }, [isScrolled]);
   const { fetchUser, user } = userInfo();
+
   useEffect(() => {
     fetchUser();
   }, [session?.user.id, fetchUser, pathname]);
-  /// TODO: WHEN OVERING THE USER AVATAR SHOW THE DROPDOWN OPTION FOR USER PROFILE , CREATE POST AND LOGOUT (PROLLY)
+  /// TODO: WHEN OVERING THE USER AVATAR SHOW THE DROPDOWN OPTION FOR USER PROFILE , CREATE POST AND 
+  const navItems = [
+
+    {
+      name: "Classroom",
+      href:"/classroom",
+      className: "",
+    },
+    {
+      name: "Forum",
+      href: "/forum",
+      className: "",
+    },
+    {
+      name: "About",
+      href: "/",
+      className: "",
+    },
+    {
+      name: "Socials",
+      href: "/",
+      className: "",
+    },
+    {
+      name: "Download",
+      href: "/",
+      className: "",
+    },
+    {
+      name: "Docs",
+      href: "/",
+      className: "",
+    },
+  ];
   return (
     <Navbar
       className={cn(
@@ -50,52 +84,29 @@ export default function NavBar() {
         </Link>
       </NavbarContent>
       <NavbarContent className="w-full hidden lg:flex gap-10" justify="center">
-        <NavbarItem>
-          <Link href="#" className="text-xl">
-            Features
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href="/forum" className="text-xl">
-            Forum
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href="#" className="text-xl">
-            About
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href="#" className="text-xl">
-            Socials
-          </Link>
-        </NavbarItem>
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#" className="text-xl">
-            Download
-          </Link>
-        </NavbarItem>
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#" className="text-xl">
-            Docs
-          </Link>
-        </NavbarItem>
+        {navItems.map((item, index) => (
+          <NavbarItem key={index}>
+            <Link href={item.href} className="text-xl">
+              {item.name}
+            </Link>
+          </NavbarItem>
+        ))}
       </NavbarContent>
       <NavbarContent justify="end">
         {/* FOR MOBILE  */}
         <NavbarItem className="md:hidden flex">
           <Menu />
         </NavbarItem>
-        {user?.id ? (
+        {session?.user.id ? (
           <>
             <NavbarItem className="relative">
-              <Notification userId={user.id} />
+              <Notification userId={user?.id as string} />
             </NavbarItem>
             <NavbarItem
               className="hidden lg:flex text-xl"
               onClick={() => router.push(`/user/${user?.username as string}`)}
             >
-              <Avatar showFallback src={user.userImage as string} size="md" />
+              <Avatar showFallback src={user?.userImage as string} size="md" />
             </NavbarItem>
           </>
         ) : (

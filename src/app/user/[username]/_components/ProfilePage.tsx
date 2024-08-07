@@ -50,8 +50,8 @@ const ProfilePage = ({
   const fileRef = useRef<HTMLInputElement>(null);
   const handleSignOut = async() => {
   const data = await  signOut({redirect:false, callbackUrl:"/"})
-    router.push(data.url)
-    toast.success("Log out succesfully")
+  router.push(data.url)
+  toast.success("Log out succesfully")
   
   };
   useEffect(() => {

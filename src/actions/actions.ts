@@ -3,19 +3,25 @@ import prisma from "@/db"
 import { authOptions } from "@/utils/authOptions"
 import { User } from "@prisma/client"
 import { getServerSession } from "next-auth"
-
-export const fetchUserProfile = async() =>{
-    const session = await getServerSession(authOptions)
-    if(!session?.user.id) return;
-    const user = await prisma.user.findUnique({
-        where:{
-            id: session?.user.id as string,
-        },
-    
-     })
-     return user as User
-
-}
+export const fetchUserProfile = async () => {
+    try {
+      const session = await getServerSession(authOptions);
+  
+      if (session && session.user && session.user.id) {
+        const user = await prisma.user.findUnique({
+          where: {
+            id: session.user.id as string,
+          },
+        });
+  
+        return user as User;
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
+  
+    return null;
+  };
 
 
 export const fetchUserFollowing = async(userId:string) => {

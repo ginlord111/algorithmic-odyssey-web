@@ -23,3 +23,7 @@ export interface ForumWithCount extends Forum {
     forums: ForumWithCount[];
     userLikes: ForumLike[];
   }
+
+
+
+  export type NavState = "announcement" | "pending-task" | "graded-task";

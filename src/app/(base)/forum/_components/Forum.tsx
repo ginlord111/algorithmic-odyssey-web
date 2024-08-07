@@ -88,7 +88,7 @@ const Forums = () => {
       fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, inView, isFetching]);
-console.log(data?.pages, "DATA PAGES")
+
   return (
     <div>
       <MaxWidthWrapper>
