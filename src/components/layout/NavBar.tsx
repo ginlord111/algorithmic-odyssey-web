@@ -9,6 +9,7 @@ import { signIn, useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import userInfo from "@/store/store";
 import Notification from "../notification/Notification";
+import path from "path";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -31,11 +32,11 @@ export default function NavBar() {
     };
   }, [isScrolled]);
   const { fetchUser, user } = userInfo();
+
   useEffect(() => {
     fetchUser();
   }, [session?.user.id, fetchUser, pathname]);
-  /// TODO: WHEN OVERING THE USER AVATAR SHOW THE DROPDOWN OPTION FOR USER PROFILE , CREATE POST AND LOGOUT (PROLLY)
-
+  /// TODO: WHEN OVERING THE USER AVATAR SHOW THE DROPDOWN OPTION FOR USER PROFILE , CREATE POST AND 
   const navItems = [
 
     {
@@ -96,16 +97,16 @@ export default function NavBar() {
         <NavbarItem className="md:hidden flex">
           <Menu />
         </NavbarItem>
-        {user?.id ? (
+        {session?.user.id ? (
           <>
             <NavbarItem className="relative">
-              <Notification userId={user.id} />
+              <Notification userId={user?.id as string} />
             </NavbarItem>
             <NavbarItem
               className="hidden lg:flex text-xl"
               onClick={() => router.push(`/user/${user?.username as string}`)}
             >
-              <Avatar showFallback src={user.userImage as string} size="md" />
+              <Avatar showFallback src={user?.userImage as string} size="md" />
             </NavbarItem>
           </>
         ) : (

@@ -34,7 +34,7 @@ model User {
   forumLikes             ForumLike[]
   sessions               Session[]
   classrooms             Classroom[]    @relation("StudentClassrooms")
-
+classroomAnnouncement     ClassroomAnnouncement[]   @relation("TeacherStudentAnnouncement")
   @@unique([id, username, userImage, facebook, twitter, github, instagram])
   @@unique([id, username, userImage])
   @@unique([id, userImage])
@@ -141,17 +141,19 @@ model Notifications {
 }
 
 model Classroom {
-  id           String     @id @default(cuid())
+  id           String                  @id @default(cuid())
   teacherId    String
   className    String
   sectionName  String
   teacherImage String
   teacherName  String
-    code        String      @unique
-  activity     Activity[] @relation("ClassroomActivities")
-  teacher         User       @relation("TeacherClassrooms", fields: [teacherName, teacherId, teacherImage], references: [username, id, userImage], onDelete: Cascade)
-  students     User[]     @relation("StudentClassrooms")
- createdAt    DateTime   @default(now())
+  code         String                  @unique
+  activity     Activity[]              @relation("ClassroomActivities")
+  teacher      User                    @relation("TeacherClassrooms", fields: [teacherName, teacherId, teacherImage], references: [username, id, userImage], onDelete: Cascade)
+  students     User[]                  @relation("StudentClassrooms")
+  announcement ClassroomAnnouncement[] @relation("ClassroomAnnouncement")
+  createdAt    DateTime                @default(now())
+
   @@schema("classroom")
 }
 
@@ -166,7 +168,7 @@ model Activity {
   classroom   Classroom @relation("ClassroomActivities", fields: [classroomId], references: [id])
   attachFile  File?     @relation(fields: [fileId], references: [id])
 
-  @@schema("activity")
+  @@schema("classroom")
 }
 
 model File {
@@ -178,5 +180,19 @@ model File {
   createdAt DateTime   @default(now())
   activity  Activity[]
 
-  @@schema("files")
+  @@schema("classroom")
+}
+
+model ClassroomAnnouncement {
+  id          String    @id @default(cuid())
+  text        String
+  image       String?
+  classroomId String
+  userName     String
+  userImage     String
+  userId        String
+  user          User      @relation("TeacherStudentAnnouncement",fields: [userId,userImage,userName], references: [id,userImage,username])
+  classroom   Classroom @relation("ClassroomAnnouncement", fields: [classroomId], references: [id])
+createdAt DateTime   @default(now())
+  @@schema("classroom")
 }

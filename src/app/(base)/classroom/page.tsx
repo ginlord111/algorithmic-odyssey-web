@@ -21,7 +21,6 @@ const {classrooms, teacherClassroms, ...user} = userClassrooms;
 
     return (
       <Fragment>
-        <Header className="md:h-[40vh]" />
         <ClassroomContainer userClassrooms={classrooms} user={user} teacherClassrooms={teacherClassroms}/>
       </Fragment>
     );
