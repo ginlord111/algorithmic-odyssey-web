@@ -5,16 +5,19 @@ import StarterKit from "@tiptap/starter-kit";
 import { Fragment, SetStateAction, Dispatch } from "react";
 import Toolbar from "./Toolbar";
 import Image from '@tiptap/extension-image'
+import FileInputLayout from "@/app/(base)/classroom/[classId]/_components/FileInputLayout";
 const Tiptap = ({
   name,
   onChange,
   setImageFile,
-  setContent
+  setContent,
+  imageFile
 }: {
   name: string;
   onChange: (richText: string) => void;
-  setImageFile:Dispatch<SetStateAction<File|null>>;
+  setImageFile:Dispatch<SetStateAction<File|null >>;
   setContent:Dispatch<SetStateAction<JSONContent>>;
+  imageFile?:File | null
 }) => {
 
   const editor = useEditor({
@@ -38,8 +41,10 @@ const Tiptap = ({
 
   return (
     <Fragment>
-      <Toolbar editor={editor} setImageFile={setImageFile}/>
-      <EditorContent editor={editor} className="border-2 border-black rounded-md p-3"/>
+      <Toolbar editor={editor} setImageFile={setImageFile as Dispatch<SetStateAction<File | null>> }/>
+      <EditorContent editor={editor} className="border-2 border-black rounded-md p-3">
+      {imageFile && <FileInputLayout imageFile={imageFile} />}
+      </EditorContent>
     </Fragment>
   );
 };

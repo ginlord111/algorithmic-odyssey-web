@@ -45,7 +45,7 @@ export const NavBar = () => {
                 as={Link}
                 href={`?tab=${currentNav}`}
                 onClick={() => handleClick(nav.value as NavState)}
-                className={`bg-transparent text-gray-600 font-medium hover:text-blue-700 py-2 px-4 hover:bg-blue-100 rounded-sm rounded-b-md ${
+                className={`bg-transparent text-gray-600 font-medium hover:text-blue-700 py-2 lg:px-4 px-1 hover:bg-blue-100 rounded-sm rounded-b-md ${
                   nav.isActive && "text-blue-600 border-b-5 border-blue-600 "
                 }`}
               >

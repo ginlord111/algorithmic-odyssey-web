@@ -1,9 +1,9 @@
 "use client";
-import Tiptap from "@/app/(base)/new/_components/Tiptap";
+import Tiptap from "@/components/tiptap/Tiptap";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import {
@@ -22,7 +22,7 @@ import { JSONContent } from "@tiptap/react";
 import { toast } from "sonner";
 const CreatePost = () => {
   const router = useRouter();
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageFile, setImageFile] = useState<File | null | undefined>(null);
   const [content, setContent] = useState<JSONContent | null>(null)
   const form = useForm<z.infer<typeof postFormSchema>>({
     resolver: zodResolver(postFormSchema),
@@ -35,12 +35,11 @@ const CreatePost = () => {
   async function onSubmit(values: z.infer<typeof postFormSchema>) {
     const formData = new FormData();
     // / IF THERE IS NO IMAGE THEN THE CAPTION IS TEXT
-    if (imageFile && values.caption === "") {
+    if (imageFile) {
       formData.append("image", imageFile);
-    } else {
+    } 
       formData.append("caption", JSON.stringify(values.caption));
       formData.append("content", JSON.stringify(content))
-    }
     formData.append("title", JSON.stringify(values.title));
     const response = await fetch(`api/forum`, {
       method: "POST",
@@ -51,7 +50,7 @@ const CreatePost = () => {
       toast.success("Post created successfully");
     }
   }
-
+  console.log(imageFile, "image")
   return (
     <div className="h-fit mt-20">
       <MaxWidthWrapper>
@@ -81,13 +80,12 @@ const CreatePost = () => {
                     <Tiptap
                       name={field.name}
                       onChange={field.onChange}
-                      setImageFile={setImageFile}
+                      setImageFile={setImageFile as Dispatch<SetStateAction<File | null>> }
                       setContent={setContent}
+                      imageFile={imageFile}
                     />
+                   
                   </FormControl>
-                  {/* <FormDescription>
-              This is your public display name.
-            </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}

@@ -64,7 +64,7 @@ const Footer = () => {
   ];
 
   return (
-    <div className="relative mt-20">
+    <div className="relative pt-10">
       <div className="w-full h-fit bg-[#414d69] py-10 px-20 dark:bg-[#1b1b1f] border-t-1 border-[#cbd5e11a]">
         <MaxWidthWrapper>
           <div className="flex justify-between md:flex-row flex-col ">

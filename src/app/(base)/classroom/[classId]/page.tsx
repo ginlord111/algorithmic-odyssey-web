@@ -10,8 +10,8 @@ const ClassPage = async({ params }: { params: { classId: string } }) => {
     /// TODO:CONDITIONAL RENDER BASED ON THE CURRENT TAB IN THE URL
     // CREATE A COMPONENT PER TAB
   return (
-   <MaxWidthWrapper className='h-screen'>
-    <SubjectContainer />
+   <MaxWidthWrapper >
+    <SubjectContainer classId={classId}/>
 
    </MaxWidthWrapper>
   )

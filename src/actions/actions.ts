@@ -1,7 +1,7 @@
 "use server"
 import prisma from "@/db"
 import { authOptions } from "@/utils/authOptions"
-import { User } from "@prisma/client"
+import { Classroom, ClassroomAnnouncement, User } from "@prisma/client"
 import { getServerSession } from "next-auth"
 export const fetchUserProfile = async () => {
     try {
@@ -102,3 +102,6 @@ export const verifyEmail = async (email:string) => {
     if(verifyEmailUser) return true;
     return false;
 }
+
+
+

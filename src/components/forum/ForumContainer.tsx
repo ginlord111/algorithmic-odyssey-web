@@ -41,7 +41,6 @@ const ForumContainer = ({
     const extension = tiptapExtensions()
     tempContent = generateHTML(content as JSONContent, extension)
   }
-  console.log(tempContent, "TEMP CNTENT")
   return (
     <div
       className={cn(
