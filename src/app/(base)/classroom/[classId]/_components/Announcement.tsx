@@ -22,12 +22,12 @@ import userInfo from "@/store/store";
 import { toast } from "sonner";
 import { ClassroomAnnouncement } from "@prisma/client";
 import { Loader2 } from "lucide-react";
-const Announcement = ({classId}:{classId:string}) => {
+import { useQuery } from "@tanstack/react-query";
+const Announcement = ({ classId }: { classId: string }) => {
   const [clickAnn, setClickAnn] = useState<boolean>(false);
   const [content, setContent] = useState<JSONContent | null>(null);
   const [imageFile, setImageFile] = useState<File | null | undefined>(null);
-  const [classAnn, setClassAnn] = useState<ClassroomAnnouncement[]>([])
-  const router = useRouter()
+  const router = useRouter();
   const announcementForm = useForm<z.infer<typeof announcementSchema>>({
     resolver: zodResolver(announcementSchema),
     mode: "onChange",
@@ -36,57 +36,61 @@ const Announcement = ({classId}:{classId:string}) => {
     },
   });
 
-const params = new URLSearchParams({
-  classId,
-})
-
-  const {fetchUser, user} = userInfo()
+  const { fetchUser, user } = userInfo();
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [fetchUser]);
+
+  const fetchClassAnnouncement = async () => {
+    const params = new URLSearchParams({
+      classId,
+    });
+
+    const response = await fetch(`/api/classroom/announcement?${params}`);
+
+    if (!response.ok) {
+     throw new Error("error")
+    } 
+
+    else{
+      const res = await response.json()
+      return res.data as ClassroomAnnouncement[]
+    }
+  };
+
+  const {data:classAnn} = useQuery({
+    queryKey:['fetch-class-ann'],
+    queryFn:fetchClassAnnouncement,
+
+  });
 
 
-useEffect(()=> {
-const fetchClassAnnouncement = async () => {
-const response = await fetch(`/api/classroom/announcement?${params}`)
-
-if(response.ok){
- const res = await response.json()
- setClassAnn(res.data)
-}
-else{
-  return;
-}
-}
-fetchClassAnnouncement()
-},[announcementForm.formState.isSubmitted])
 
   async function onSubmit(values: z.infer<typeof announcementSchema>) {
     const formData = new FormData();
     if (imageFile) {
       formData.append("image", imageFile);
-    } 
+    }
     formData.append("announcement", JSON.stringify(values.announcement));
-    formData.append("content", JSON.stringify(content))
-    formData.append("userId", JSON.stringify(user?.id))
-    formData.append("classId", JSON.stringify(classId))
+    formData.append("content", JSON.stringify(content));
+    formData.append("userId", JSON.stringify(user?.id));
+    formData.append("classId", JSON.stringify(classId));
     const response = await fetch("/api/classroom/announcement", {
-      method:"POST",
-      body:formData,
-    })
+      method: "POST",
+      body: formData,
+    });
     if (response && response.ok) {
-      announcementForm.reset()
-      setClickAnn((prev)=>prev=false)
+      announcementForm.reset();
+      setClickAnn((prev) => (prev = false));
       toast.success("Classroom posted succesfully");
-      router.refresh()
+      router.refresh();
     }
   }
 
   const handleCancel = () => {
     setClickAnn((prev) => !prev);
-    setImageFile(null)
-
-  }
+    setImageFile(null);
+  };
 
   return (
     <div className="flex flex-col lg:mx-36 mx-0 mt-10 space-y-20">
@@ -128,11 +132,12 @@ fetchClassAnnouncement()
                   Cancel
                 </Button>
                 <Button className="bg-blue-500" type="submit">
-                {announcementForm.formState.isLoading || announcementForm.formState.isSubmitting ? (
-                <Loader2 className="w-7 h-7 animate-spin text-white" />
-              ) : (
-                <span>Post</span>
-              )}
+                  {announcementForm.formState.isLoading ||
+                  announcementForm.formState.isSubmitting ? (
+                    <Loader2 className="w-7 h-7 animate-spin text-white" />
+                  ) : (
+                    <span>Post</span>
+                  )}
                 </Button>
               </div>
             </form>
@@ -150,8 +155,8 @@ fetchClassAnnouncement()
         )}
       </div>
 
-      {classAnn.map((ann: ClassroomAnnouncement) => (
-        <AnnouncementCard data={ann} />
+      {classAnn?.map((ann: ClassroomAnnouncement)  => (
+        <AnnouncementCard key={ann.id} data={ann} />
       ))}
     </div>
   );
