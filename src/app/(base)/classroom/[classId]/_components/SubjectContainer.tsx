@@ -5,7 +5,7 @@ import { NavState } from "@/types/types";
 import Announcement from "./Announcement";
 import PendingTask from "./PendingTask";
 import GradedTask from "./GradedTask";
-const SubjectContainer = () => {
+const SubjectContainer = ({classId}:{classId:string}) => {
   const searchParams = useSearchParams();
   const [currentTab, setCurrentTab] = useState<NavState>(
     searchParams.get("tab") as NavState
@@ -17,7 +17,7 @@ const SubjectContainer = () => {
   return (
     <div>
       {currentTab === "announcement" ? (
-        <Announcement />
+        <Announcement classId={classId}/>
       ) : currentTab === "pending-task" ? (
         <PendingTask />
       ) : (

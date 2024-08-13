@@ -109,3 +109,9 @@ export const createClassroomForm = z.object({
     message:"Classroom code must be atleast 6 characters and unique"
   }),
 })
+
+export const announcementSchema = z.object({
+  announcement:z.string().min(10, {
+    message:"Your classroom announcement must be atleast 10 characters"
+  })
+})

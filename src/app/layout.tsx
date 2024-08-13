@@ -24,8 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} relative h-full font-sans`}>
-        <main className="relative flex flex-col min-h-screen bg-[#eff1f5] dark:bg-[#1b1b1f]">
+      <body
+        className={`${inter.className} relative h-full font-sans bg-[#eff1f5] dark:bg-[#1b1b1f]`}
+      >
+        <main className="relative flex flex-col min-h-screen">
           <Suspense>
             <NextTopLoader showSpinner={false} height={5} />
             <TopLoader />
@@ -38,11 +40,11 @@ export default function RootLayout({
                   {children}
                   <Toaster position="bottom-right" richColors />
                 </div>
-                <Footer />
               </NextAuthProvider>
             </Query>
           </Provider>
         </main>
+        <Footer />
       </body>
     </html>
   );

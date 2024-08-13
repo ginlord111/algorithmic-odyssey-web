@@ -185,7 +185,7 @@ model File {
 
 model ClassroomAnnouncement {
   id          String    @id @default(cuid())
-  text        String
+  content        Json?
   image       String?
   classroomId String
   userName     String
