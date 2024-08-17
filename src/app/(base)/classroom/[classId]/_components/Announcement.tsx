@@ -58,7 +58,7 @@ const Announcement = ({ classId }: { classId: string }) => {
     }
   };
 
-  const {data:classAnn} = useQuery({
+  const {data:classAnn, refetch} = useQuery({
     queryKey:['fetch-class-ann'],
     queryFn:fetchClassAnnouncement,
 
@@ -83,6 +83,7 @@ const Announcement = ({ classId }: { classId: string }) => {
       announcementForm.reset();
       setClickAnn((prev) => (prev = false));
       toast.success("Classroom posted succesfully");
+      refetch()
       router.refresh();
     }
   }

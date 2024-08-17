@@ -36,6 +36,7 @@ const CommentPage = async ({
       },
     });
   }
+  console.log(forum, "FORUM ID")
   return (
     <Fragment>
       <ForumContainer
