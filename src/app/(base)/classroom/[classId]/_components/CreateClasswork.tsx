@@ -1,0 +1,136 @@
+"use client";
+import React, { Dispatch, SetStateAction, useState } from "react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { createActivitySchema } from "@/types/form-types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import Tiptap from "@/components/tiptap/Tiptap";
+import { JSONContent } from "@tiptap/react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+const CreateClasswork = ({
+  setClickCreate,
+  classId
+}: {
+  setClickCreate: Dispatch<boolean>;
+  classId:string
+}) => {
+  const [file, setFile] = useState<File | null | undefined>(null);
+  const [content, setContent] = useState<JSONContent | null>(null);
+  const { data: session } = useSession();
+  const router = useRouter()
+  const createActivityForm = useForm<z.infer<typeof createActivitySchema>>({
+    resolver: zodResolver(createActivitySchema),
+    mode: "onChange",
+    defaultValues: {
+      title:"",
+      instruc: "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof createActivitySchema>) {
+    const formData = new FormData();
+    // if there is any attach file
+    if(file){
+      formData.append("file" , file)
+      formData.append("mimeType", JSON.stringify(file.type))
+    }
+    formData.append("title", JSON.stringify(values.title))
+    formData.append("instruc", JSON.stringify(content))
+    formData.append("id", JSON.stringify(session?.user.id))
+    formData.append("classId", JSON.stringify(classId))
+    
+    const response = await fetch(`/api/classroom/classwork`, {
+      method: "POST",
+      body: formData,
+    });
+    if(!response.ok){
+     return createActivityForm.setError("title", {
+        message:"Something went wrong, Try again"
+      })
+    }
+    router.refresh()
+    toast.success("Classwork created succesfully")
+    setClickCreate(false)
+  
+
+  }
+
+  return (
+    <div>
+      <Form {...createActivityForm}>
+        <form
+          className="space-y-3"
+          onSubmit={createActivityForm.handleSubmit(onSubmit)}
+        >
+          <FormField
+            control={createActivityForm.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Title"  {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={createActivityForm.control}
+            name="instruc"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Create Classwork</FormLabel>
+                <FormControl>
+                  <Tiptap
+                    name={field.name}
+                    onChange={field.onChange}
+                    setContent={setContent}
+                    setImageFile={
+                      setFile as Dispatch<SetStateAction<File | null>>
+                    }
+                    imageFile={file}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex items-end  justify-end space-x-5 mr-3">
+            <Button
+              className="bg-red-500"
+              type="button"
+              onClick={() => setClickCreate(false)}
+            >
+              Cancel
+            </Button>
+            <Button className="bg-blue-500" type="submit">
+            {createActivityForm.formState.isLoading || createActivityForm.formState.isSubmitting ? (
+                <Loader2 className="w-7 h-7 animate-spin" />
+              ) : (
+                <span>Post</span>
+              )}
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
+  );
+};
+
+export default CreateClasswork;

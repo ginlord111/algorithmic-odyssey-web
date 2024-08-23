@@ -4,17 +4,23 @@ import { Button } from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import React, { Fragment, useEffect, useState } from "react";
-import { NavState } from "@/types/types";
-export const NavBar = () => {
+import { NavClasState } from "@/types/types";
+import userInfo from "@/store/store";
+export const NavbarClassroom = () => {
   const router = useRouter();
   const pathname = usePathname();
-
-  const [currentNav, setCurrentNav] = useState<NavState>("announcement");
+  const { fetchUser, user } = userInfo();
+  const [currentNav, setCurrentNav] = useState<NavClasState>("announcement");
   useEffect(() => {
     router.replace(`${pathname}?tab=${currentNav}`);
   }, [currentNav]);
 
-  const navigation = [
+
+  useEffect(()=> {
+fetchUser();
+  },[fetchUser])
+
+  const navigationForStud = [
     {
       name: "Announcement",
       isActive: currentNav === "announcement",
@@ -32,7 +38,23 @@ export const NavBar = () => {
     },
   ];
 
-  const handleClick = (state: NavState) => {
+  const navigationForTeacher = [
+    {
+      name: "Announcement",
+      isActive: currentNav === "announcement",
+      value: "announcement",
+    },
+
+    {
+      name: "Classwork",
+      isActive: currentNav === "classwork",
+      value: "classwork",
+    },
+  ]
+
+  const navigation = user?.isStudent ? navigationForStud : navigationForTeacher
+
+  const handleClick = (state: NavClasState) => {
     setCurrentNav((prevNav) => (prevNav = state));
   };
   return (
@@ -44,7 +66,7 @@ export const NavBar = () => {
               <Button
                 as={Link}
                 href={`?tab=${currentNav}`}
-                onClick={() => handleClick(nav.value as NavState)}
+                onClick={() => handleClick(nav.value as NavClasState)}
                 className={`bg-transparent text-gray-600 font-medium hover:text-blue-700 py-2 lg:px-4 px-1 hover:bg-blue-100 rounded-sm rounded-b-md ${
                   nav.isActive && "text-blue-600 border-b-5 border-blue-600 "
                 }`}

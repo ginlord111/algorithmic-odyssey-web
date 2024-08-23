@@ -1,25 +1,30 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { NavState } from "@/types/types";
+import { NavClasState } from "@/types/types";
 import Announcement from "./Announcement";
 import PendingTask from "./PendingTask";
 import GradedTask from "./GradedTask";
-const SubjectContainer = ({classId}:{classId:string}) => {
+import Classwork from "./Classwork";
+import { Activity } from "@prisma/client";
+const SubjectContainer = ({classId,classAct}:{classId:string,classAct:Activity[]}) => {
   const searchParams = useSearchParams();
-  const [currentTab, setCurrentTab] = useState<NavState>(
-    searchParams.get("tab") as NavState
+  const [currentTab, setCurrentTab] = useState<NavClasState>(
+    searchParams.get("tab") as NavClasState 
   );
   useEffect(() => {
-    const tab = searchParams.get("tab") as NavState;
+    const tab = searchParams.get("tab") as NavClasState;
    setCurrentTab(tab);
   }, [searchParams]);
+
   return (
     <div>
       {currentTab === "announcement" ? (
         <Announcement classId={classId}/>
       ) : currentTab === "pending-task" ? (
         <PendingTask />
+      ) : currentTab === "classwork" ? (
+        <Classwork classId={classId} classAct={classAct} />
       ) : (
         <GradedTask />
       )}

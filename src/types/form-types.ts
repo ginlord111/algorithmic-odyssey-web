@@ -115,3 +115,14 @@ export const announcementSchema = z.object({
     message:"Your classroom announcement must be atleast 10 characters"
   })
 })
+
+
+
+export const createActivitySchema = z.object({
+  instruc:z.string().min(5, {
+    message:"Your classroom instruction must be atleast 5 characters"
+  }),
+  title:z.string().min(5, {
+      message:"Title must be atleast 5 characters"
+  })
+})
