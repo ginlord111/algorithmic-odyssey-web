@@ -91,3 +91,38 @@ export const signInFormSchema = z.object({
     message: "Password must be atleast 6 characters",
   }),
 });
+
+
+
+export const classroomCodeForm = z.object({
+  code:z.string().min(6, {
+    message:"Code must be atleast 6 character"
+  })
+})
+
+export const createClassroomForm = z.object({
+  classroomName:z.string().min(6,{
+    message:"Classroom name must be atleast 6 characters"
+  }),
+  sectionName:z.string(),
+  classCode:z.string().min(6,{
+    message:"Classroom code must be atleast 6 characters and unique"
+  }),
+})
+
+export const announcementSchema = z.object({
+  announcement:z.string().min(10, {
+    message:"Your classroom announcement must be atleast 10 characters"
+  })
+})
+
+
+
+export const createActivitySchema = z.object({
+  instruc:z.string().min(5, {
+    message:"Your classroom instruction must be atleast 5 characters"
+  }),
+  title:z.string().min(5, {
+      message:"Title must be atleast 5 characters"
+  })
+})

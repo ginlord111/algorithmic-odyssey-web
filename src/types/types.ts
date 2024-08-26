@@ -23,3 +23,9 @@ export interface ForumWithCount extends Forum {
     forums: ForumWithCount[];
     userLikes: ForumLike[];
   }
+
+
+
+  export type NavClasState = "announcement" | "pending-task" | "graded-task" | "classwork";
+
+export type NavActState = "instruction" | "students-work" | "works"

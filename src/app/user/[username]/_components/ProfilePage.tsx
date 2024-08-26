@@ -22,7 +22,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import {signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Button } from "@nextui-org/react";
 import FollowBtn from "./FollowBtn";
 import FollowingsList from "./FollowingsList";
@@ -37,10 +37,11 @@ const ProfilePage = ({
   github,
   twitter,
   followerImages,
-  followingImages
-}: User &
-{followerImages:{userFollowerImage:string}[], followingImages:{userFollowingImage:string}[]}
-) => {
+  followingImages,
+}: User & {
+  followerImages: { userFollowerImage: string }[];
+  followingImages: { userFollowingImage: string }[];
+}) => {
   const [userProfile, setUserProfile] = useState<File | null>(null);
   const pathname = usePathname();
   const currentTab = pathname.split("/").slice(-1)[0];
@@ -48,11 +49,10 @@ const ProfilePage = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { data: session } = useSession();
   const fileRef = useRef<HTMLInputElement>(null);
-  const handleSignOut = async() => {
-  const data = await  signOut({redirect:false, callbackUrl:"/"})
-    router.push(data.url)
-    toast.success("Log out succesfully")
-  
+  const handleSignOut = async () => {
+    const data = await signOut({ redirect: false, callbackUrl: "/" });
+    router.push(data.url);
+    toast.success("Log out succesfully");
   };
   useEffect(() => {
     const changeProfile = async () => {
@@ -83,7 +83,6 @@ const ProfilePage = ({
       router.push(`/user/${username}/posts`);
     }
   }, []);
-
   return (
     <div className="relative">
       <div className="flex lg:flex-row flex-col lg:items-start items-center">
@@ -134,7 +133,10 @@ const ProfilePage = ({
             <p className="text-muted-foreground lg:text-start text-center">
               {email}
             </p>
-            <FollowingsList followerImages={followerImages} followingImages={followingImages}/>
+            <FollowingsList
+              followerImages={followerImages}
+              followingImages={followingImages}
+            />
             <div className="flex lg:flex-row flex-col gap-10 pt-10 cursor-pointer lg:items-start items-center ">
               <div className="flex gap-1">
                 <Facebook className="w-5 h-5" />
@@ -168,7 +170,7 @@ const ProfilePage = ({
                 <ButtonShadCn
                   variant="link"
                   className={`font-bold ${
-                    currentTab === username ? "underline" : ""
+                   currentTab !== "posts" && "underline"
                   }`}
                 >
                   Account Details
@@ -209,7 +211,7 @@ const ProfilePage = ({
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <FollowBtn  followingId={id} />
+          <FollowBtn followingId={id} />
         )}
       </div>
     </div>

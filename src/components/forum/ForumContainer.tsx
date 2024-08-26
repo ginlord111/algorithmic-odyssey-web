@@ -8,7 +8,8 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import parse from "html-react-parser";
 import { JSONContent } from "@tiptap/react";
-import GenerateHtmlContent from "./GenerateHtmlContent";
+import { generateHTML } from '@tiptap/html'
+import tiptapExtensions from "@/utils/tiptapExtension";
 const ForumContainer = ({
   id,
   authorUsername,
@@ -37,7 +38,8 @@ const ForumContainer = ({
   }, [createdAt]);
   let tempContent;
   if (content) {
-    tempContent = GenerateHtmlContent(content as JSONContent);
+    const extension = tiptapExtensions()
+    tempContent = generateHTML(content as JSONContent, extension)
   }
   return (
     <div

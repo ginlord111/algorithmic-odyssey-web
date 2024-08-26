@@ -5,6 +5,7 @@ import { uploadCloudinary } from "@/lib/cloudinary";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 import { revalidatePath } from "next/cache";
+import generateRandomString from "@/helper/generateRandomString";
 export async function GET(req: NextRequest): Promise<any> {
   try {
     const url = new URL(req.url);
@@ -100,23 +101,13 @@ export async function POST(req: NextRequest) {
   const title = JSON.parse(body.get("title") as string);
   const content = JSON.parse(body.get("content") as string)
   /// FOR TITLE ID RANDOM STRING
-  function generateRandomString(length = 8) {
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "";
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(
-        Math.floor(Math.random() * characters.length)
-      );
-    }
-    return result;
-  }
+const titleId= generateRandomString()
   try {
     await prisma.forum.create({
       data: {
         caption: captions ?? null,
         title: title,
-        titleId: generateRandomString(),
+        titleId,
         forumImage: imageUpload?.secure_url ?? null,
         content,
         user: {

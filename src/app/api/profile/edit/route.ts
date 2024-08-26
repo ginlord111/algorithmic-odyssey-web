@@ -18,8 +18,22 @@ try {
           twitter,
         }
       })
+
+      // await prisma.notifications.update({
+      //   where:{
+      //     resourceId:{
+      //       contains:username,
+      //     },
+      //   },
+      //   data:{
+          
+      //   }
+      // })
       
       return NextResponse.json({message:"Success"}, {status:200})
+
+
+      /// TODO : UPDATE ALSO THE USERNAME IN THE NOTIFICATION MODEL
 } catch (error) {
     return NextResponse.json({error})
 }

@@ -20,6 +20,10 @@ const nextConfig = {
                 hostname: 'images.unsplash.com',
                pathname :'/broken'
               },
+              {
+                protocol: 'https',
+                hostname: 'www.gstatic.com',
+              },
         ]
     },
 

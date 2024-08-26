@@ -6,36 +6,42 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["accounts", "forums", "sessions", "users", "follow", "notifications"]
+  schemas  = ["accounts", "activity", "classroom", "files", "follow", "forums", "notifications", "sessions", "users"]
 }
 
-//// TODO: CHANGE THE RELATION NAME FOR THE USER MODEL AND MAKE IT ALIGN BASED ON THEIR PURPOSES
-
 model User {
-  id            String         @id @default(cuid())
-  userId        String?
-  username      String         @unique
-  password      String?        
-  email         String?        @unique
-  emailVerified DateTime?
-  userImage     String?
-  accounts      Account[]
-  forums        Forum[]
-  comments      ForumComment[]
-  forumLikes    ForumLike[]
-  role          String        @default("user")
-  sessions      Session[]
-  follower      Follow[]       @relation("Followings")
-  following     Follow[]       @relation("Followers")
-  facebook      String?
-  twitter       String?
-  github        String?
-  instagram     String?
-  isEmailVerified Boolean      @default(false)
-  emailVerificationToken String? 
+  id                     String                  @id @default(cuid())
+  userId                 String?
+  username               String                  @unique
+  email                  String?                 @unique
+  emailVerified          DateTime?
+  userImage              String?
+  facebook               String?
+  github                 String?
+  instagram              String?
+  twitter                String?
+  password               String?
+  emailVerificationToken String?
+  isEmailVerified        Boolean                 @default(false)
+  role                   String                  @default("user")
+  isStudent              Boolean                 @default(true)
+  accounts               Account[]
+  teacherActivity        Activity[]              @relation("TeacherWhoCreateActivity")
+  StudentActivity        StudentActivity?
+  teacherClassroms       Classroom[]             @relation("TeacherClassrooms")
+  classroomAnnouncement  ClassroomAnnouncement[] @relation("TeacherStudentAnnouncement")
+  following              Follow[]                @relation("Followers")
+  follower               Follow[]                @relation("Followings")
+  forums                 Forum[]
+  comments               ForumComment[]
+  forumLikes             ForumLike[]
+  sessions               Session[]
+  classrooms             Classroom[]             @relation("StudentClassrooms")
+
   @@unique([id, username, userImage, facebook, twitter, github, instagram])
   @@unique([id, username, userImage])
   @@unique([id, userImage])
+  @@unique([id, username])
   @@schema("users")
 }
 
@@ -72,13 +78,13 @@ model Forum {
   id             String         @id @default(cuid())
   userId         String
   authorUsername String
-  userImage      String
   forumImage     String?
   title          String
   caption        String?
-  content        Json?
   createdAt      DateTime       @default(now())
   titleId        String         @unique
+  userImage      String
+  content        Json?
   user           User           @relation(fields: [userId, authorUsername, userImage], references: [id, username, userImage], onDelete: Cascade)
   comments       ForumComment[]
   forumLikes     ForumLike[]
@@ -114,25 +120,93 @@ model Follow {
   id                 String   @id @default(cuid())
   followerId         String
   followingId        String
-  userFollowerImage  String   
-  userFollowingImage String  
+  createdAt          DateTime @default(now())
+  userFollowerImage  String
+  userFollowingImage String
   follower           User     @relation("Followers", fields: [followerId, userFollowerImage], references: [id, userImage], onDelete: Cascade)
   following          User     @relation("Followings", fields: [followingId, userFollowingImage], references: [id, userImage], onDelete: Cascade)
-  createdAt          DateTime @default(now())
 
   @@unique([followerId, followingId])
   @@schema("follow")
 }
 
 model Notifications {
-  id         String @id @default(cuid())
-  userId     String
-  type       String
-  from       String
-  resourceId String
-  isRead     Boolean  @default(false)
+  id            String   @id @default(cuid())
+  userId        String
+  type          String
+  from          String
+  resourceId    String
+  isRead        Boolean  @default(false)
   fromUserImage String
-  fromUsername String
-  createdAt   DateTime @default(now())
+  createdAt     DateTime @default(now())
+  fromUsername  String
+
   @@schema("notifications")
+}
+
+model Classroom {
+  id           String                  @id @default(cuid())
+  teacherId    String
+  className    String
+  createdAt    DateTime                @default(now())
+  sectionName  String
+  teacherImage String
+  teacherName  String
+  code         String                  @unique
+  activity     Activity[]              @relation("ClassroomActivities")
+  teacher      User                    @relation("TeacherClassrooms", fields: [teacherName, teacherId, teacherImage], references: [username, id, userImage], onDelete: Cascade)
+  announcement ClassroomAnnouncement[] @relation("ClassroomAnnouncement")
+  students     User[]                  @relation("StudentClassrooms")
+
+  @@schema("classroom")
+}
+
+model Activity {
+  id              String            @id @default(cuid())
+  teacherId       String
+  classroomId     String
+  title           String
+  slug            String
+  createdAt       DateTime          @default(now())
+  instruction     Json
+  fileUrl         String
+  fileUrlDownload String
+  teacherName     String
+  fileType        String
+  classroom       Classroom         @relation("ClassroomActivities", fields: [classroomId], references: [id])
+  teacher         User              @relation("TeacherWhoCreateActivity", fields: [teacherId, teacherName], references: [id, username])
+  StudentActivity StudentActivity[]
+
+  @@schema("activity")
+}
+
+model StudentActivity {
+  id               String    @id @default(cuid())
+  studentId        String    @unique
+  activityId       String
+  score            Int?
+  isCompleted      Boolean   @default(false)
+  completedAt      DateTime?
+  fileSubmittedUrl String?
+  fileName          String?
+  fileType          String?
+  activity         Activity  @relation(fields: [activityId], references: [id])
+  student          User      @relation(fields: [studentId], references: [id])
+
+  @@schema("activity")
+}
+
+model ClassroomAnnouncement {
+  id          String    @id @default(cuid())
+  image       String?
+  classroomId String
+  userName    String
+  userImage   String
+  userId      String
+  createdAt   DateTime  @default(now())
+  content     Json?
+  classroom   Classroom @relation("ClassroomAnnouncement", fields: [classroomId], references: [id])
+  user        User      @relation("TeacherStudentAnnouncement", fields: [userId, userImage, userName], references: [id, userImage, username])
+
+  @@schema("classroom")
 }
