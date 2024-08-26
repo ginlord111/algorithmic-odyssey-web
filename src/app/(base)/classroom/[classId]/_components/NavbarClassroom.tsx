@@ -13,7 +13,7 @@ export const NavbarClassroom = () => {
   const [currentNav, setCurrentNav] = useState<NavClasState>("announcement");
   useEffect(() => {
     router.replace(`${pathname}?tab=${currentNav}`);
-  }, [currentNav]);
+  }, [currentNav,pathname,router]);
 
 
   useEffect(()=> {

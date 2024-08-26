@@ -19,7 +19,7 @@ const EmptyClasswork = () => {
       </div>
       <div className="flex flex-col text-center space-y-1 mt-5">
         <span className="tracking-wdie font-semibold">
-          This is where you'll set up assignments and activities.
+          This is where you&apos;ll set up assignments and activities.
         </span>
         <span className="text-sm text-muted-foreground">
           You can input assignments and other tasks for the class and then
@@ -54,10 +54,12 @@ const pathname = usePathname()
           {classAct.length > 0 ? (
             <div className="flex flex-col space-y-8">
               {classAct.map((act) => (
-                <ClassworkList act={act} 
+             <Fragment key={act.id}>
+                 <ClassworkList act={act} 
                 onClick={()=>router.push(`${pathname}/${act.slug}`, 
                 )}
                 />
+             </Fragment>
               ))}
             </div>
           ) : (

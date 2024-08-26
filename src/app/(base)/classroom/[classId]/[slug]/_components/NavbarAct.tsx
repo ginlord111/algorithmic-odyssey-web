@@ -13,7 +13,7 @@ export const NavBarAct = () => {
   const [currentNav, setCurrentNav] = useState<NavActState>("instruction");
   useEffect(() => {
     router.replace(`${pathname}?tab=${currentNav}`);
-  }, [currentNav]);
+  }, [currentNav,pathname,router]);
 
 
   useEffect(()=> {
