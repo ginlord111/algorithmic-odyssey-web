@@ -27,9 +27,9 @@ fetchUser();
       value: "instruction",
     },
     {
-      name: "Students Work",
-      isActive: currentNav === "students-work",
-      value: "students-work",
+      name: "Works",
+      isActive: currentNav === "works",
+      value: "works",
     },
   ];
 
@@ -40,7 +40,7 @@ fetchUser();
         value: "instruction",
       },
       {
-        name: "Student Work",
+        name: "Student's Work",
         isActive: currentNav === "students-work",
         value: "students-work",
       },

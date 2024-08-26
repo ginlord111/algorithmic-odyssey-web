@@ -22,8 +22,9 @@ const SubjectContainer = ({classId,classAct}:{classId:string,classAct:Activity[]
       {currentTab === "announcement" ? (
         <Announcement classId={classId}/>
       ) : currentTab === "pending-task" ? (
-        <PendingTask />
-      ) : currentTab === "classwork" ? (
+        <PendingTask  studentActs={classAct} />
+      ) : currentTab === "classwork" ? 
+      (
         <Classwork classId={classId} classAct={classAct} />
       ) : (
         <GradedTask />

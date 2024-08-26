@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth';
 import React from 'react'
 import SubjectContainer from './_components/SubjectContainer';
 import prisma from '@/db';
-import { Activity, ClassroomAnnouncement } from '@prisma/client';
+import { Activity } from '@prisma/client';
 import { NavbarClassroom } from './_components/NavbarClassroom';
 
 const ClassPage = async({ params }: { params: { classId: string } }) => {
@@ -14,10 +14,15 @@ const ClassPage = async({ params }: { params: { classId: string } }) => {
     // CREATE A COMPONENT PER TAB
     const classAct:Activity[] = await prisma.activity.findMany({
       where:{
-        classroomId:classId,
+        classroomId:classId ?? null,
+      },
+      orderBy:{
+        createdAt:"desc"
       }
       
-    })
+    }) 
+
+
 
   return (
    <MaxWidthWrapper >
