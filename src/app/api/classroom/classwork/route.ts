@@ -64,8 +64,11 @@ export async function POST(req: NextRequest) {
     const studentIds = students.flatMap((stud) => stud.students);
 
     // destructuring the data for the student id and class id to be in input in student act model
-    const data = studentIds.flatMap((studentId) => ({
-      studentId: studentId.id, // The student's ID
+    const data = studentIds.flatMap((student) => ({
+      studentId: student.id, // The student's ID
+      studentName:student.username as string,
+      studentAvatar:student.userImage as string,
+      studentEmail:student.email as string,
       activityId: actId.id, // The activity's ID
     }));
 
@@ -84,6 +87,9 @@ try {
   const body = await req.formData();
   const works = body.get("works") as File
   const studentId = JSON.parse(body.get("studentId") as string)
+  const studentName = JSON.parse(body.get("studentName") as string)
+  const studentAvatar = JSON.parse(body.get("studentAvatar") as string)
+  const studentEmail = JSON.parse(body.get("studentEmail") as string)
   const activityId = JSON.parse(body.get("activityId") as string)
   const savedFilePath = await saveFile(works, works.name);
   const fileUpload = await uploadGdrive(works.name, works.type);
@@ -98,7 +104,8 @@ try {
       fileSubmittedUrl: fileUpload?.fileUrl ?? null,
       completedAt:new Date(),
       fileName:works.name,
-      fileType:works.type
+      fileType:works.type,
+      isCompleted:true,
     },
     create:{
       activityId,
@@ -106,7 +113,11 @@ try {
       fileSubmittedUrl: fileUpload?.fileUrl ?? null,
       completedAt:new Date(),
       fileName:works.name,
-      fileType:works.type
+      fileType:works.type,
+      studentName,
+      studentAvatar,
+      studentEmail,
+      isCompleted:true,
     }
   }); 
 

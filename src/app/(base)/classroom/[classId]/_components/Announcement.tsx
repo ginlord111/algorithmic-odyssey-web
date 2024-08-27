@@ -148,7 +148,8 @@ const Announcement = ({ classId }: { classId: string }) => {
             className="flex items-center"
             onClick={() => setClickAnn((prev) => !prev)}
           >
-            <Avatar showFallback src={user?.userImage as string} size="md" />
+            <Avatar showFallback src={user?.userImage as string} size="md" 
+            />
             <p className="text-sm text-muted-foreground tracking-wide pl-5">
               Announce something to your class
             </p>

@@ -54,7 +54,8 @@ providers:[
             email:profile.email,
             userImage:defaultImage, // DEFAULT IMAGE
             isEmailVerified:true,
-            role:profile.role ?? "user"
+            role:profile.role ?? "user",
+            isStudent:profile.isStudent ?? true
         }
        }
     }),
@@ -64,6 +65,7 @@ callbacks: {
   jwt({user, token}){
     if(user){
       token.role = user.role
+      token.isStudent = user.isStudent
     }
     return token;
   },
@@ -74,6 +76,7 @@ callbacks: {
           ...session.user, 
           id: token.sub, 
           role:token.role,
+          isStudent:token.isStudent,
         },
       };
     },
