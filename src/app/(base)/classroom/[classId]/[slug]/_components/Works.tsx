@@ -10,29 +10,34 @@ const SubmittingWorks = ({
   setWorks,
   user,
   act,
-  studentWork
+  studentWork,
 }: {
   works: File | null;
   setWorks: Dispatch<File | null>;
   user: User;
   act: Activity;
-  studentWork:StudentActivity | null
+  studentWork: StudentActivity | null;
 }) => {
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const router = useRouter()
-  const imgSrc = studentWork?.fileType?.includes("image") ?? works?.type.includes("image")
-    ? "/photo.png"
-    : studentWork?.fileType?.includes("document") ?? works?.type.includes("document")
-    ? "/doc.png"
-    : "/pdf.png";
+  const router = useRouter();
+  const imgSrc =
+    studentWork?.fileType?.includes("image") ?? works?.type.includes("image")
+      ? "/photo.png"
+      : studentWork?.fileType?.includes("document") ??
+        works?.type.includes("document")
+      ? "/doc.png"
+      : "/pdf.png";
 
   const onSubmit = async () => {
     setIsLoading(true);
     const formData = new FormData();
-formData.append('works', works as File);
-formData.append('studentId', JSON.stringify(user.id));
-formData.append('activityId', JSON.stringify(act.id));
+    formData.append("works", works as File);
+    formData.append("studentId", JSON.stringify(user.id));
+    formData.append("activityId", JSON.stringify(act.id));
+    formData.append("studentName", JSON.stringify(user.username))
+    formData.append("studentAvatar", JSON.stringify(user.userImage))
+    formData.append("studentEmail", JSON.stringify(user.email))
     const res = await fetch("/api/classroom/classwork", {
       method: "PATCH",
       body: formData,
@@ -40,8 +45,8 @@ formData.append('activityId', JSON.stringify(act.id));
     if (!res.ok) {
       setMessage("Something went wrong");
     }
-    router.refresh()
-    toast.success("Sucessful submitted your works")
+    router.refresh();
+    toast.success("Sucessful submitted your works");
     setIsLoading(false);
   };
   return (
@@ -53,8 +58,8 @@ formData.append('activityId', JSON.stringify(act.id));
         </div>
       )}
       {studentWork && !studentWork.score && (
-     <div className="flex justify-end space-x-3 text-muted-foreground italic">
-      <span>Waiting to be graded</span>
+        <div className="flex justify-end space-x-3 text-muted-foreground italic">
+          <span>Waiting to be graded</span>
         </div>
       )}
       <div className="flex space-x-5">
@@ -65,41 +70,51 @@ formData.append('activityId', JSON.stringify(act.id));
           <span className="font-bold text-lg tracking-normal">
             {studentWork?.fileName ?? works?.name}
           </span>
-          <span className="text-muted-foreground text-md">{studentWork?.fileType ?? works?.type}</span>
+          <span className="text-muted-foreground text-md">
+            {studentWork?.fileType ?? works?.type}
+          </span>
         </div>
       </div>
-{studentWork ? (
-    <span className="text-muted-foreground italic flex justify-end">Your work has been submitted</span>
-): (
+      {studentWork?.isCompleted ? (
+        <span className="text-muted-foreground italic flex justify-end">
+          Your work has been submitted
+        </span>
+      ) : (
         <div className="flex justify-end space-x-3">
-        <Button className="bg-red-500" onClick={() => setWorks(null)}>
-          Cancel
-        </Button>
-        <Button className="bg-blue-500"
-        onClick={onSubmit}
-        >
-          {isLoading ? (
-            <Loader2 className="w-7 h-7 animate-spin" />
-          ) : (
-            "Submit Work"
-          )}
-        </Button>
-      </div>
-)}
-   {message && (
-       <span className="text-red-500 font-bold text-sm flex justify-end mt-2">
-       Something went wrong
-     </span>
-   )}
+          <Button className="bg-red-500" onClick={() => setWorks(null)}>
+            Cancel
+          </Button>
+          <Button className="bg-blue-500" onClick={onSubmit}>
+            {isLoading ? (
+              <Loader2 className="w-7 h-7 animate-spin" />
+            ) : (
+              "Submit Work"
+            )}
+          </Button>
+        </div>
+      )}
+      {message && (
+        <span className="text-red-500 font-bold text-sm flex justify-end mt-2">
+          Something went wrong
+        </span>
+      )}
     </div>
   );
 };
-const Works = ({ user, act,studentWork }: { user: User; act: Activity,studentWork:StudentActivity|null }) => {
+const Works = ({
+  user,
+  act,
+  studentWork,
+}: {
+  user: User;
+  act: Activity;
+  studentWork: StudentActivity |  null;
+}) => {
   const [works, setWorks] = useState<File | null>(null);
   const fileBtn = useRef<HTMLInputElement>(null);
   return (
     <div className="mt-10">
-      {studentWork ?? works ? (
+      {studentWork?.fileSubmittedUrl ?? works ? (
         <SubmittingWorks
           works={works}
           setWorks={setWorks}

@@ -42,7 +42,7 @@ const Tiptap = ({
   return (
     <Fragment>
       <Toolbar editor={editor} setImageFile={setImageFile as Dispatch<SetStateAction<File | null>> }/>
-      <EditorContent editor={editor} className="border-2 border-black rounded-md p-3">
+      <EditorContent editor={editor} className="border-2 border-black rounded-md p-3 bg-white">
       {imageFile && <FileInputLayout imageFile={imageFile} />}
       </EditorContent>
     </Fragment>

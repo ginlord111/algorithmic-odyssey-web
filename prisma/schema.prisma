@@ -27,7 +27,7 @@ model User {
   isStudent              Boolean                 @default(true)
   accounts               Account[]
   teacherActivity        Activity[]              @relation("TeacherWhoCreateActivity")
-  StudentActivity        StudentActivity?
+  StudentActivity        StudentActivity[]        @relation("StudentActivities")
   teacherClassroms       Classroom[]             @relation("TeacherClassrooms")
   classroomAnnouncement  ClassroomAnnouncement[] @relation("TeacherStudentAnnouncement")
   following              Follow[]                @relation("Followers")
@@ -42,6 +42,7 @@ model User {
   @@unique([id, username, userImage])
   @@unique([id, userImage])
   @@unique([id, username])
+  @@unique([id, username, email, userImage])
   @@schema("users")
 }
 
@@ -188,10 +189,14 @@ model StudentActivity {
   isCompleted      Boolean   @default(false)
   completedAt      DateTime?
   fileSubmittedUrl String?
-  fileName          String?
-  fileType          String?
+  fileName         String?
+  fileType         String?
+  studentAvatar    String
+  studentEmail     String
+  studentName      String
+  isGraded         Boolean   @default(false)
   activity         Activity  @relation(fields: [activityId], references: [id])
-  student          User      @relation(fields: [studentId], references: [id])
+  student          User      @relation("StudentActivities", fields: [studentId, studentName, studentAvatar, studentEmail], references: [id, username, userImage, email])
 
   @@schema("activity")
 }

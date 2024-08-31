@@ -6,8 +6,8 @@ import Announcement from "./Announcement";
 import PendingTask from "./PendingTask";
 import GradedTask from "./GradedTask";
 import Classwork from "./Classwork";
-import { Activity } from "@prisma/client";
-const SubjectContainer = ({classId,classAct}:{classId:string,classAct:Activity[]}) => {
+import { Activity, StudentActivity } from "@prisma/client";
+const SubjectContainer = ({classId,classActs,studentActs}:{classId:string,classActs:Activity[],studentActs:StudentActivity[]}) => {
   const searchParams = useSearchParams();
   const [currentTab, setCurrentTab] = useState<NavClasState>(
     searchParams.get("tab") as NavClasState 
@@ -17,17 +17,20 @@ const SubjectContainer = ({classId,classAct}:{classId:string,classAct:Activity[]
    setCurrentTab(tab);
   }, [searchParams]);
 
+  const isCompletedTaskIds = studentActs.filter((studAct)=>studAct.isCompleted).map((act)=>act.activityId)
+  const gradedTasks = classActs.filter((act) => isCompletedTaskIds.includes(act.id));
+  const pendingTasks = classActs.filter((act) => !isCompletedTaskIds.includes(act.id));
   return (
     <div>
       {currentTab === "announcement" ? (
         <Announcement classId={classId}/>
       ) : currentTab === "pending-task" ? (
-        <PendingTask  studentActs={classAct} />
+        <PendingTask  pendingTasks={pendingTasks} />
       ) : currentTab === "classwork" ? 
       (
-        <Classwork classId={classId} classAct={classAct} />
+        <Classwork classId={classId} classActs={classActs} />
       ) : (
-        <GradedTask />
+        <GradedTask gradedTasks={gradedTasks}/>
       )}
     </div>
   );
