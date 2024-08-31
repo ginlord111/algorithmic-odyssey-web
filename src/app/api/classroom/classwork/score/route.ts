@@ -12,6 +12,7 @@ export async function PATCH(req:NextRequest){
     },
     data:{
         score,
+        isGraded:true,
     }
    }) 
    return NextResponse.json({message:"SUCCESS"}, {status:200})

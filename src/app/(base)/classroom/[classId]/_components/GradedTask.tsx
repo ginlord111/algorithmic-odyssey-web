@@ -1,8 +1,10 @@
+import { Activity } from '@prisma/client'
 import React from 'react'
+import TaskContainer from './TaskContainer'
 
-const GradedTask = () => {
+const GradedTask = ({gradedTasks}:{gradedTasks:Activity[]}) => {
   return (
-    <div>GradedTask</div>
+    <TaskContainer tasks={gradedTasks}/>
   )
 }
 

@@ -194,9 +194,10 @@ model StudentActivity {
   studentAvatar    String
   studentEmail     String
   studentName      String
+  isGraded         Boolean   @default(false)
   activity         Activity  @relation(fields: [activityId], references: [id])
-  student          User      @relation("StudentActivities",fields: [studentId, studentName, studentAvatar, studentEmail], references: [id, username, userImage, email])
-  
+  student          User      @relation("StudentActivities", fields: [studentId, studentName, studentAvatar, studentEmail], references: [id, username, userImage, email])
+
   @@schema("activity")
 }
 

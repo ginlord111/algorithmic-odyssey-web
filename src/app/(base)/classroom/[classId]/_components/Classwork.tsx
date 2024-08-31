@@ -32,14 +32,15 @@ const EmptyClasswork = () => {
 
 const Classwork = ({
   classId,
-  classAct,
+  classActs,
 }: {
   classId: string;
-  classAct: Activity[];
+  classActs: Activity[];
 }) => {
   const [clickCreate, setClickCreate] = useState<boolean>(false);
   const router = useRouter()
 const pathname = usePathname()
+
   return (
     <Fragment>
       {clickCreate ? (
@@ -51,9 +52,9 @@ const pathname = usePathname()
               Create +
             </Button>
           </div>
-          {classAct.length > 0 ? (
+          {classActs.length > 0 ? (
             <div className="flex flex-col space-y-8">
-              {classAct.map((act) => (
+              {classActs.map((act) => (
              <Fragment key={act.id}>
                  <ClassworkList act={act} 
                 onClick={()=>router.push(`${pathname}/${act.slug}`, 
