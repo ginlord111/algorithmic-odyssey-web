@@ -8,15 +8,15 @@ import { getServerSession } from "next-auth";
 const CommentPage = async ({
   params,
 }: {
-  params: { username: string; title: string; titleId: string };
+  params: { userId: string; title: string; titleId: string };
 }) => {
-  const { username, title, titleId } = params;
+  const { userId, title, titleId } = params;
   const session = await getServerSession(authOptions);
   let userLikes: ForumLike[] = [];
   const forum: Forum & { _count: { forumLikes: number } } =
     (await prisma.forum.findFirst({
       where: {
-        authorUsername: decodeURIComponent(username),
+        userId:decodeURIComponent(userId),
         title: decodeURIComponent(title),
         titleId: decodeURIComponent(titleId),
       },
@@ -37,6 +37,7 @@ const CommentPage = async ({
     });
   }
   console.log(forum, "FORUM ID")
+  console.log(userId,title,titleId, "USER ID")
   return (
     <Fragment>
       <ForumContainer

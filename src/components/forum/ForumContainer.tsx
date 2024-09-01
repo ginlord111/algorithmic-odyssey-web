@@ -97,7 +97,7 @@ const ForumContainer = ({
             likes={_count.forumLikes}
             forumId={id}
             userLikes={userLikes}
-            route={`/forum/${authorUsername}/comments/${titleId}/${title}`}
+            route={`/forum/${userId}/comments/${titleId}/${title}`}
             comments={_count.comments as number}
             postOwner={userId}
           />

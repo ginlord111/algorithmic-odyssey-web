@@ -17,6 +17,7 @@ const Notification = ({ userId }: { userId: string }) => {
     queryKey: ["get-user-notification", userId],
     queryFn: () => fetchUserNotification(userId),
   });
+  console.log(notifs, userId, "notifss")
   /// TODO: MAKE A GLOBAL STATE THAT TRACCK IF SOMEONE LIKE AND IF SO, REVALIDATE THE GET USER NOTIFCATION FOR REALTIME NOTIF
   const queryClient = useQueryClient();
   const router = useRouter()
