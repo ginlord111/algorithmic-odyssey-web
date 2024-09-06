@@ -17,9 +17,11 @@ import { Key, SetStateAction, Dispatch } from "react";
 import { useRouter } from "next/navigation";
 import { Github, Loader2, Mail } from "lucide-react";
 import { signIn } from "next-auth/react";
-interface signUpError{
-  emailError:string;
-  usernameError:string;
+import RoleModal from "./RoleModal";
+import { useDisclosure } from "@nextui-org/react";
+interface signUpError {
+  emailError: string;
+  usernameError: string;
 }
 const SignUpTab = ({
   setSelected,
@@ -31,6 +33,7 @@ const SignUpTab = ({
     resolver: zodResolver(signUpFormSchema),
     mode: "onSubmit",
   });
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   async function onSubmit(data: z.infer<typeof signUpFormSchema>) {
     const { email, password, username } = data;
 
@@ -40,17 +43,16 @@ const SignUpTab = ({
       body: JSON.stringify({ email, password, username }),
     });
     if (!res.ok && res.status === 409) {
-      const error:signUpError = await res.json();
+      const error: signUpError = await res.json();
       if (error.emailError) {
         signUpForm.setError("email", {
           message: error.emailError,
         });
+      } else if (error.usernameError) {
+        signUpForm.setError("username", {
+          message: error.usernameError,
+        });
       }
-     else if(error.usernameError){
-      signUpForm.setError("username", {
-        message: error.usernameError,
-      });
-     }
     } else {
       router.replace(`/otp?to=${email}`);
     }
@@ -58,6 +60,11 @@ const SignUpTab = ({
   return (
     <Form {...signUpForm}>
       <form onSubmit={signUpForm.handleSubmit(onSubmit)} className="space-y-5">
+        <RoleModal
+          isOpen={isOpen}
+          onClose={onClose}
+          onOpenChange={onOpenChange}
+        />
         <FormField
           control={signUpForm.control}
           name="email"
@@ -114,7 +121,6 @@ const SignUpTab = ({
           )}
         />
         <Button type="submit" className="w-full">
-          {" "}
           {signUpForm.formState.isLoading ||
           signUpForm.formState.isSubmitting ? (
             <Loader2 className="w-7 h-7 animate-spin" />
@@ -123,27 +129,18 @@ const SignUpTab = ({
           )}
         </Button>
         <div className="flex flex-col items-center justify-center mt-7 space-y-3">
-        <span className="text-sm text-muted-foreground font-bold">
-          Or sign up with
-        </span>
-        <Button
-          onClick={async () => {
-            await signIn("github");
-            router.push("/");
-          }}
-          className="px-10"
-          variant="secondary"
-          type="button"
-        >
-          <Github className="w-6 h-6" />
-        </Button>
+          <span className="text-sm text-muted-foreground font-bold">
+            Or sign up with
+          </span>
+          <Button onClick={() => onOpen()} className="px-10" type="button">
+            <Github className="w-6 h-6" />
+          </Button>
 
-        <Button className="px-10" variant="secondary" type="button">
-          <Mail />
-        </Button>
-      </div>
+          <Button className="px-10" type="button">
+            <Mail />
+          </Button>
+        </div>
       </form>
-   
     </Form>
   );
 };

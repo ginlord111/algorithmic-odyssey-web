@@ -40,10 +40,6 @@ const Notification = ({ userId }: { userId: string }) => {
       <DropdownMenu className="w-fit md:max-h-[700px] max-h-[200px] overflow-y-auto" aria-label="Dynamic Actions" items={notifs}
       emptyContent={<p>You got 0 notification</p>}
       >
-      {/* {unReadNotif && (
-            <p className="text-lg font-bold">New notification</p>
-        )} */}
-          
           {(notif:Notifications) => {
                return (
                 <DropdownItem key={notif.id} className="w-full p-5" onClick={()=>handleClickNotif(notif.id, notif.resourceId)}>

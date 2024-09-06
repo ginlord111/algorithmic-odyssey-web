@@ -12,6 +12,14 @@ export interface AccountDetail{
     // mobileNum:number | null;
 
 }
+export interface CommentProps {
+  id: string;
+  comment: string;
+  username: string;
+  createdAt: Date;
+  userImage: string;
+  hideComment: boolean;
+}
 
 
 

@@ -22,20 +22,20 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 const CreateClasswork = ({
   setClickCreate,
-  classId
+  classId,
 }: {
   setClickCreate: Dispatch<boolean>;
-  classId:string
+  classId: string;
 }) => {
   const [file, setFile] = useState<File | null | undefined>(null);
   const [content, setContent] = useState<JSONContent | null>(null);
   const { data: session } = useSession();
-  const router = useRouter()
+  const router = useRouter();
   const createActivityForm = useForm<z.infer<typeof createActivitySchema>>({
     resolver: zodResolver(createActivitySchema),
     mode: "onChange",
     defaultValues: {
-      title:"",
+      title: "",
       instruc: "",
     },
   });
@@ -43,29 +43,33 @@ const CreateClasswork = ({
   async function onSubmit(values: z.infer<typeof createActivitySchema>) {
     const formData = new FormData();
     // if there is any attach file
-    if(file){
-      formData.append("file" , file)
-      formData.append("mimeType", JSON.stringify(file.type))
+    if (file) {
+      formData.append("file", file);
+      formData.append("mimeType", JSON.stringify(file.type));
     }
-    formData.append("title", JSON.stringify(values.title))
-    formData.append("instruc", JSON.stringify(content))
-    formData.append("id", JSON.stringify(session?.user.id))
-    formData.append("classId", JSON.stringify(classId))
-    
+    formData.append("title", JSON.stringify(values.title));
+    formData.append("instruc", JSON.stringify(content));
+    formData.append("id", JSON.stringify(session?.user.id));
+    formData.append("classId", JSON.stringify(classId));
+    formData.append("maxScore", JSON.stringify(values.maxScore));
+    if (values.maxScore > 100) {
+      createActivityForm.setError("maxScore", {
+        message: "Max score must be 100 or less",
+      });
+      return;
+    }
     const response = await fetch(`/api/classroom/classwork`, {
       method: "POST",
       body: formData,
     });
-    if(!response.ok){
-     return createActivityForm.setError("title", {
-        message:"Something went wrong, Try again"
-      })
+    if (!response.ok) {
+      return createActivityForm.setError("title", {
+        message: "Something went wrong, Try again",
+      });
     }
-    router.refresh()
-    toast.success("Classwork created succesfully")
-    setClickCreate(false)
-  
-
+    router.refresh();
+    toast.success("Classwork created succesfully");
+    setClickCreate(false);
   }
 
   return (
@@ -82,7 +86,21 @@ const CreateClasswork = ({
               <FormItem>
                 <FormLabel>Title</FormLabel>
                 <FormControl>
-                  <Input placeholder="Title"  {...field} />
+                  <Input placeholder="Title" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={createActivityForm.control}
+            name="maxScore"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Max score (maxiumum is 100)</FormLabel>
+                <FormControl>
+                  <Input placeholder="Max score" {...field} type="number" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -120,7 +138,8 @@ const CreateClasswork = ({
               Cancel
             </Button>
             <Button className="bg-blue-500" type="submit">
-            {createActivityForm.formState.isLoading || createActivityForm.formState.isSubmitting ? (
+              {createActivityForm.formState.isLoading ||
+              createActivityForm.formState.isSubmitting ? (
                 <Loader2 className="w-7 h-7 animate-spin" />
               ) : (
                 <span>Post</span>

@@ -1,8 +1,8 @@
 import timeDiff from "@/utils/timeCalc";
 import { Avatar } from "@nextui-org/react";
-import { ForumComment } from "@prisma/client";
 import React, { useMemo } from "react";
 import Link from "next/link";
+import { CommentProps } from "@/types/types";
 const CommentsList = ({
   id,
   comment,
@@ -10,7 +10,7 @@ const CommentsList = ({
   createdAt,
   hideComment,
   userImage,
-}:ForumComment & {
+}:CommentProps  & {
   hideComment:boolean;
 }) => {
   const timeDiffCalc = useMemo(() => {

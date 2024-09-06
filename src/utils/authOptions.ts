@@ -6,6 +6,7 @@ import { randomUsername } from "./randUsername";
 import prisma from "@/db";
 import CredentialsProvider from "next-auth/providers/credentials"
 import { verifyPassword } from "./verifyHashPass";
+import Cookies from 'js-cookie';
 const username = randomUsername()
 export const authOptions:NextAuthOptions = {
     adapter: PrismaAdapter(prisma) as Adapter,
@@ -46,9 +47,11 @@ providers:[
     GitHubProvider({
         clientId:process.env.GITHUB_CLIENT_ID as string,
         clientSecret:process.env.GITHUB_CLIENT_SECRET as string,
-       profile(profile){
+        profile(profile) {
       const defaultImage = 'https://res.cloudinary.com/dv6qpahip/image/upload/v1718451921/algorithmic-oddysey/cyftkayeh6c0hsuaihtc.png'
-        return {
+     const role = profile.state
+          console.log(role, "ROLEEEE")
+      return {
             id: profile.id.toString(),
             username:username, /// GENERATE RANDOM USERNAME
             email:profile.email,
@@ -57,12 +60,13 @@ providers:[
             role:profile.role ?? "user",
             isStudent:profile.isStudent ?? true
         }
-       }
+       },
+      
     }),
  
 ],
 callbacks: {
-  jwt({user, token}){
+  jwt({user, token, account}){
     if(user){
       token.role = user.role
       token.isStudent = user.isStudent

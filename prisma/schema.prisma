@@ -37,7 +37,7 @@ model User {
   forumLikes             ForumLike[]
   sessions               Session[]
   classrooms             Classroom[]             @relation("StudentClassrooms")
-
+  activityComments      ActivityComments[]      
   @@unique([id, username, userImage, facebook, twitter, github, instagram])
   @@unique([id, username, userImage])
   @@unique([id, userImage])
@@ -174,10 +174,11 @@ model Activity {
   fileUrlDownload String
   teacherName     String
   fileType        String
+  maxScore        Int
   classroom       Classroom         @relation("ClassroomActivities", fields: [classroomId], references: [id])
   teacher         User              @relation("TeacherWhoCreateActivity", fields: [teacherId, teacherName], references: [id, username])
   StudentActivity StudentActivity[]
-
+  activityComments  ActivityComments[]
   @@schema("activity")
 }
 
@@ -214,4 +215,22 @@ model ClassroomAnnouncement {
   user        User      @relation("TeacherStudentAnnouncement", fields: [userId, userImage, userName], references: [id, userImage, username])
 
   @@schema("classroom")
+}
+
+
+
+model ActivityComments{
+
+  id        String   @id @default(cuid())
+  comment   String
+  userId    String
+  userImage String
+  username  String
+  activityId  String
+  activity  Activity  @relation(fields: [activityId] , references: [id])
+  user        User    @relation(fields: [userId,username,userImage], references: [id,username,userImage])
+  createdAt DateTime @default(now())
+
+
+@@schema("activity")
 }

@@ -7,6 +7,7 @@ import { generateHTML } from "@tiptap/html";
 import parse from "html-react-parser";
 import Link from "next/link";
 import timeDiff from "@/utils/timeCalc";
+import ActivityComment from "./ActivityComment";
 const InstructionTab = ({ act }: { act: Activity }) => {
   const extension = tiptapExtensions();
   const instruction = generateHTML(act.instruction as JSONContent, extension);
@@ -48,6 +49,9 @@ const InstructionTab = ({ act }: { act: Activity }) => {
           </Link>
         </div>
       </div>
+  <div className="mt-20">
+  <ActivityComment activityId={act.id}/>
+  </div>
     </div>
   );
 };

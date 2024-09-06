@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
     const instruction = JSON.parse(body.get("instruc") as string);
     const id = JSON.parse(body.get("id") as string);
     const classId = JSON.parse(body.get("classId") as string);
+    const maxScore = JSON.parse(body.get("maxScore") as string)
 
     // saving the file inside the upload folder
     const savedFilePath = await saveFile(file, file.name);
@@ -39,6 +40,7 @@ export async function POST(req: NextRequest) {
         fileType: file.type,
         fileUrl: (fileUpload?.fileUrl as string) ?? null,
         fileUrlDownload: (fileUpload?.fileUrlDownload as string) ?? null,
+        maxScore,
         teacher: {
           connect: {
             id,

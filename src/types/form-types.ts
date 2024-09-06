@@ -124,5 +124,10 @@ export const createActivitySchema = z.object({
   }),
   title:z.string().min(5, {
       message:"Title must be atleast 5 characters"
-  })
-})
+  }),
+  maxScore: z
+    .string()
+    .transform((val) => Number(val)) // Transform the string to a number
+    .refine((val) => !isNaN(val), {
+      message: "Max score must be a valid number",
+    })})

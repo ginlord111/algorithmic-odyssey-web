@@ -85,7 +85,7 @@ const LandingPage = () => {
             <h1 className="font-bold md:text-5xl text-2xl tracking-wide">
               About
             </h1>
-            <div className="pt-10 flex gap-10 md:flex-row flex-col">
+            <div className="pt-10 flex gap-10 lg:flex-row md:flex-col overflow-hidden">
               <div className="flex flex-col gap-5 md:w-[50%] w-full">
                 <div className="relative md:w-[500px] md:h-[300px] w-full h-[200px]">
                   <Image
