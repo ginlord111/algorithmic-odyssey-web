@@ -10,7 +10,7 @@ import {
 import { announcementSchema } from "@/types/form-types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Avatar } from "@nextui-org/react";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { JSONContent } from "@tiptap/react";
@@ -58,7 +58,7 @@ const Announcement = ({ classId }: { classId: string }) => {
     }
   };
 
-  const {data:classAnn} = useQuery({
+  const {data:classAnn, refetch,isRefetching,isLoading,isPending,isSuccess} = useQuery({
     queryKey:['fetch-class-ann'],
     queryFn:fetchClassAnnouncement,
 
@@ -83,6 +83,7 @@ const Announcement = ({ classId }: { classId: string }) => {
       announcementForm.reset();
       setClickAnn((prev) => (prev = false));
       toast.success("Classroom posted succesfully");
+      refetch()
       router.refresh();
     }
   }
@@ -147,7 +148,8 @@ const Announcement = ({ classId }: { classId: string }) => {
             className="flex items-center"
             onClick={() => setClickAnn((prev) => !prev)}
           >
-            <Avatar showFallback src={user?.userImage as string} size="md" />
+            <Avatar showFallback src={user?.userImage as string} size="md" 
+            />
             <p className="text-sm text-muted-foreground tracking-wide pl-5">
               Announce something to your class
             </p>
@@ -155,9 +157,18 @@ const Announcement = ({ classId }: { classId: string }) => {
         )}
       </div>
 
-      {classAnn?.map((ann: ClassroomAnnouncement)  => (
-        <AnnouncementCard key={ann.id} data={ann} />
-      ))}
+     {isSuccess && !isLoading && !isRefetching && !isPending ? (
+       <Fragment>
+             {classAnn?.map((ann: ClassroomAnnouncement)  => (
+              <AnnouncementCard key={ann.id} data={ann} />
+            ))}
+       </Fragment>
+      
+     ): (
+<div className="relative flex items-center justify-center">
+<Loader2 className="h-16 w-16 animate-spin"/>
+</div>
+     )}
     </div>
   );
 };

@@ -9,7 +9,17 @@ import { signIn, useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import userInfo from "@/store/store";
 import Notification from "../notification/Notification";
-import path from "path";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
+import { Button } from "../ui/button";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -94,8 +104,27 @@ export default function NavBar() {
       </NavbarContent>
       <NavbarContent justify="end">
         {/* FOR MOBILE  */}
-        <NavbarItem className="md:hidden flex">
-          <Menu />
+        <NavbarItem className="md:hidden flex w-[40%]">
+        <Drawer direction="right" snapPoints={[0.7, 1]} handleOnly>
+  <DrawerTrigger>
+    <Menu />
+  </DrawerTrigger>
+  <DrawerContent className="w-[70%] overflow-hidden bg-white  text-gray-500 h-full">
+    <DrawerHeader className="p-4 border-b border-gray-700">
+      <DrawerTitle className="text-lg font-semibold">Navigation</DrawerTitle>
+    </DrawerHeader>
+    {navItems.map((item, index) => (
+          <NavbarItem key={index} className="block py-2 px-3">
+            <Link href={item.href} className="text-xl">
+             <DrawerClose >
+             {item.name}
+             </DrawerClose>
+            </Link>
+          </NavbarItem>
+        ))}
+  </DrawerContent>
+</Drawer>
+
         </NavbarItem>
         {session?.user.id ? (
           <>
