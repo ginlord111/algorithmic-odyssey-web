@@ -9,12 +9,13 @@ import ForumSkeleton from "@/components/forum/ForumSkeleton";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import FollowBtn from "@/app/user/[username]/_components/FollowBtn";
-const Forums = () => {
+type SortType = "newest" | "oldest" | "popular" | "following";
+const Forums = ({ userId }: { userId: string | null }) => {
   const searchParams = useSearchParams();
-  const { replace,push } = useRouter();
+  const { replace, push } = useRouter();
   const pathname = usePathname();
   const [sortAs, setSortAs] = useState<string>(
-    searchParams.get("sort") as "newest" | "oldest" | "popular"
+    searchParams.get("sort") as SortType
   );
   const getForums = async ({ cursor }: { cursor: string }) => {
     const params = new URLSearchParams({
@@ -56,7 +57,7 @@ const Forums = () => {
     initialPageParam: "",
     queryKey: ["forums"],
     queryFn: ({ pageParam = "" }) => getForums({ cursor: pageParam as string }),
-    refetchOnWindowFocus:false,
+    refetchOnWindowFocus: false,
     getNextPageParam: (lastPage) => {
       return Object.keys(lastPage).length !== 0
         ? lastPage?.metaData.lastCursor
@@ -69,7 +70,7 @@ const Forums = () => {
       scroll: false,
     });
     if (!sortAs) {
-      setSortAs(searchParams.get("sort") as "newest" | "oldest" | "popular");
+      setSortAs(searchParams.get("sort") as SortType);
     }
     refetch();
     refetchUserLikes();
@@ -96,9 +97,7 @@ const Forums = () => {
         <div className="flex flex-col">
           {/* TODO: MOVE THIS BUTTON TO THE NAVBAR OR IN SIDEBAR*/}
           <div className="flex items-center justify-center w-full mt-10">
-            <Button 
-            onClick={()=>push("/new")}
-            >Create Post</Button>
+            <Button onClick={() => push("/new")}>Create Post</Button>
           </div>
           <div className="flex items-end w-full lg:justify-center justify-center mt-7">
             <Button
@@ -122,13 +121,15 @@ const Forums = () => {
             >
               Newest
             </Button>
-            <Button
-              variant="link"
-              // onClick={() => setSortAs((prev) => (prev = "newest"))}
-              // className={`${sortAs === "newest" && "underline"}`}
-            >
-              Following
-            </Button>
+            {userId && (
+              <Button
+                variant="link"
+                onClick={() => setSortAs((prev) => (prev = "following"))}
+                className={`${sortAs === "following" && "underline"}`}
+              >
+                Following
+              </Button>
+            )}
           </div>
           {isSuccess && !isPending && !isLoading && !isRefetching ? (
             data.pages.map(
@@ -141,22 +142,40 @@ const Forums = () => {
                     },
                     index: number
                   ) => (
-                 <Fragment key={index}>
-                  {page.data.length === index +1 ? (
-                       <div key={index} ref={ref}>
-                       <ForumContainer {...forum} userLikes={userLikes} followBtnComponent={<FollowBtn  followingId={forum.userId} className="mt-0"/>}/>
-                     </div>
-                  ): (
-                    <div>
-                       <ForumContainer {...forum} userLikes={userLikes} followBtnComponent={<FollowBtn  followingId={forum.userId} className="mt-0"/>}/>
-                    </div>
-                  )}
-                 </Fragment>
+                    <Fragment key={index}>
+                      {page.data.length === index + 1 ? (
+                        <div key={index} ref={ref}>
+                          <ForumContainer
+                            {...forum}
+                            userLikes={userLikes}
+                            followBtnComponent={
+                              <FollowBtn
+                                followingId={forum.userId}
+                                className="mt-0"
+                              />
+                            }
+                          />
+                        </div>
+                      ) : (
+                        <div>
+                          <ForumContainer
+                            {...forum}
+                            userLikes={userLikes}
+                            followBtnComponent={
+                              <FollowBtn
+                                followingId={forum.userId}
+                                className="mt-0"
+                              />
+                            }
+                          />
+                        </div>
+                      )}
+                    </Fragment>
                   )
                 )
             )
           ) : (
-            <ForumSkeleton/>
+            <ForumSkeleton />
           )}
           {isFetchingNextPage && <ForumSkeleton />}
           {!hasNextPage && !isPending && !isLoading && !isFetching && (

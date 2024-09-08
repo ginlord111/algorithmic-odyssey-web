@@ -6,20 +6,60 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 import { revalidatePath } from "next/cache";
 import generateRandomString from "@/helper/generateRandomString";
+interface forumQuery {
+  include: {};
+  where?: {
+    userId: {};
+  };
+  orderBy?: {} | [];
+}
 export async function GET(req: NextRequest): Promise<any> {
   try {
     const url = new URL(req.url);
+    const session = await getServerSession(authOptions);
     const cursor = url.searchParams.get("cursor");
     const sort = url.searchParams.get("sort");
-    const forums = await prisma.forum.findMany({
-      ...(cursor && {
-        skip: 1,
-        cursor: {
-          id: cursor,
-        },
+    // const forums = await prisma.forum.findMany({
+    //   ...(cursor && {
+    //     skip: 1,
+    //     cursor: {
+    //       id: cursor,
+    //     },
+    //   }),
+    //   take: 1,
+    //   include: {
+    //     _count: {
+    //       select: {
+    //         forumLikes: true,
+    //         comments: true,
+    //       },
+    //     },
+    //   },
 
-        }),
-        take:1,
+    //   //TODO: ADD A ONE MORE SORT HERE FOR FOLLOWING USER SORT
+    //   // if the forum have the same numnber of like, added a second criteria for sorting which is the createdAt here
+    //   //@ts-ignore  /// temporary ignoring the error here
+    //   orderBy: [
+    //     ...(sort === "popular"
+    //       ? [
+    //           {
+    //             forumLikes: {
+    //               _count: "desc",
+    //             },
+    //           },
+    //           {
+    //             createdAt: "desc", // Secondary sort criterion
+    //           },
+    //         ]
+    //       : [
+    //           {
+    //             createdAt: sort === "newest" ? "desc" : "asc",
+    //           },
+    //         ]),
+    //   ],
+    // });
+
+    const forumQuery: forumQuery = {
       include: {
         _count: {
           select: {
@@ -28,29 +68,70 @@ export async function GET(req: NextRequest): Promise<any> {
           },
         },
       },
-      //TODO: ADD A ONE MORE SORT HERE FOR FOLLOWING USER SORT
-      // if the forum have the same numnber of like, added a second criteria for sorting which is the createdAt here
-      //@ts-ignore  /// temporary ignoring the error here
-      orderBy: [
-        ...(sort === "popular"
-          ? [
-              {
-                forumLikes: {
-                  _count: "desc",
-                },
-              },
-              {
-                createdAt: "desc", // Secondary sort criterion
-              },
-            ]
-          : [
-              {
-                createdAt: sort === "newest" ? "desc" : "asc",
-              },
-            ]),
-      ],
+      orderBy: {
+        createdAt: "desc",
+      },
+    };
 
+    if (sort === "oldest") {
+      forumQuery.orderBy = {
+        createdAt: "asc",
+      };
+    }
+    if (sort === "newest") {
+      forumQuery.orderBy = {
+        createdAt: "desc",
+      };
+    }
+    if (sort === "popular") {
+      forumQuery.orderBy = [
+        {
+          forumLikes: {
+            _count: "desc",
+          },
+        },
+        {
+          createdAt: "desc", // Secondary sort criterion
+        },
+      ];
+    }
+
+    if (sort === "following") {
+      const data = await prisma.user.findMany({
+        where: {
+          id: session?.user.id as string,
+        },
+        include: {
+          following: {
+            select: {
+              followingId: true,
+            },
+          },
+        },
+      });
+
+      const followingIds = data
+        .flatMap((user) => user.following)
+        .map((res) => res.followingId) ?? []
+      forumQuery.where = {
+        ...forumQuery.where,
+        userId: {
+          in: followingIds.length > 0 ? followingIds : [''], 
+        },
+      };
+    }
+
+    const forums = await prisma.forum.findMany({
+      ...forumQuery,
+      ...(cursor && {
+        skip: 1,
+        cursor: {
+          id: cursor,
+        },
+      }),
+      take:1,
     });
+
     if (forums.length === 0) {
       return NextResponse.json(
         {
@@ -99,9 +180,9 @@ export async function POST(req: NextRequest) {
   }
   const captions = JSON.parse(body.get("caption") as string);
   const title = JSON.parse(body.get("title") as string);
-  const content = JSON.parse(body.get("content") as string)
+  const content = JSON.parse(body.get("content") as string);
   /// FOR TITLE ID RANDOM STRING
-const titleId= generateRandomString()
+  const titleId = generateRandomString();
   try {
     await prisma.forum.create({
       data: {
