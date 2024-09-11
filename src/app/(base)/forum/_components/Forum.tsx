@@ -9,6 +9,7 @@ import ForumSkeleton from "@/components/forum/ForumSkeleton";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import FollowBtn from "@/app/user/[username]/_components/FollowBtn";
+import Image from "next/image";
 type SortType = "newest" | "oldest" | "popular" | "following";
 const Forums = ({ userId }: { userId: string | null }) => {
   const searchParams = useSearchParams();
@@ -89,7 +90,9 @@ const Forums = ({ userId }: { userId: string | null }) => {
       fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, inView, isFetching]);
-
+  const isDataFound = data?.pages[0].length  === 0 
+  console.log(isDataFound, "data found")
+  console.log(data, "DATAA")
   return (
     <div>
       <MaxWidthWrapper>
@@ -176,6 +179,19 @@ const Forums = ({ userId }: { userId: string | null }) => {
             )
           ) : (
             <ForumSkeleton />
+          )}
+          {isDataFound && (
+                   <div className="flex items-center justify-center flex-col space-y-3">
+                   <Image 
+                   src="/no-works.svg"
+                   alt="No data found"
+                   width={400}
+                   height={400}
+                   />
+                   <span className="text-muted-foreground font-semibold">
+                     No data found
+                   </span>
+                 </div>
           )}
           {isFetchingNextPage && <ForumSkeleton />}
           {!hasNextPage && !isPending && !isLoading && !isFetching && (

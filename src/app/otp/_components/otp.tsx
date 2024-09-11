@@ -94,6 +94,7 @@ const OTPComponent = () => {
                         <span className="text-muted-foreground font-semibold pb-[90px] mt-10 ">
                           We send OTP to your email
                         </span>
+                        <span>Default code is : 123456</span>
                         <InputOTP
                           maxLength={6}
                           value={value as string}
