@@ -22,7 +22,6 @@ const RoleModal = ({ isOpen, onOpenChange, onClose }: RoleModalProps) => {
   const router = useRouter();
   const {setRoles} = useRoleStore()
   const handleSignup = async () => {
-    Cookies.set("userRole", role)
     setRoles(role)
     await signIn("github", {
       params: {
@@ -31,7 +30,6 @@ const RoleModal = ({ isOpen, onOpenChange, onClose }: RoleModalProps) => {
     });
     router.push("/");
   };
-  console.log(role, " ROLEEE");
   return (
     <Modal
       backdrop="opaque"

@@ -57,6 +57,9 @@ const SignUpTab = ({
       router.replace(`/otp?to=${email}`);
     }
   }
+  const handleSignUp = async() => {
+   await  signIn("github", {callbackUrl:"/forum"});
+  }
   return (
     <Form {...signUpForm}>
       <form onSubmit={signUpForm.handleSubmit(onSubmit)} className="space-y-5">
@@ -132,7 +135,7 @@ const SignUpTab = ({
           <span className="text-sm text-muted-foreground font-bold">
             Or sign up with
           </span>
-          <Button onClick={() => onOpen()} className="px-10" type="button">
+          <Button onClick={handleSignUp} className="px-10" type="button">
             <Github className="w-6 h-6" />
           </Button>
 
