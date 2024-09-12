@@ -1,11 +1,12 @@
-import RoleModal from '@/app/auth/_components/RoleModal'
-import React from 'react'
+
+import React, { Suspense } from 'react'
+import RoleModal from './_components/RoleModal'
 
 const page = () => {
   return (
-    <div>
-        <RoleModal />
-    </div>
+<Suspense>
+  <RoleModal />
+</Suspense>
   )
 }
 
