@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Form,
   FormControl,
@@ -17,8 +17,8 @@ import { Key, SetStateAction, Dispatch } from "react";
 import { useRouter } from "next/navigation";
 import { Github, Loader2, Mail } from "lucide-react";
 import { signIn } from "next-auth/react";
-import RoleModal from "./RoleModal";
-import { useDisclosure } from "@nextui-org/react";
+import { Radio, RadioGroup, useDisclosure } from "@nextui-org/react";
+import { UserRole } from "@/types/types";
 interface signUpError {
   emailError: string;
   usernameError: string;
@@ -28,6 +28,7 @@ const SignUpTab = ({
 }: {
   setSelected: Dispatch<SetStateAction<Key>>;
 }) => {
+  const [role,setRole] = useState<UserRole>("student")
   const router = useRouter();
   const signUpForm = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
@@ -40,7 +41,7 @@ const SignUpTab = ({
     /// SEND VERIFICATION CODE HERE
     const res = await fetch("api/sign-up", {
       method: "POST",
-      body: JSON.stringify({ email, password, username }),
+      body: JSON.stringify({ email, password, username,role }),
     });
     if (!res.ok && res.status === 409) {
       const error: signUpError = await res.json();
@@ -57,17 +58,12 @@ const SignUpTab = ({
       router.replace(`/otp?to=${email}`);
     }
   }
-  const handleSignUp = async() => {
-   await  signIn("github", {callbackUrl:"/forum"});
+  const handleSignUpGithub = async() => {
+   await  signIn("github");
   }
   return (
     <Form {...signUpForm}>
       <form onSubmit={signUpForm.handleSubmit(onSubmit)} className="space-y-5">
-        <RoleModal
-          isOpen={isOpen}
-          onClose={onClose}
-          onOpenChange={onOpenChange}
-        />
         <FormField
           control={signUpForm.control}
           name="email"
@@ -123,6 +119,14 @@ const SignUpTab = ({
             </FormItem>
           )}
         />
+          <RadioGroup
+                label="Select type of account"
+                value={role}
+                onChange={(e) => setRole(e.target.value as UserRole)}
+              >
+                <Radio value="student">Student</Radio>
+                <Radio value="teacher">Teacher</Radio>
+              </RadioGroup>
         <Button type="submit" className="w-full">
           {signUpForm.formState.isLoading ||
           signUpForm.formState.isSubmitting ? (
@@ -135,7 +139,7 @@ const SignUpTab = ({
           <span className="text-sm text-muted-foreground font-bold">
             Or sign up with
           </span>
-          <Button onClick={handleSignUp} className="px-10" type="button">
+          <Button onClick={handleSignUpGithub} className="px-10" type="button">
             <Github className="w-6 h-6" />
           </Button>
 

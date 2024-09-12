@@ -1,7 +1,8 @@
 "use server"
 import prisma from "@/db"
+import { UserRole } from "@/types/types"
 import { authOptions } from "@/utils/authOptions"
-import { Activity, Classroom, ClassroomAnnouncement, User } from "@prisma/client"
+import { Activity, User } from "@prisma/client"
 import { getServerSession } from "next-auth"
 export const fetchUserProfile = async () => {
     try {
@@ -112,4 +113,28 @@ export const fetchClassAct = async(classId:string) => {
       })
 
       return classAct  as Activity[] ?? []
+}
+
+
+export const submitRole = async(username:string,role:UserRole) =>{
+  try {
+  await prisma.user.update({
+        where:{
+            username
+        },
+        data:{
+        isStudent:role === "student" ?  true : role==="teacher" ? false : true
+        }
+    })
+    
+    return {
+        status:200
+    }
+  } catch (error) {
+    console.log(error)
+    return {
+        status:500,
+        message:"Something went wrong"
+    }
+  }
 }

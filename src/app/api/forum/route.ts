@@ -19,45 +19,7 @@ export async function GET(req: NextRequest): Promise<any> {
     const session = await getServerSession(authOptions);
     const cursor = url.searchParams.get("cursor");
     const sort = url.searchParams.get("sort");
-    // const forums = await prisma.forum.findMany({
-    //   ...(cursor && {
-    //     skip: 1,
-    //     cursor: {
-    //       id: cursor,
-    //     },
-    //   }),
-    //   take: 1,
-    //   include: {
-    //     _count: {
-    //       select: {
-    //         forumLikes: true,
-    //         comments: true,
-    //       },
-    //     },
-    //   },
-
-    //   //TODO: ADD A ONE MORE SORT HERE FOR FOLLOWING USER SORT
-    //   // if the forum have the same numnber of like, added a second criteria for sorting which is the createdAt here
-    //   //@ts-ignore  /// temporary ignoring the error here
-    //   orderBy: [
-    //     ...(sort === "popular"
-    //       ? [
-    //           {
-    //             forumLikes: {
-    //               _count: "desc",
-    //             },
-    //           },
-    //           {
-    //             createdAt: "desc", // Secondary sort criterion
-    //           },
-    //         ]
-    //       : [
-    //           {
-    //             createdAt: sort === "newest" ? "desc" : "asc",
-    //           },
-    //         ]),
-    //   ],
-    // });
+   
 
     const forumQuery: forumQuery = {
       include: {
@@ -69,7 +31,7 @@ export async function GET(req: NextRequest): Promise<any> {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
     };
 

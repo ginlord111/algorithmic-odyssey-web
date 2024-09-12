@@ -6,8 +6,8 @@ import { randomUsername } from "./randUsername";
 import prisma from "@/db";
 import CredentialsProvider from "next-auth/providers/credentials"
 import { verifyPassword } from "./verifyHashPass";
-import Cookies from 'js-cookie';
 const username = randomUsername()
+let email;
 export const authOptions:NextAuthOptions = {
     adapter: PrismaAdapter(prisma) as Adapter,
   secret:process.env.NEXTAUTH_SECRET as string,
@@ -49,8 +49,7 @@ providers:[
         clientSecret:process.env.GITHUB_CLIENT_SECRET as string,
         profile(profile) {
       const defaultImage = 'https://res.cloudinary.com/dv6qpahip/image/upload/v1718451921/algorithmic-oddysey/cyftkayeh6c0hsuaihtc.png'
-     const role = profile.state
-          console.log(role, "ROLEEEE")
+          console.log(profile.email, "USER ID")
       return {
             id: profile.id.toString(),
             username:username, /// GENERATE RANDOM USERNAME
@@ -87,7 +86,7 @@ callbacks: {
   },
 pages:{
    // TODO : DIRECT THE NEW USER TO THE USERNAME CONFIGURE TO CHANGE THEIR USERNAME
-    newUser:`/user/${username}/`,
+    newUser:`/role?to=${username}`,
     signOut:'/auth/signout',
     // TODO: RETURN HOME WHEN THHE USER LOG OUT
 signIn:'/auth',
