@@ -28,7 +28,7 @@ const RoleModal = () => {
     if (!username) {
       setUsername(searchParams.get("to") as string);
     }
-  }, [username]);
+  }, [username,searchParams]);
 
   console.log(username, "username")
   const onSubmit = async () => {
@@ -60,7 +60,7 @@ const RoleModal = () => {
             <ModalHeader className="flex flex-col gap-1">
               <p> Who are you?</p>
               <span className="text-red-500 text-xs">
-                Note: If you dont select a role, 'Student' will be set as the
+                Note: If you don&apos;t select a role, &apos;Student&apos; will be set as the
                 default
               </span>
             </ModalHeader>
