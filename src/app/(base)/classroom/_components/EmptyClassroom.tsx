@@ -20,7 +20,7 @@ const EmptyClassroom = ({ isStudent }: { isStudent: boolean }) => {
   const {fetchUser, user} = userInfo()
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [fetchUser]);
   
   return (
     <div className="flex items-center justify-center flex-col space-y-4">
