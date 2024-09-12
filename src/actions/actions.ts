@@ -1,7 +1,7 @@
 "use server"
 import prisma from "@/db"
 import { authOptions } from "@/utils/authOptions"
-import { Classroom, ClassroomAnnouncement, User } from "@prisma/client"
+import { Activity, Classroom, ClassroomAnnouncement, User } from "@prisma/client"
 import { getServerSession } from "next-auth"
 export const fetchUserProfile = async () => {
     try {
@@ -103,5 +103,13 @@ export const verifyEmail = async (email:string) => {
     return false;
 }
 
+export const fetchClassAct = async(classId:string) => {
+    const classAct = await prisma.activity.findMany({
+        where:{
+          classroomId:classId,
+        }
+        
+      })
 
-
+      return classAct  as Activity[] ?? []
+}

@@ -1,9 +1,11 @@
-import React from 'react'
+import { Activity } from "@prisma/client";
+import React from "react";
+import TaskContainer from "./TaskContainer";
 
-const PendingTask = () => {
+const PendingTask = ({ pendingTasks }: { pendingTasks: Activity[] }) => {
   return (
-    <div>PendingTask</div>
-  )
-}
+  <TaskContainer tasks={pendingTasks} isPending/>
+  );
+};
 
-export default PendingTask
+export default PendingTask;

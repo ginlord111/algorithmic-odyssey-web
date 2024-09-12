@@ -95,3 +95,15 @@ export const createClassroomModal = create<createClassroomModalProps>((set) => (
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false })
 }));
+
+
+
+interface RoleState {
+  roles: string;
+  setRoles: (role: string) => void;
+}
+
+export const useRoleStore = create<RoleState>((set) => ({
+  roles: "student", // default value
+  setRoles: (roles) => set({ roles }),
+}));

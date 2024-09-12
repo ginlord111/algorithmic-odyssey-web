@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} relative h-full font-sans bg-[#eff1f5] dark:bg-[#1b1b1f]`}
+        className={'relative h-full font-sans bg-[#eff1f5] dark:bg-[#1b1b1f]'}
       >
         <main className="relative flex flex-col min-h-screen">
           <Suspense>
