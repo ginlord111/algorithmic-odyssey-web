@@ -13,13 +13,11 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer"
-import { Button } from "../ui/button";
+} from "@/components/ui/drawer";
+import Image from "next/image";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -46,12 +44,11 @@ export default function NavBar() {
   useEffect(() => {
     fetchUser();
   }, [session?.user.id, fetchUser, pathname]);
-  /// TODO: WHEN OVERING THE USER AVATAR SHOW THE DROPDOWN OPTION FOR USER PROFILE , CREATE POST AND 
+  /// TODO: WHEN OVERING THE USER AVATAR SHOW THE DROPDOWN OPTION FOR USER PROFILE , CREATE POST AND
   const navItems = [
-
     {
       name: "Classroom",
-      href:"/classroom",
+      href: "/classroom",
       className: "",
     },
     {
@@ -60,8 +57,8 @@ export default function NavBar() {
       className: "",
     },
     {
-      name: "About",
-      href: "/",
+      name: "About us",
+      href: "/about-us",
       className: "",
     },
     {
@@ -70,27 +67,35 @@ export default function NavBar() {
       className: "",
     },
     {
-      name: "Download",
+      name: "Game",
       href: "/",
       className: "",
     },
-    {
-      name: "Docs",
-      href: "/",
-      className: "",
-    },
+    // {
+    //   name: "Docs",
+    //   href: "/",
+    //   className: "",
+    // },
   ];
   return (
     <Navbar
       className={cn(
         " px-10 cursor-pointer w-full  bg-transparent bg-opacity-70 transition backdrop-filter backdrop-blur-sm absolute z-10 text-white font-bold border-b-1 border-[#cbd5e11a]",
-        { "fixed bg-[#414d69] dark:bg-[#1b1b1f]  ": isScrolled }
+        { "fixed bg-[#00171F] dark:bg-[#1b1b1f]  ": isScrolled }
       )}
       maxWidth="full"
     >
       <NavbarContent justify="start">
         <Link href="/">
-          <p className="font-bold text-xl mr-16">LOGO</p>
+          <div className="relative w-[50px] h-[40px]">
+            <Image
+              src="/algorithmic-logo.png"
+              alt="LOGO"
+              className="object-cover rounded-lg"
+              layout="fill"
+            />
+            logo
+          </div>
         </Link>
       </NavbarContent>
       <NavbarContent className="w-full hidden lg:flex gap-10" justify="center">
@@ -105,26 +110,25 @@ export default function NavBar() {
       <NavbarContent justify="end">
         {/* FOR MOBILE  */}
         <NavbarItem className="md:hidden flex w-[40%]">
-        <Drawer direction="right" snapPoints={[0.7, 1]} handleOnly>
-  <DrawerTrigger>
-    <Menu />
-  </DrawerTrigger>
-  <DrawerContent className="w-[70%] overflow-hidden bg-white  text-gray-500 h-full">
-    <DrawerHeader className="p-4 border-b border-gray-700">
-      <DrawerTitle className="text-lg font-semibold">Navigation</DrawerTitle>
-    </DrawerHeader>
-    {navItems.map((item, index) => (
-          <NavbarItem key={index} className="block py-2 px-3">
-            <Link href={item.href} className="text-xl">
-             <DrawerClose >
-             {item.name}
-             </DrawerClose>
-            </Link>
-          </NavbarItem>
-        ))}
-  </DrawerContent>
-</Drawer>
-
+          <Drawer direction="right" snapPoints={[0.7, 1]} handleOnly>
+            <DrawerTrigger>
+              <Menu />
+            </DrawerTrigger>
+            <DrawerContent className="w-[70%] overflow-hidden bg-white  text-gray-500 h-full">
+              <DrawerHeader className="p-4 border-b border-gray-700">
+                <DrawerTitle className="text-lg font-semibold">
+                  Navigation
+                </DrawerTitle>
+              </DrawerHeader>
+              {navItems.map((item, index) => (
+                <NavbarItem key={index} className="block py-2 px-3">
+                  <Link href={item.href} className="text-xl">
+                    <DrawerClose>{item.name}</DrawerClose>
+                  </Link>
+                </NavbarItem>
+              ))}
+            </DrawerContent>
+          </Drawer>
         </NavbarItem>
         {session?.user.id ? (
           <>
