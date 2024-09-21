@@ -19,6 +19,7 @@ import { Github, Loader2, Mail } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { Radio, RadioGroup, useDisclosure } from "@nextui-org/react";
 import { UserRole } from "@/types/types";
+import { generateToken } from "@/utils/tokenGenerator";
 interface signUpError {
   emailError: string;
   usernameError: string;
@@ -37,12 +38,16 @@ const SignUpTab = ({
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   async function onSubmit(data: z.infer<typeof signUpFormSchema>) {
     const { email, password, username } = data;
-
-    /// SEND VERIFICATION CODE HERE
+    const token = generateToken()
+    await fetch("api/email" , {
+      method:"POST",
+      body:JSON.stringify({email,username,token})
+    })
     const res = await fetch("api/sign-up", {
       method: "POST",
-      body: JSON.stringify({ email, password, username,role }),
+      body: JSON.stringify({ email, password, username,role,token }),
     });
+        /// SEND VERIFICATION CODE HERE
     if (!res.ok && res.status === 409) {
       const error: signUpError = await res.json();
       if (error.emailError) {

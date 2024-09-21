@@ -149,7 +149,7 @@ const LandingPage = () => {
                     />
                   </div>
                 </CardHeader>
-                <CardBody className="bg-[#414d69]">
+                <CardBody className="bg-[#003459]">
                   <div className="py-4 flex flex-col items-start gap-3">
                     <h3 className="font-bold tracking-wide text-2xl h-fit text-white">
                       {card.title}

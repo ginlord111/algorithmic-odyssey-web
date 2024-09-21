@@ -5,15 +5,16 @@ import { NextRequest, NextResponse } from "next/server";
 import EmailTemplate from '../../../../emails/EmailTemplate';
 const resend = new Resend(process.env.RESEND_API_KEY);
 export  async function POST (req: NextRequest) {
-    const {email, userName} = await req.json()
+     const {email, username,token} = await req.json()
     const { data, error } = await resend.emails.send({
-      from: 'Acme <onboarding@resend.dev>',
-      to: ['delivered@resend.dev'],
-      subject: 'Hello world',
-   html:render(EmailTemplate({userFirstname:userName}))
+      from: 'algorithmic@algorithmic-odyssey.online',
+      to: [`${email}`],
+      subject: 'Email Verification',
+   html:render(EmailTemplate({username:username, otp:token}))
     });
   
     if (error) {
+      console.log(error, "ERROR")
       return NextResponse.json({error}, {status:400});
     }
   

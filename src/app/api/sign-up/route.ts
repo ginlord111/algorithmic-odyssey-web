@@ -4,7 +4,7 @@ import { generateToken } from "@/utils/tokenGenerator";
 import { hashPassword } from "@/utils/hashPassword";
 export async function POST(req: NextRequest) {
   try {
-    const { email, username, password,role } = await req.json();
+    const { email, username, password,role,token } = await req.json();
     console.log(email, " email")
     const isEmailOrUsernameUnique = await prisma.user.findFirst({
       where:{
@@ -34,8 +34,7 @@ export async function POST(req: NextRequest) {
         email,
         username,
         password:hashedPassword,
-        emailVerificationToken: "123456", /// THIS IS TEMPORAR TOKEN
-        // generateToken(),
+        emailVerificationToken:token,
         userImage:defaultImage,
         isStudent:role === "student" ?  true : role==="teacher" ? false : true
       },

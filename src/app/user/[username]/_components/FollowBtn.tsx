@@ -58,7 +58,7 @@ const FollowBtn = ({
   return (
     <div className={` ${className}`}>
       <Button
-        className="bg-transparent font-semibold tracking-wide text-md flex items-center justify-center"
+        className="bg-[#003459] text-white font-semibold tracking-wide text-md flex items-center justify-center"
         variant="bordered"
         onClick={handleFollowUnfollowUser}
       >

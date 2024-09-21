@@ -100,7 +100,9 @@ const Forums = ({ userId }: { userId: string | null }) => {
         <div className="flex flex-col">
           {/* TODO: MOVE THIS BUTTON TO THE NAVBAR OR IN SIDEBAR*/}
           <div className="flex items-center justify-center w-full mt-10">
-            <Button onClick={() => push("/new")}>Create Post</Button>
+            <Button 
+            className="bg-[#00171F] text-white"
+            onClick={() => push("/new")}>Create Post</Button>
           </div>
           <div className="flex items-end w-full lg:justify-center justify-center mt-7">
             <Button

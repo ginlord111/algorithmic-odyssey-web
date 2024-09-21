@@ -62,8 +62,8 @@ export default function NavBar() {
       className: "",
     },
     {
-      name: "Socials",
-      href: "/",
+      name: "Lessons",
+      href: "/lessons",
       className: "",
     },
     {
@@ -94,7 +94,6 @@ export default function NavBar() {
               className="object-cover rounded-lg"
               layout="fill"
             />
-            logo
           </div>
         </Link>
       </NavbarContent>
