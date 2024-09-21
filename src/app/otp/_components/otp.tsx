@@ -24,6 +24,7 @@ const OTPComponent = () => {
   const [selected, setSelected] = useState<"login" | Key>("otp");
   const [value, setValue] = useState<string | null>(null);
   const [emailCode, setEmailCode] = useState("");
+  const [message ,setMessage] = useState<string>("")
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -39,7 +40,11 @@ const OTPComponent = () => {
   }, [session?.user.id, emailCode, setEmailCode, searchParams]);
 
   useEffect(() => {
-    console.log(value === emailCode, "IS MATCH")
+  
+    if (value?.length ===6 && value !== emailCode) {
+      setMessage("Invalid code, try again");
+      return;
+    }
     if (value === emailCode) {
       const userVerifyFn = async () => {
         const email = searchParams.get("to");
@@ -56,10 +61,9 @@ const OTPComponent = () => {
 
       userVerifyFn();
     }
+   
   }, [value]);
 
-  console.log(emailCode, "EMAIL CODE");
-  console.log(value, "value");
   return (
     <div className="flex flex-col w-screen h-screen items-center justify-center">
       <Modal
@@ -94,7 +98,6 @@ const OTPComponent = () => {
                         <span className="text-muted-foreground font-semibold pb-[90px] mt-10 ">
                           We send OTP to your email
                         </span>
-                        <span>Default code is : 123456</span>
                         <InputOTP
                           maxLength={6}
                           value={value as string}
@@ -130,6 +133,7 @@ const OTPComponent = () => {
                             />
                           </InputOTPGroup>
                         </InputOTP>
+                      <span className="text-red-500 font-semibold mt-5">{message}</span>
                       </Tab>
                     </Tabs>
                   </CardBody>
