@@ -50,7 +50,7 @@ const AlgorithmPage = () => {
       isBegin: index === 0,
       isEnd: index === contents.length - 1,
     });
-  }, [slide, contents, index]);
+  }, [slide, index]);
 
   const hiddenIcon = "hidden text-gray-400";
   if (audioRef.current && isMuted === false) {
@@ -108,7 +108,9 @@ const AlgorithmPage = () => {
 
           {contents.map((content, index) => {
             return (
-              <SwiperSlide className="-z-10 relative h-full w-full">
+              <SwiperSlide className="-z-10 relative h-full w-full"
+              key={index}
+              >
                 {
                   <div
                     className="flex flex-col items-center justify-center w-full h-full md:space-y-4 space-y-1"

@@ -212,7 +212,7 @@ const AlgorithmPage = () => {
       isBegin: index === 0,
       isEnd: index === contents.length - 1,
     });
-  }, [slide, contents, index]);
+  }, [slide, index]);
 
   const hiddenIcon = "hidden text-gray-400";
   if (audioRef.current && isMuted === false) {
@@ -270,7 +270,9 @@ const AlgorithmPage = () => {
 
           {contents.map((content, index) => {
             return (
-              <SwiperSlide className="-z-10 relative h-full w-full">
+              <SwiperSlide className="-z-10 relative h-full w-full"
+              key={index}
+              >
                 {content.component ? (
                   content.component
                 ) : (
