@@ -6,6 +6,7 @@ import { randomUsername } from "./randUsername";
 import prisma from "@/db";
 import CredentialsProvider from "next-auth/providers/credentials"
 import { verifyPassword } from "./verifyHashPass";
+
 const username = randomUsername()
 let email;
 export const authOptions:NextAuthOptions = {
@@ -40,6 +41,8 @@ providers:[
       if (!isValid) {
         throw new Error("Invalid Credentials");
       }
+
+   
       return user;
       
     },
@@ -64,6 +67,17 @@ providers:[
     }),
  
 ],
+// cookies: {
+//   sessionToken: {
+//     name: `next-auth.session-token`,
+//     options: {
+//      httpOnly: true,
+//       secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+//       sameSite: 'lax', // 'lax' or 'none' (if using 'none', make sure your site is served over HTTPS)
+//       path: '/',
+//     },
+//   },
+// },
 callbacks: {
   jwt({user, token, account}){
     if(user){

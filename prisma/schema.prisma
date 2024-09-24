@@ -25,8 +25,11 @@ model User {
   isEmailVerified        Boolean                 @default(false)
   role                   String                  @default("user")
   isStudent              Boolean                 @default(true)
+  level                  Int?                    @default(1)
+  score                  Json?
   accounts               Account[]
   teacherActivity        Activity[]              @relation("TeacherWhoCreateActivity")
+  activityComments       ActivityComments[]
   StudentActivity        StudentActivity[]        @relation("StudentActivities")
   teacherClassroms       Classroom[]             @relation("TeacherClassrooms")
   classroomAnnouncement  ClassroomAnnouncement[] @relation("TeacherStudentAnnouncement")
@@ -37,7 +40,7 @@ model User {
   forumLikes             ForumLike[]
   sessions               Session[]
   classrooms             Classroom[]             @relation("StudentClassrooms")
-  activityComments      ActivityComments[]      
+
   @@unique([id, username, userImage, facebook, twitter, github, instagram])
   @@unique([id, username, userImage])
   @@unique([id, userImage])
@@ -163,22 +166,23 @@ model Classroom {
 }
 
 model Activity {
-  id              String            @id @default(cuid())
-  teacherId       String
-  classroomId     String
-  title           String
-  slug            String
-  createdAt       DateTime          @default(now())
-  instruction     Json
-  fileUrl         String
-  fileUrlDownload String
-  teacherName     String
-  fileType        String
-  maxScore        Int
-  classroom       Classroom         @relation("ClassroomActivities", fields: [classroomId], references: [id])
-  teacher         User              @relation("TeacherWhoCreateActivity", fields: [teacherId, teacherName], references: [id, username])
-  StudentActivity StudentActivity[]
-  activityComments  ActivityComments[]
+  id               String             @id @default(cuid())
+  teacherId        String
+  classroomId      String
+  title            String
+  slug             String
+  createdAt        DateTime           @default(now())
+  instruction      Json
+  fileUrl          String
+  fileUrlDownload  String
+  teacherName      String
+  fileType         String
+  maxScore         Int
+  classroom        Classroom          @relation("ClassroomActivities", fields: [classroomId], references: [id])
+  teacher          User               @relation("TeacherWhoCreateActivity", fields: [teacherId, teacherName], references: [id, username])
+  activityComments ActivityComments[]
+  StudentActivity  StudentActivity[]
+
   @@schema("activity")
 }
 
@@ -196,6 +200,7 @@ model StudentActivity {
   studentEmail     String
   studentName      String
   isGraded         Boolean   @default(false)
+  codeSubmitted    String?
   activity         Activity  @relation(fields: [activityId], references: [id])
   student          User      @relation("StudentActivities", fields: [studentId, studentName, studentAvatar, studentEmail], references: [id, username, userImage, email])
 
@@ -217,20 +222,16 @@ model ClassroomAnnouncement {
   @@schema("classroom")
 }
 
+model ActivityComments {
+  id         String   @id @default(cuid())
+  comment    String
+  userId     String
+  userImage  String
+  username   String
+  activityId String
+  createdAt  DateTime @default(now())
+  activity   Activity @relation(fields: [activityId], references: [id])
+  user       User     @relation(fields: [userId, username, userImage], references: [id, username, userImage])
 
-
-model ActivityComments{
-
-  id        String   @id @default(cuid())
-  comment   String
-  userId    String
-  userImage String
-  username  String
-  activityId  String
-  activity  Activity  @relation(fields: [activityId] , references: [id])
-  user        User    @relation(fields: [userId,username,userImage], references: [id,username,userImage])
-  createdAt DateTime @default(now())
-
-
-@@schema("activity")
+  @@schema("activity")
 }

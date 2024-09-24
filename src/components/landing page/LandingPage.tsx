@@ -3,8 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import MaxWidthWrapper from "../layout/MaxWidthWrapper";
 import { Card, CardHeader, CardBody } from "@nextui-org/react";
-import { Car } from "lucide-react";
 import Header from "../layout/Header";
+
 
 const LandingPage = () => {
   const imageAbout = [

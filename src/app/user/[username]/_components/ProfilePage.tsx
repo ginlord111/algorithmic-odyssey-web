@@ -23,10 +23,11 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "next-auth/react";
-import { Button } from "@nextui-org/react";
+import { Button,Tooltip } from "@nextui-org/react";
 import FollowBtn from "./FollowBtn";
 import FollowingsList from "./FollowingsList";
 import { toast } from "sonner";
+import { CircleAlert } from "lucide-react";
 const ProfilePage = ({
   username,
   id,
@@ -130,9 +131,35 @@ const ProfilePage = ({
             <p className="lg:text-4xl text-xl font-bold lg:text-start text-center mb-2">
               {username}
             </p>
-            <p className="text-muted-foreground lg:text-start text-center">
-              {email}
+          <div className="flex space-x-2">
+          <p className="text-muted-foreground lg:text-start text-center">
+              {email} 
             </p>
+          <Tooltip content="Email is not verified" color="danger" 
+           delay={0}
+           closeDelay={0}
+           motionProps={{
+             variants: {
+               exit: {
+                 opacity: 0,
+                 transition: {
+                   duration: 0.1,
+                   ease: "easeIn",
+                 }
+               },
+               enter: {
+                 opacity: 1,
+                 transition: {
+                   duration: 0.15,
+                   ease: "easeOut",
+                 }
+               },
+             },
+           }}
+          >
+          <CircleAlert  className="bg-gray-500 w-fit rounded-full text-white"/>
+          </Tooltip>
+          </div>
             <FollowingsList
               followerImages={followerImages}
               followingImages={followingImages}

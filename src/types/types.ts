@@ -36,4 +36,4 @@ export interface ForumWithCount extends Forum {
 export type UserRole = "student" | "teacher"
   export type NavClasState = "announcement" | "pending-task" | "graded-task" | "classwork";
 
-export type NavActState = "instruction" | "students-work" | "works"
+export type NavActState = "instruction" | "students-work" | "works" | "compiler"

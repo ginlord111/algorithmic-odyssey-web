@@ -138,3 +138,43 @@ export const submitRole = async(username:string,role:UserRole) =>{
     }
   }
 }
+
+export const fetchTaskProgress = async(activityId:string, studentId:string) =>{
+  try {
+    const task = await prisma.studentActivity.findFirst({
+        where:{
+            activityId,
+            studentId
+        },
+     select:{
+        isCompleted:true,
+     }
+    }) 
+
+    return task?.isCompleted 
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
+export const fetchStudentCode = async(activityId:string, studentId:string)=>{
+ try {
+  const data = await prisma.studentActivity.findFirst({
+    where:{
+      activityId,
+      studentId
+    },
+    select:{
+      codeSubmitted:true
+    }
+  })
+
+ if(data){
+  return data.codeSubmitted
+ }
+ return null;
+ } catch (error) {
+  console.log(error)
+ }
+}

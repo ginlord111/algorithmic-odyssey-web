@@ -31,6 +31,11 @@ fetchUser();
       isActive: currentNav === "works",
       value: "works",
     },
+    {
+      name:"Compiler",
+      isActive: currentNav === "compiler",
+      value:"compiler"
+    }
   ];
 
   const navigationForTeacher = [
@@ -44,6 +49,11 @@ fetchUser();
         isActive: currentNav === "students-work",
         value: "students-work",
       },
+      {
+        name:"Compiler",
+        isActive: currentNav === "compiler",
+        value:"compiler"
+      }
   ]
 
   const navigation = user?.isStudent ? navigationForStud : navigationForTeacher

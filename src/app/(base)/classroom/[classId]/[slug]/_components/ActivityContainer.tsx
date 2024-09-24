@@ -1,12 +1,13 @@
 "use client";
 import { NavActState } from "@/types/types";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import InstructionTab from "./InstructionTab";
 import StudentWorkTab from "./StudentWorkTab";
 import { Activity, StudentActivity, User } from "@prisma/client";
 import Works from "./Works";
 import userInfo from "@/store/store";
+import Compiler from "./Compiler";
 
 const ActivityContainer = ({
   act,
@@ -37,28 +38,37 @@ const ActivityContainer = ({
   } else {
     teacherViewWork = studentWorks as StudentActivity[];
   }
-  console.log(isStudent, "IS STUDENT")
-  if(isStudent) {
+  console.log(isStudent, "IS STUDENT");
+  if (isStudent) {
     return (
       <Fragment>
-      {currentTab === "instruction" ? (
-        <InstructionTab act={act} />
-      ) : (
-        <Works user={user as User} act={act} studentWork={studentWork as StudentActivity}/>        
-      )}
-    </Fragment>
-    )
-  }
-  else{
-return (
-  <Fragment>
-  {currentTab === "instruction" ? (
-      <InstructionTab act={act} />
-  ) : (
-    <StudentWorkTab teacherViewWork={teacherViewWork as StudentActivity[]} />
-  )}
-</Fragment>
-)
+        {currentTab === "instruction" ? (
+          <InstructionTab act={act} />
+        ) : currentTab === "compiler" ? (
+          <Compiler    user={user as User} act={act}/>
+        ) : (
+          <Works
+            user={user as User}
+            act={act}
+            studentWork={studentWork as StudentActivity}
+          />
+        )}
+      </Fragment>
+    );
+  } else {
+    return (
+      <Fragment>
+        {currentTab === "instruction" ? (
+          <InstructionTab act={act} />
+        ) : currentTab === "compiler" ? (
+          <Compiler    user={user as User} act={act}/>
+        ) : (
+          <StudentWorkTab
+            teacherViewWork={teacherViewWork as StudentActivity[]}
+          />
+        )}
+      </Fragment>
+    );
   }
 };
 

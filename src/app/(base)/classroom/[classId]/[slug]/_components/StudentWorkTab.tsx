@@ -1,6 +1,6 @@
 import { StudentActivity } from "@prisma/client";
 import Image from "next/image";
-import React, { Fragment, useState } from "react";
+import React, { Dispatch, Fragment, SetStateAction, useState } from "react";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import { Avatar } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
@@ -8,8 +8,9 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure,
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { NavActState } from "@/types/types";
 const EmptyStudentWork = () => {
   return (
     <div className="flex items-center justify-center flex-col space-y-4">
@@ -94,13 +95,22 @@ const StudentWorkTab = ({
 }) => {
   const {isOpen, onOpenChange, onOpen,onClose} = useDisclosure();
   const [targetStud, setTargetStud] = useState<StudentActivity | null> (null)
-
+  const router = useRouter()
+  const pathname = usePathname()
   const handleGrade = (stud:StudentActivity) => {
 
     onOpen()
     setTargetStud(stud)
   }
 
+  const handleViewWorks = (stud:StudentActivity) =>{
+    if(stud.fileSubmittedUrl){
+      router.push(stud.fileSubmittedUrl)
+    }
+    else if(stud.codeSubmitted){
+      router.replace(`${pathname}?tab=compiler&student=${stud.studentId}`)
+    }
+  }
   return (
     <div className="relative mt-10">
       <InputGradeModal isOpen={isOpen} onOpenChange={onOpenChange} targetStud={targetStud} onClose={onClose}/>
@@ -156,10 +166,9 @@ const StudentWorkTab = ({
                       Grade
                     </Button>
                     <Button
-                      as={Link}
                       target="_blank"
                       className="bg-blue-500 hover:bg-blue-500 text-white"
-                      href={stud.fileSubmittedUrl as string}
+                      onClick={()=>handleViewWorks(stud)}
                     >
                       View Works
                     </Button>

@@ -40,10 +40,35 @@ export default function NavBar() {
     };
   }, [isScrolled]);
   const { fetchUser, user } = userInfo();
-
   useEffect(() => {
     fetchUser();
   }, [session?.user.id, fetchUser, pathname]);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      console.log(user, "USER NAVBAR")
+      const response = await fetch('http://localhost:5000/api/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body:JSON.stringify({user,session})
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error occurred during fetch:', error || error);
+    }
+  };
+
+  fetchData();
+}, [session,user,fetchUser]);
   /// TODO: WHEN OVERING THE USER AVATAR SHOW THE DROPDOWN OPTION FOR USER PROFILE , CREATE POST AND
   const navItems = [
     {
@@ -68,7 +93,7 @@ export default function NavBar() {
     },
     {
       name: "Game",
-      href: "/",
+      href: "https://algody.vercel.app",
       className: "",
     },
     // {
@@ -100,7 +125,9 @@ export default function NavBar() {
       <NavbarContent className="w-full hidden lg:flex gap-10" justify="center">
         {navItems.map((item, index) => (
           <NavbarItem key={index}>
-            <Link href={item.href} className="text-xl">
+            <Link href={item.href} className="text-xl"
+            target={item.name === "Game" ? "_blank"  : ""}
+            >
               {item.name}
             </Link>
           </NavbarItem>
