@@ -133,11 +133,11 @@ const SignInTab = ({
         >
           <Github className="w-6 h-6" />
         </Button>
-        <Button className="px-10" variant="solid" color="primary"
+        {/* <Button className="px-10" variant="solid" color="primary"
         type="button"
         >
           <Mail />
-        </Button>
+        </Button> */}
       </div>
     </Form>
   );

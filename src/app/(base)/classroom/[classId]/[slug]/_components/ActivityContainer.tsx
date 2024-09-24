@@ -28,7 +28,7 @@ const ActivityContainer = ({
   useEffect(() => {
     const tab = searchParams.get("tab") as NavActState;
     setCurrentTab(tab);
-  }, [searchParams]);
+  }, [searchParams,setCurrentTab,currentTab]);
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
@@ -65,6 +65,7 @@ const ActivityContainer = ({
         ) : (
           <StudentWorkTab
             teacherViewWork={teacherViewWork as StudentActivity[]}
+            setCurrentTab={setCurrentTab as Dispatch<SetStateAction<NavActState>>}
           />
         )}
       </Fragment>

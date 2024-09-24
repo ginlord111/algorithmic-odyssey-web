@@ -6,97 +6,114 @@ import type SwiperType from "swiper";
 import { cn } from "@/lib/utils";
 import "swiper/css";
 import "swiper/css/pagination";
-import "../styles/style.css";
 import { ChevronLeft, ChevronRight, Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
-const randomizeArray = (length: number) => {
-    return Array.from({ length }, () => Math.floor(Math.random() * 100) + 10);
-  };
+
 const VisualComponent = () => {
-    const [array, setArray] = useState<number[]>(randomizeArray(7));
-    const [isSorting, setIsSorting] = useState(false);
+    const [array, setArray] = useState<number[]>(randomizeArray(7).sort((a, b) => a - b));
+    const [target, setTarget] = useState<number | string>('');
     const [result, setResult] = useState<string>('');
     const [highlightIndexes, setHighlightIndexes] = useState<number[]>([]);
-    const [swapIndexes, setSwapIndexes] = useState<number[]>([]);
-    const [inputValue, setInputValue] = useState<string>('');
+    const [foundIndex, setFoundIndex] = useState<number | null>(null);
+    const [inputArray, setInputArray] = useState<string>('');
   
-    const createBar = (height: number, value: number, index: number) => {
-      let barClass = 'bg-[lightblue]'; // Default bar color
+    // Helper function to create a random array
+    function randomizeArray(length: number): number[] {
+      return Array.from({ length }, () => Math.floor(Math.random() * 100) + 10);
+    }
   
+    // Function to create a bar for each element
+    const createBar = (value: number, index: number) => {
+      let barClass = 'bg-[lightblue] border-blue-600 border-2';
       if (highlightIndexes.includes(index)) {
-        barClass = 'bg-orange-500'; // Bars being compared
+        barClass = 'bg-orange-500';
       }
-      if (swapIndexes.includes(index)) {
-        barClass = 'bg-red-500'; // Bars being swapped
+      if (index === foundIndex) {
+        barClass = 'bg-green-500';
       }
   
       return (
         <div
-          className={`bar flex items-end justify-center border-blue-600 border-2 relative ${barClass}`}
-          style={{ height: `${height}px`, width: '30px', margin: '2px' }}
           key={index}
+          className={`flex items-end justify-center relative ${barClass}`}
+          style={{ height: `${value}px`, width: '30px', margin: '2px' }}
         >
           <span className="absolute bottom-1 text-black">{value}</span>
         </div>
       );
     };
   
+    // Function to update the bars (this is effectively the return JSX in React)
     const updateBars = () => {
-      return array.map((value, index) => createBar(value, value, index));
+      return array.map((value, index) => createBar(value, index));
     };
   
-    const sleep = (ms: number) => {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    };
+    // Binary Search Algorithm
+    const binarySearch = async (arr: number[], target: number) => {
+      let left = 0;
+      let right = arr.length - 1;
   
-    const bubbleSort = async (array: number[]) => {
-      setIsSorting(true);
-      let N = array.length;
-      let swapped;
-      do {
-        swapped = false;
-        for (let i = 0; i < N - 1; i++) {
-          setHighlightIndexes([i, i + 1]); // Highlight bars being compared
-          setSwapIndexes([]); // Clear swap highlight
-          setResult(`Comparing ${array[i]} and ${array[i + 1]}`);
-          setArray([...array]);
-          await sleep(1000);
+      while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+        setHighlightIndexes([mid]);
+        setResult(`Checking middle element: ${arr[mid]}`);
+        await sleep(1000);
   
-          if (array[i] > array[i + 1]) {
-            setResult(`Swapping ${array[i]} and ${array[i + 1]}`);
-            setSwapIndexes([i, i + 1]); // Highlight bars being swapped
-            [array[i], array[i + 1]] = [array[i + 1], array[i]];
-            swapped = true;
-            setArray([...array]);
-            await sleep(1000);
-          }
+        if (arr[mid] === target) {
+          setResult(`Target ${target} found at index ${mid}`);
+          setFoundIndex(mid);
+          return;
+        } else if (arr[mid] < target) {
+          setResult(`Target is greater than ${arr[mid]}`);
+          left = mid + 1;
+        } else {
+          setResult(`Target is less than ${arr[mid]}`);
+          right = mid - 1;
         }
-        N--;
-      } while (swapped);
   
-      setResult(`Sorted array = [${array.join(', ')}]`);
-      setHighlightIndexes([]);
-      setSwapIndexes([]);
-      setIsSorting(false);
+        await sleep(1000);
+      }
+  
+      setResult(`Target ${target} not found in the array`);
     };
   
+    // Utility function to simulate sleep
+    function sleep(ms: number) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+  
+    // Reset function to randomize a new array
     const reset = () => {
-      setArray(randomizeArray(7));
+      const newArray = randomizeArray(7).sort((a, b) => a - b);
+      setArray(newArray);
+      setInputArray('');
       setResult('');
       setHighlightIndexes([]);
-      setSwapIndexes([]);
+      setFoundIndex(null);
     };
   
+    // Set the array from input
     const setArrayFromInput = () => {
-      const numbers = inputValue
+      const numbers = inputArray
         .split(',')
         .map((num) => parseInt(num.trim(), 10))
         .filter((num) => !isNaN(num));
+  
       if (numbers.length > 0) {
-        setArray(numbers);
+        const sortedArray = numbers.sort((a, b) => a - b);
+        setArray(sortedArray);
         setResult('');
         setHighlightIndexes([]);
-        setSwapIndexes([]);
+        setFoundIndex(null);
+      }
+    };
+  
+    // Event handler for search
+    const handleSearch = () => {
+      const parsedTarget = parseInt(target as string, 10);
+      if (!isNaN(parsedTarget)) {
+        setFoundIndex(null);
+        binarySearch(array, parsedTarget);
       }
     };
   
@@ -105,32 +122,45 @@ const VisualComponent = () => {
         <div id="array" className="flex justify-center items-end" style={{ height: '300px' }}>
           {updateBars()}
         </div>
-        <p id="result" className="mt-4 text-center">{result}</p>
-        <div className="controls flex md:flex-row flex-col mt-4 justify-center items-center md:space-x-2">
-          <button onClick={reset} disabled={isSorting} className="border md:px-1 md:py-1 mr-2 border-black z-40">
+        <p id="result" className="mt-4 text-center">
+          {result}
+        </p>
+        <div className="controls flex flex-col md:flex-row items-center justify-center mt-4 space-x-2">
+          <button onClick={reset} className="border md:px-1 md:py-1 mr-2 border-black rounded-sm">
             Randomize Array
           </button>
-          <button onClick={() => bubbleSort([...array])} disabled={isSorting} className="border md:px-1 md:py-1 border-black z-40">
-            Sort Array
-          </button>
-          <div className="controls flex md:flex-row flex-col ">
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="2, 5, 9, 3, 3"
-            className="border md:px-1 md:py-1 md:w-72 w-36 border-black z-40"
-            disabled={isSorting}
-          />
-          <button onClick={setArrayFromInput} disabled={isSorting} className="border md:px-1 md:py-1 border-black z-40">
-            Set Array
-          </button>
+          <div className="flex flex-row items-center">
+            <input
+              type="number"
+              value={target}
+              onChange={(e) => setTarget(e.target.value)}
+              placeholder="Enter target number"
+              className="border md:px-1 md:py-1 w-36 md:w-72 border-black rounded-sm"
+            />
+            <button
+              onClick={handleSearch}
+              className="border md:px-1 md:py-1 ml-2 border-black rounded-sm"
+            >
+              Search Array
+            </button>
+          </div>
+          <div className="flex flex-row items-center md:mt-0 mt-2">
+            <input
+              type="text"
+              value={inputArray}
+              onChange={(e) => setInputArray(e.target.value)}
+              placeholder="Enter custom array (comma-separated)"
+              className="border md:px-1 md:py-1 w-36 md:w-72 border-black rounded-sm"
+            />
+            <button onClick={setArrayFromInput} className="border md:px-1 md:py-1 ml-2 border-black rounded-sm">
+              Set Array
+            </button>
+          </div>
         </div>
-        </div>
-     
       </div>
     );
   };
+
 
   
   
@@ -138,27 +168,28 @@ const VisualComponent = () => {
 
 const contents = [
   {
-    desc: "Bubble Sort Algorithm",
+    desc: "Binary Search Algorithm",
     className: "font-bold lg:text-6xl text-xl",
   },
   {
-    desc: `Bubble Sort is a basic sorting method that organizes elements by repeatedly stepping through the list. 
-    It compares each pair of adjacent elements and swaps them if they are in the wrong order, gradually moving larger elements to the end.`,
-    imageSrc: '/lessons/img/bubble-sort/bubble-sort-algorithm.png',
-    audioSrc: '/audio/bubble-sort/what is bubble sort.mp3',
+    desc: `Binary Search is a searching algorithm used in a sorted array by repeatedly dividing the search interval in half. 
+    The idea behind binary search is to take advantage of the fact that the array is sorted to reduce the time complexity to O(log N).`,
+    imageSrc: '/lessons/img/binary-search/magnifying.png',
+    audioSrc: '/audio/binary-search/definition.mp3',
   },
   {
-    desc: `The algorithm starts by comparing the first two elements of the list and swapping them if needed. 
-    It continues this process for each pair of adjacent elements until reaching the end of the list. After each pass through the list, 
-    the next largest element is in its correct position, and the process is repeated for the remaining elements.`,
-    imageSrc: '/lessons/img/bubble-sort/bubble-sort.gif',
-    audioSrc: '/audio/bubble-sort/how bubble sort works.mp3',
+    desc: `Binary Search begins by comparing the target element with the middle element of the array. 
+    If the target is smaller, the algorithm searches the left half of the array; if larger, it searches the right half. 
+    This halving process continues until the target element is found or the search space is exhausted.`,
+    imageSrc: '/lessons/img/binary-search/binary-visual.gif',
+    audioSrc: '/audio/binary-search/works.mp3',
   },
   {
-    desc: `Bubble Sort can be slow with large lists because it involves many steps to compare and swap elements. Even though it's easy to understand and use, 
-    other sorting methods are generally faster for big lists.`,
-    imageSrc: '/lessons/img/bubble-sort/slow.png',
-    audioSrc: '/audio/bubble-sort/efficiency and complexity.mp3',
+    desc: `The method is efficient for large datasets with a time complexity of O(log n) and reduces the search space by half with each comparison, 
+    but it requires the list to be sorted beforehand, which introduces overhead if the list isn't already sorted, 
+    and it isn't suitable for linked lists due to their lack of random access.`,
+    imageSrc: '/lessons/img/binary-search/robot.jpeg',
+    audioSrc: '/audio/binary-search/advantage.mp3',
   },
   {
     component: <VisualComponent />,

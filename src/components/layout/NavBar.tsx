@@ -47,7 +47,6 @@ export default function NavBar() {
 useEffect(() => {
   const fetchData = async () => {
     try {
-      console.log(user, "USER NAVBAR")
       const response = await fetch('http://localhost:5000/api/signin', {
         method: 'POST',
         headers: {
@@ -72,6 +71,16 @@ useEffect(() => {
   /// TODO: WHEN OVERING THE USER AVATAR SHOW THE DROPDOWN OPTION FOR USER PROFILE , CREATE POST AND
   const navItems = [
     {
+      name: "Tutorial",
+      href: "/tutorial",
+      className: "",
+    },
+    {
+      name: "Game",
+      href: "https://algody.vercel.app",
+      className: "",
+    },
+    {
       name: "Classroom",
       href: "/classroom",
       className: "",
@@ -82,25 +91,15 @@ useEffect(() => {
       className: "",
     },
     {
+      name: "Leaderboard",
+      href: "/leaderboard",
+      className: "",
+    },
+    {
       name: "About us",
       href: "/about-us",
       className: "",
     },
-    {
-      name: "Lessons",
-      href: "/lessons",
-      className: "",
-    },
-    {
-      name: "Game",
-      href: "https://algody.vercel.app",
-      className: "",
-    },
-    // {
-    //   name: "Docs",
-    //   href: "/",
-    //   className: "",
-    // },
   ];
   return (
     <Navbar

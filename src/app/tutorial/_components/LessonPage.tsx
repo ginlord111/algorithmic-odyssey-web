@@ -6,43 +6,43 @@ const LessonPage = () => {
       title: "What is algorithm",
       description:
         "An algorithm is a step-by-step process to solve a problem or complete a task efficiently.",
-      href: "/lessons/algorithm",
+      href: "/tutorial/algorithm",
     },
     {
       title: "Euclid Algorithm",
       description:
         "The Euclidean Algorithm finds the GCD of two numbers by repeatedly dividing and taking remainders until the remainder is zero.",
-      href: "/lessons/euclid-algorithm",
+      href: "/tutorial/euclid-algorithm",
     },
     {
       title: "Knuth Morris Pratt",
       description:
         "The KMP algorithm finds patterns in text efficiently by using a preprocessed table to skip redundant comparisons.",
-      href: "/lessons/knuth-morris-pratt",
+      href: "/tutorial/knuth-morris-pratt",
     },
   ];
   const sortingAlgoCards = [
     {
-        href: '/lessons/insertion-sort',
+        href: '/tutorial/insertion-sort',
         title: 'Insertion Sort',
         description: 'Insertion Sort is a simple sorting algorithm that builds the final sorted array one item at a time by repeatedly inserting each element into its correct position.',
       },
       {
-        href: '/lessons/selection-sort',
+        href: '/tutorial/selection-sort',
         title: 'Selection Sort',
         description: 'Selection Sort is a sorting algorithm that repeatedly selects the smallest (or largest) element from the unsorted portion and moves it to the end of the sorted portion.',
       },
       {
-        href: '/lessons/bubble-sort',
+        href: '/tutorial/bubble-sort',
         title: 'Bubble Sort',
         description: 'Bubble Sort repeatedly swaps adjacent elements if they are in the wrong order until the list is sorted.',
       },
       {
-        href:'/lessons/merge-sort',
+        href:'/tutorial/merge-sort',
         title:'Merging Sort',
         description:'Merge Sort is a divide-and-conquer algorithm that splits the list into halves, sorts each half, and then merges the sorted halves back together.'
       },{
-        href:'/lessons/quick-sort',
+        href:'/tutorial/quick-sort',
         title:'Quick Sort',
         description:'Quick Sort is a divide-and-conquer algorithm that selects a "pivot" element, partitions the list into elements less than and greater than the pivot, and recursively sorts the partitions.'
       }
@@ -50,27 +50,27 @@ const LessonPage = () => {
 
   const searchingAlgoCards = [
     {
-        href: '/lessons/linear-search',
+        href: '/tutorial/linear-search',
         title: 'Linear Search',
         description: 'Linear Search checks each element in a list sequentially until the target element is found or the end of the list is reached.',
       },
       {
-        href: '/lessons/binary-search',
+        href: '/tutorial/binary-search',
         title: 'Binary Search',
         description: 'Binary Search efficiently finds an element in a sorted list by repeatedly dividing the search interval in half.',
       },
       {
-        href: '/lessons/breadth-first',
+        href: '/tutorial/breadth-first',
         title: 'Breadth First Search',
         description: 'Breadth-First Search explores a graph or tree level by level, starting from the root or initial node and visiting all neighbors before moving to the next level.',
       },
       {
-        href: '/lessons/depth-first',
+        href: '/tutorial/depth-first',
         title: 'Depth First Search',
         description: 'Depth-First Search (DFS) explores a graph or tree by diving as deep as possible into each branch before backtracking.',
       },
       {
-        href: '/lessons/sequential-search',
+        href: '/tutorial/sequential-search',
         title: 'Sequential Search',
         description: 'Sequential Search checks each element in a list one by one until it finds the target or reaches the end.',
       },
@@ -95,7 +95,7 @@ const LessonPage = () => {
           </p>
           <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
             <a
-              href="/lessons/algorithm"
+              href="/tutorial/algorithm"
               className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
             >
               Get started
@@ -143,7 +143,7 @@ const LessonPage = () => {
                   href={algorithm.href}
                   className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
-                  Read now
+                  Learn now
                   <svg
                     className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
                     aria-hidden="true"
@@ -177,7 +177,7 @@ const LessonPage = () => {
               </a>
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{algorithm.description}</p>
               <a href={algorithm.href} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                Read now
+                Learn now
                 <svg className="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                   <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                 </svg>
@@ -201,7 +201,7 @@ const LessonPage = () => {
               </a>
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{algorithm.description}</p>
               <a href={algorithm.href} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                Read now
+                Learn now
                 <svg className="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                   <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                 </svg>

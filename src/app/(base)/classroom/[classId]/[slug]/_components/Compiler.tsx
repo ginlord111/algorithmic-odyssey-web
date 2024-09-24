@@ -209,9 +209,6 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
       ) : (
         <div className="flex flex-col space-y-3">
           <div className="flex justify-end space-x-3">
-            <Button onClick={() => handleLanguageChange(currentLanguage)}>
-              Clear
-            </Button>
             <Select
               isRequired
               value={currentLanguage}
@@ -226,13 +223,15 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
                 </SelectItem>
               ))}
             </Select>
-            <Button onClick={handleSubmit}>
-              {isLoading ? (
-                <Loader2 className="animate-spin w-6 h-6" />
-              ) : (
-                "Submit"
-              )}
-            </Button>
+            {user?.isStudent === true && (
+              <Button onClick={handleSubmit}>
+                {isLoading ? (
+                  <Loader2 className="animate-spin w-6 h-6" />
+                ) : (
+                  "Submit"
+                )}
+              </Button>
+            )}
           </div>
           <iframe
             ref={iframeRef}

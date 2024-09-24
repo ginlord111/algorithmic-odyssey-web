@@ -65,6 +65,7 @@ const CreateClasswork = ({
     formData.append("id", JSON.stringify(session?.user.id));
     formData.append("classId", JSON.stringify(classId));
     formData.append("maxScore", JSON.stringify(values.maxScore));
+    formData.append("actType", JSON.stringify(actType));
     if (values.maxScore > 100) {
       createActivityForm.setError("maxScore", {
         message: "Max score must be 100 or less",
@@ -84,7 +85,6 @@ const CreateClasswork = ({
     toast.success("Classwork created succesfully");
     setClickCreate(false);
   }
-console.log(actType, "ACT TYPE")
   return (
     <div>
       <Form {...createActivityForm}>

@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     const id = JSON.parse(body.get("id") as string);
     const classId = JSON.parse(body.get("classId") as string);
     const maxScore = JSON.parse(body.get("maxScore") as string)
-
+    const actType = JSON.parse(body.get("actType") as string)
     // saving the file inside the upload folder
     const savedFilePath = await saveFile(file, file.name);
 
@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
         fileType: file.type,
         fileUrl: (fileUpload?.fileUrl as string) ?? null,
         fileUrlDownload: (fileUpload?.fileUrlDownload as string) ?? null,
+        isActivity:actType ==="activity"  ? true : false,
         maxScore,
         teacher: {
           connect: {

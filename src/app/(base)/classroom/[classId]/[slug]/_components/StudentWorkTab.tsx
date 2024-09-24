@@ -90,8 +90,10 @@ const InputGradeModal = ({isOpen,onOpenChange,targetStud,onClose}:{isOpen:boolea
 
 const StudentWorkTab = ({
   teacherViewWork,
+  setCurrentTab
 }: {
   teacherViewWork: StudentActivity[];
+  setCurrentTab:Dispatch<SetStateAction<NavActState>>
 }) => {
   const {isOpen, onOpenChange, onOpen,onClose} = useDisclosure();
   const [targetStud, setTargetStud] = useState<StudentActivity | null> (null)
@@ -109,6 +111,7 @@ const StudentWorkTab = ({
     }
     else if(stud.codeSubmitted){
       router.replace(`${pathname}?tab=compiler&student=${stud.studentId}`)
+      setCurrentTab("compiler")
     }
   }
   return (

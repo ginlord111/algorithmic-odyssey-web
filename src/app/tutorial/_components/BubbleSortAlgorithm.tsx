@@ -6,20 +6,18 @@ import type SwiperType from "swiper";
 import { cn } from "@/lib/utils";
 import "swiper/css";
 import "swiper/css/pagination";
-import "../styles/style.css";
 import { ChevronLeft, ChevronRight, Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
 const randomizeArray = (length: number) => {
     return Array.from({ length }, () => Math.floor(Math.random() * 100) + 10);
   };
 const VisualComponent = () => {
-
     const [array, setArray] = useState<number[]>(randomizeArray(7));
+    const [isSorting, setIsSorting] = useState(false);
     const [result, setResult] = useState<string>('');
     const [highlightIndexes, setHighlightIndexes] = useState<number[]>([]);
-    const [pivotIndex, setPivotIndex] = useState<number | null>(null);
+    const [swapIndexes, setSwapIndexes] = useState<number[]>([]);
     const [inputValue, setInputValue] = useState<string>('');
-    const [isSorting, setIsSorting] = useState<boolean>(false);
   
     const createBar = (height: number, value: number, index: number) => {
       let barClass = 'bg-[lightblue]'; // Default bar color
@@ -27,13 +25,13 @@ const VisualComponent = () => {
       if (highlightIndexes.includes(index)) {
         barClass = 'bg-orange-500'; // Bars being compared
       }
-      if (index === pivotIndex) {
-        barClass = 'bg-red-500'; // Highlight pivot
+      if (swapIndexes.includes(index)) {
+        barClass = 'bg-red-500'; // Bars being swapped
       }
   
       return (
         <div
-          className={`flex items-end justify-center border-blue-600 border-2 relative ${barClass}`}
+          className={`bar flex items-end justify-center border-blue-600 border-2 relative ${barClass}`}
           style={{ height: `${height}px`, width: '30px', margin: '2px' }}
           key={index}
         >
@@ -47,70 +45,57 @@ const VisualComponent = () => {
     };
   
     const sleep = (ms: number) => {
-      return new Promise(resolve => setTimeout(resolve, ms));
+      return new Promise((resolve) => setTimeout(resolve, ms));
     };
   
-    const partition = async (array: number[], low: number, high: number) => {
-      const pivot = array[high];
-      let i = low - 1;
-  
-      setPivotIndex(high);
-      setResult(`Pivot selected: ${pivot}`);
-      await sleep(1000);
-  
-      for (let j = low; j < high; j++) {
-        setHighlightIndexes([j]);
-        await sleep(800);
-        setResult(`Comparing ${array[j]} with pivot ${pivot}`);
-  
-        if (array[j] < pivot) {
-          i++;
-          [array[i], array[j]] = [array[j], array[i]];
-          setHighlightIndexes([i, j]);
-          setResult(`Swapping ${array[i]} and ${array[j]}`);
+    const bubbleSort = async (array: number[]) => {
+      setIsSorting(true);
+      let N = array.length;
+      let swapped;
+      do {
+        swapped = false;
+        for (let i = 0; i < N - 1; i++) {
+          setHighlightIndexes([i, i + 1]); // Highlight bars being compared
+          setSwapIndexes([]); // Clear swap highlight
+          setResult(`Comparing ${array[i]} and ${array[i + 1]}`);
+          setArray([...array]);
           await sleep(1000);
-          setArray([...array]); // Trigger re-render
+  
+          if (array[i] > array[i + 1]) {
+            setResult(`Swapping ${array[i]} and ${array[i + 1]}`);
+            setSwapIndexes([i, i + 1]); // Highlight bars being swapped
+            [array[i], array[i + 1]] = [array[i + 1], array[i]];
+            swapped = true;
+            setArray([...array]);
+            await sleep(1000);
+          }
         }
-      }
+        N--;
+      } while (swapped);
   
-      [array[i + 1], array[high]] = [array[high], array[i + 1]];
-      setHighlightIndexes([i + 1, high]);
-      setResult(`Swapping pivot ${array[high]} with ${array[i + 1]}`);
-      await sleep(1000);
-      setArray([...array]); // Trigger re-render
-  
-      return i + 1;
+      setResult(`Sorted array = [${array.join(', ')}]`);
+      setHighlightIndexes([]);
+      setSwapIndexes([]);
+      setIsSorting(false);
     };
-  
-    const quickSort = async (array: number[], low: number, high: number) => {
-      if (low < high) {
-        const pi = await partition(array, low, high);
-        await quickSort(array, low, pi - 1);
-        await quickSort(array, pi + 1, high);
-      }
-      if (low === 0 && high === array.length - 1) {
-        setResult(`Sorted array = [${array.join(', ')}]`);
-      }
-    };
- 
   
     const reset = () => {
       setArray(randomizeArray(7));
       setResult('');
       setHighlightIndexes([]);
-      setPivotIndex(null);
+      setSwapIndexes([]);
     };
   
     const setArrayFromInput = () => {
       const numbers = inputValue
         .split(',')
-        .map(num => parseInt(num.trim(), 10))
-        .filter(num => !isNaN(num));
+        .map((num) => parseInt(num.trim(), 10))
+        .filter((num) => !isNaN(num));
       if (numbers.length > 0) {
         setArray(numbers);
         setResult('');
         setHighlightIndexes([]);
-        setPivotIndex(null);
+        setSwapIndexes([]);
       }
     };
   
@@ -120,26 +105,14 @@ const VisualComponent = () => {
           {updateBars()}
         </div>
         <p id="result" className="mt-4 text-center">{result}</p>
-        <div className="controls flex md:flex-row flex-col items-center justify-center mt-4 space-x-2">
-          <button
-            onClick={reset}
-            className="border md:px-1 md:py-1 mr-2 border-black z-40"
-            disabled={isSorting}
-          >
+        <div className="controls flex md:flex-row flex-col mt-4 justify-center items-center md:space-x-2">
+          <button onClick={reset} disabled={isSorting} className="border md:px-1 md:py-1 mr-2 border-black z-40">
             Randomize Array
           </button>
-          <button
-            onClick={async () => {
-              setIsSorting(true);
-              await quickSort([...array], 0, array.length - 1);
-              setIsSorting(false);
-            }}
-            className="border md:px-1 md:py-1 border-black z-40"
-            disabled={isSorting}
-          >
+          <button onClick={() => bubbleSort([...array])} disabled={isSorting} className="border md:px-1 md:py-1 border-black z-40">
             Sort Array
           </button>
-          <div className="controls flex md:flex-row flex-col">
+          <div className="controls flex md:flex-row flex-col ">
           <input
             type="text"
             value={inputValue}
@@ -148,16 +121,12 @@ const VisualComponent = () => {
             className="border md:px-1 md:py-1 md:w-72 w-36 border-black z-40"
             disabled={isSorting}
           />
-          <button
-            onClick={setArrayFromInput}
-            className="border md:px-1 md:py-1 border-black z-40"
-            disabled={isSorting}
-          >
+          <button onClick={setArrayFromInput} disabled={isSorting} className="border md:px-1 md:py-1 border-black z-40">
             Set Array
           </button>
         </div>
         </div>
-   
+     
       </div>
     );
   };
@@ -168,30 +137,27 @@ const VisualComponent = () => {
 
 const contents = [
   {
-    desc: "Quick Sort Algorithm",
+    desc: "Bubble Sort Algorithm",
     className: "font-bold lg:text-6xl text-xl",
   },
   {
-    desc: `Quick Sort is a popular and efficient sorting algorithm used to organize a list of items. 
-    It’s known for its ability to handle large lists quickly by using a divide-and-conquer strategy. 
-    The main goal of Quick Sort is to sort a list by dividing it into smaller sections, sorting those sections, and then combining them. 
-    This algorithm is widely used because of its effectiveness in managing and sorting data efficiently.`,
-    imageSrc: '/lessons/img/quick-sort/quick-sort-intro.png',
-    audioSrc: '/audio/quick-sort/intro.mp3',
+    desc: `Bubble Sort is a basic sorting method that organizes elements by repeatedly stepping through the list. 
+    It compares each pair of adjacent elements and swaps them if they are in the wrong order, gradually moving larger elements to the end.`,
+    imageSrc: '/lessons/img/bubble-sort/bubble-sort-algorithm.png',
+    audioSrc: '/audio/bubble-sort/what is bubble sort.mp3',
   },
   {
-    desc: `Quick Sort operates by selecting an item from the list called a pivot. 
-    The list is then rearranged so that all items smaller than the pivot are placed before it, and all items larger are placed after it. 
-    Once the pivot is correctly positioned, Quick Sort is applied recursively to the smaller sections on either side of the pivot. 
-    This process continues until each section is sorted, resulting in a fully ordered list.`,
-    imageSrc: '/lessons/img/quick-sort/quicksort-visual.gif',
-    audioSrc: '/audio/quick-sort/works.mp3',
+    desc: `The algorithm starts by comparing the first two elements of the list and swapping them if needed. 
+    It continues this process for each pair of adjacent elements until reaching the end of the list. After each pass through the list, 
+    the next largest element is in its correct position, and the process is repeated for the remaining elements.`,
+    imageSrc: '/lessons/img/bubble-sort/bubble-sort.gif',
+    audioSrc: '/audio/bubble-sort/how bubble sort works.mp3',
   },
   {
-    desc: `Quick Sort is very fast and efficient for sorting large lists and uses minimal extra memory. 
-    However, it can become slow if the pivot is poorly chosen, and it doesn’t maintain the original order of items with equal values.`,
-    imageSrc: '/lessons/img/quick-sort/rabbit.png',
-    audioSrc: '/audio/quick-sort/benefits.mp3',
+    desc: `Bubble Sort can be slow with large lists because it involves many steps to compare and swap elements. Even though it's easy to understand and use, 
+    other sorting methods are generally faster for big lists.`,
+    imageSrc: '/lessons/img/bubble-sort/slow.png',
+    audioSrc: '/audio/bubble-sort/efficiency and complexity.mp3',
   },
   {
     component: <VisualComponent />,

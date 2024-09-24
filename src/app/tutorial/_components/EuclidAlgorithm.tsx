@@ -6,35 +6,126 @@ import type SwiperType from "swiper";
 import { cn } from "@/lib/utils";
 import "swiper/css";
 import "swiper/css/pagination";
-import "../styles/style.css";
 import { ChevronLeft, ChevronRight, Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
 
 const VisualComponent = () => {
-  return <div>d</div>;
+  const [inputA, setInputA] = useState<number | "">("");
+  const [inputB, setInputB] = useState<number | "">("");
+  const [log, setLog] = useState<string>("");
+  const [gcd, setGcd] = useState<number | null>(null);
+
+  const updateBars = (a: number, b: number) => {
+    setLog(
+      (prev) => `${prev}Calculating: a = ${a}, b = ${b}, a % b = ${a % b}\n`
+    );
+  };
+
+  const sleep = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
+  const euclideanAlgorithm = async (a: number, b: number) => {
+    setLog(`Starting with a = ${a}, b = ${b}\n`);
+    while (b !== 0) {
+      updateBars(a, b);
+      await sleep(1000);
+      const temp = b;
+      b = a % b;
+      a = temp;
+    }
+    setGcd(a);
+    setLog((prev) => `${prev}GCD is ${a}`);
+  };
+
+  const handleStart = () => {
+    const a = Number(inputA);
+    const b = Number(inputB);
+    if (!isNaN(a) && !isNaN(b) && a > 0 && b > 0) {
+      setGcd(null);
+      euclideanAlgorithm(a, b);
+    } else {
+      setLog("Please enter valid positive numbers.");
+    }
+  };
+
+  return (
+    <div className="container max-w-full justify-center py-10">
+      <div className="flex flex-col items-center">
+        <div id="bars" className="flex justify-center items-end h-80 m-5">
+          <div
+            className="bar w-24 mr-2 bg-lightblue border border-blue flex items-end justify-center relative"
+            style={{ height: `${inputA}px` }}
+          >
+            <span className="absolute bottom-1 text-black">{inputA}</span>
+          </div>
+          <div
+            className="bar w-24 mr-2 bg-lightblue border border-blue flex items-end justify-center relative"
+            style={{ height: `${inputB}px` }}
+          >
+            <span className="absolute bottom-1 text-black">{inputB}</span>
+          </div>
+        </div>
+        <div className="log text-left mb-4">
+          <pre>{log}</pre>
+        </div>
+        <p>{gcd !== null ? `GCD is ${gcd}` : ""}</p>
+        <div className="controls flex flex-col md:flex-row justify-center">
+          <input
+            type="number"
+            value={inputA}
+            onChange={(e) => setInputA(Number(e.target.value))}
+            className="border px-2 py-1 w-32 border-black z-40"
+            placeholder="Enter first number"
+          />
+          <input
+            type="number"
+            value={inputB}
+            onChange={(e) => setInputB(Number(e.target.value))}
+            className="border px-2 py-1 w-32 border-black z-40 md:ml-1 mt-2 md:mt-0"
+            placeholder="Enter second number"
+          />
+          <button
+            onClick={handleStart}
+            className="border px-2 py-1 border-black z-40 md:ml-1 mt-2 md:mt-0"
+          >
+            Start Euclidean Algorithm
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
+
 const contents = [
   {
-    desc: "Algorithm",
+    desc: "Euclid's Algorithm",
     className: "font-bold lg:text-6xl text-xl",
   },
   {
-    desc: "An algorithm is a set of instructions designed to perform a specific task or solve a problem. It decomposes the process into a series of well-defined steps,  each aimed at achieving a particular goal. In computing, algorithms guide the computer through tasks such as processing data or executing commands.To ensure accuracy and successful completion of the task, each step in the algorithm must be detailed and unambiguous",
-    imageSrc: "/lessons/img/lesson1/algorithm.png",
-    audioSrc: "/audio/lesson 1/algorithm.mp3",
+    desc: `Euclid's Algorithm is a method for finding the greatest common divisor (GCD) of two numbers. 
+      The GCD is the largest number that divides both numbers without leaving a remainder.`,
+    imageSrc: "/lessons/img/euclid-algorithm/euclid.png",
+    audioSrc: "/audio/euclid-algorithm/intro.mp3",
   },
   {
-    desc: "An algorithm comprises several fundamental components. The input is the data or initial conditions that the algorithm uses as a starting point.The steps are a series of precise instructions that direct how the algorithm should process the input.The output is the result or solution produced after executing the algorithm's steps. The efficiency of an algorithm is crucial,as it seeks to optimize the time and resources needed to reach the desired outcome while minimizing waste and delays.",
-    imageSrc: "/lessons/img/lesson1/image-2.png",
-    audioSrc: "/audio/lesson 1/components of algorithm.mp3",
+    desc: `To use Euclid's Algorithm, divide the larger number by the smaller number and find the remainder. 
+      Replace the larger number with the smaller number and the smaller number with the remainder. 
+      Repeat this process until the remainder is zero. The non-zero remainder just before reaching zero is the GCD.`,
+    imageSrc: "/lessons/img/euclid-algorithm/understanding.png",
+    audioSrc: "/audio/euclid-algorithm/works.mp3",
   },
   {
-    desc: "Algorithms come in various types, each designed for specific tasks. Sorting algorithms, such as QuickSort and MergeSort,are used to arrange data in a particular order. Search algorithms, including Binary Search and Linear Search, are employed to locate specific data within a dataset. Graph algorithms, like Dijkstra’s Algorithm and A* Algorithm,tackle problems related to network graphs and shortest paths. Algorithms find extensive applications across different fields:they manage and analyze large datasets in data processing, build predictive models in machine learning, and optimize data transmission routes in networking, demonstrating their versatile and crucial role in technology.",
-    imageSrc: "/lessons/img/lesson1/types of algorithm.png",
-    audioSrc: "/audio/lesson 1/types.mp3",
+    desc: `Euclid's Algorithm is highly efficient and handles large numbers well due to its simple iterative division process, 
+      making it suitable for various applications. However, it may involve multiple division steps, which can be computationally intensive for very large numbers, 
+      and understanding and implementing it might be challenging for those new to mathematical algorithms.`,
+    imageSrc: "/lessons/img/euclid-algorithm/how.png",
+    audioSrc: "/audio/euclid-algorithm/benefits.mp3",
   },
-
+  {
+    component: <VisualComponent />,
+  },
 ];
+
 const AlgorithmPage = () => {
   const [slide, setSlide] = useState<SwiperType | null>(null);
   const [index, setIndex] = useState<number>(0);
@@ -111,7 +202,9 @@ const AlgorithmPage = () => {
               <SwiperSlide className="-z-10 relative h-full w-full"
               key={index}
               >
-                {
+                {content.component ? (
+                  content.component
+                ) : (
                   <div
                     className="flex flex-col items-center justify-center w-full h-full md:space-y-4 space-y-1"
                     key={index}
@@ -133,7 +226,7 @@ const AlgorithmPage = () => {
                       {content.desc}
                     </div>
                   </div>
-                }
+                )}
               </SwiperSlide>
             );
           })}
