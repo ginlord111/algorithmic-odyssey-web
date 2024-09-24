@@ -50,52 +50,58 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
     { name: "PHP", value: "php" },
   ];
 
-
   const [currentLanguage, setCurrentLanguage] = useState<string>("java");
   const [content, setContent] = useState<string>(getInitialContent("java"));
   const [codeSubmitted, setCodeSubmitted] = useState<string>("");
-  const [isLoading , setIsLoading] = useState<boolean>(false)
-  const [isTaskDone , setIsTaskDone] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isTaskDone, setIsTaskDone] = useState<boolean>(false);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const searchParams = useSearchParams();
   const updateCompilerContent = (code: string) => {
     if (code) {
       const iframe = iframeRef.current;
       if (iframe && iframe.contentWindow) {
-        iframe.contentWindow.postMessage(
-          {
-            eventType: "populateCode",
-            language: currentLanguage,
-            files: [
-              {
-                name: `${currentLanguage}${getFileExtension(currentLanguage)}`,
-                content: code,
-              },
-            ],
-          },
-          "*"
-        );
+        console.log(code, "THIS IS CODE IN UPDATE FUNC");
+        iframe.onload = () => {
+          iframe.contentWindow?.postMessage(
+            {
+              eventType: "populateCode",
+              language: currentLanguage,
+              files: [
+                {
+                  name: `${currentLanguage}${getFileExtension(
+                    currentLanguage
+                  )}`,
+                  content: code,
+                },
+              ],
+            },
+            "*"
+          );
+        };
       }
     }
   };
 
- useEffect(()=> {
-  const getCode = async() => {
+  useEffect(() => {
+    const getCode = async () => {
+      const student = searchParams.get("student");
 
-    const student = searchParams.get("student")
+      // get the content of the submited code of the student
+      if (student) {
+        const studentSubmittedCode = await fetchStudentCode(
+          act.id,
+          student as string
+        );
+        console.log(studentSubmittedCode, "USER CODE");
+        return updateCompilerContent(studentSubmittedCode as string);
+      }
 
-    // get the content of the submited code of the student
-    if(student){
-      const studentSubmittedCode = await fetchStudentCode(act.id, student as string)
-      console.log(studentSubmittedCode, "USER CODE")
-    return updateCompilerContent(studentSubmittedCode as string)
-    }
+      return;
+    };
 
-    return;
-  }
-
-  getCode()
- },[useSearchParams])
+    getCode();
+  }, [useSearchParams]);
 
   const getFileExtension = (language: string): string => {
     switch (language) {
@@ -122,18 +128,21 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
     setContent(initialContent); // Update content to initial code for new language
   };
 
-
   const handleSubmit = async () => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const response = await fetch("/api/classroom/classwork/code", {
         method: "POST",
-        body: JSON.stringify({ studentId: user.id, code: codeSubmitted, actId: act.id }),
+        body: JSON.stringify({
+          studentId: user.id,
+          code: codeSubmitted,
+          actId: act.id,
+        }),
         headers: {
           "Content-Type": "application/json",
         },
       });
-      setIsLoading(false)
+      setIsLoading(false);
       if (!response.ok) {
         throw new Error("ERROR");
       }
@@ -170,60 +179,69 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
       console.log("No files available.");
     }
   }
-useEffect(()=> {
-  const fetchTaskDone = async() =>{
-    const data = await fetchTaskProgress(act?.id, user?.id)
-  if(data){
-    setIsTaskDone(data)
-  }
+  useEffect(() => {
+    const fetchTaskDone = async () => {
+      const data = await fetchTaskProgress(act?.id, user?.id);
+      if (data) {
+        setIsTaskDone(data);
+      }
 
-  return ;
-  }
+      return;
+    };
 
-  fetchTaskDone()
-},[act,user])
-
+    fetchTaskDone();
+  }, [act, user, handleSubmit]);
 
   return (
     <div className="relative mt-10">
-   {isTaskDone ? (
-    <div className="flex items-center justify-center flex-col space-y-2">
-      <Image 
-      src={"/no-pending-task.svg"}
-      alt="Submitted Task"
-      width={400}
-      height={300}
-      />
-      <span className="text-muted-foreground text-sm">Your work is submitted</span>
-    </div>
-   ) : (
-       <div className="flex flex-col space-y-3">
-       <div className="flex justify-end space-x-3">
-         <Button onClick={() => handleLanguageChange(currentLanguage)}>Clear</Button>
-         <Select
-           isRequired
-           value={currentLanguage}
-           className="max-w-xs"
-           defaultSelectedKeys={["java"]}
-           onChange={(e) => handleLanguageChange(e.target.value)}
-           aria-label="Select Lang"
-         >
-           {languages.map((lang) => (
-             <SelectItem key={lang.value} value={lang.value}>
-               {lang.name}
-             </SelectItem>
-           ))}
-         </Select>
-         <Button onClick={handleSubmit}>{isLoading ? (<Loader2 className="animate-spin w-6 h-6"/>) : "Submit"}</Button>
-       </div>
-       <iframe
-         ref={iframeRef}
-         id="oc-editor"
-         className="w-full h-[400px] border-none"
-         src="https://onecompiler.com/embed?availableLanguages=cpp%2Cjava%2Cpython%2Cjavascript%2Cphp&hideNew=true&hideNewFileOption=true&hideTitle=true&hideStdin=true&theme=dark&listenToEvents=true&codeChangeEvent=true&fontSize=16&hideLanguageSelection=true"
-       ></iframe>
-     </div>
-   )}
+      {isTaskDone ? (
+        <div className="flex items-center justify-center flex-col space-y-2">
+          <Image
+            src={"/no-pending-task.svg"}
+            alt="Submitted Task"
+            width={400}
+            height={300}
+          />
+          <span className="text-muted-foreground text-sm">
+            Your work is submitted
+          </span>
+        </div>
+      ) : (
+        <div className="flex flex-col space-y-3">
+          <div className="flex justify-end space-x-3">
+            <Button onClick={() => handleLanguageChange(currentLanguage)}>
+              Clear
+            </Button>
+            <Select
+              isRequired
+              value={currentLanguage}
+              className="max-w-xs"
+              defaultSelectedKeys={["java"]}
+              onChange={(e) => handleLanguageChange(e.target.value)}
+              aria-label="Select Lang"
+            >
+              {languages.map((lang) => (
+                <SelectItem key={lang.value} value={lang.value}>
+                  {lang.name}
+                </SelectItem>
+              ))}
+            </Select>
+            <Button onClick={handleSubmit}>
+              {isLoading ? (
+                <Loader2 className="animate-spin w-6 h-6" />
+              ) : (
+                "Submit"
+              )}
+            </Button>
+          </div>
+          <iframe
+            ref={iframeRef}
+            id="oc-editor"
+            className="w-full h-[400px] border-none"
+            src="https://onecompiler.com/embed?availableLanguages=cpp%2Cjava%2Cpython%2Cjavascript%2Cphp&hideNew=true&hideNewFileOption=true&hideTitle=true&hideStdin=true&theme=dark&listenToEvents=true&codeChangeEvent=true&fontSize=16&hideLanguageSelection=true"
+          ></iframe>
+        </div>
+      )}
     </div>
   );
 };

@@ -5,11 +5,17 @@ export async function POST(req:NextRequest){
   try {
     const {studentId,code,actId} = await req.json()
 
+    const studActId = await prisma.studentActivity.findFirst({
+      where:{
+        activityId:actId,
+        studentId
+      }
+    })
 
+    console.log(studentId, actId ,"PARAMSS")
     await prisma.studentActivity.update({
         where:{
-     studentId,
-     activityId:actId
+          id:studActId?.id as string,
         },
         data:{
 codeSubmitted:code,

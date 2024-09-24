@@ -88,19 +88,23 @@ export async function PATCH(req: NextRequest) {
 try {
   const body = await req.formData();
   const works = body.get("works") as File
-  const studentId = JSON.parse(body.get("studentId") as string)
-  const studentName = JSON.parse(body.get("studentName") as string)
+  const studentId = JSON.parse(body.get("studentId")  as string) as string
+   const studentName = JSON.parse(body.get("studentName") as string)
   const studentAvatar = JSON.parse(body.get("studentAvatar") as string)
   const studentEmail = JSON.parse(body.get("studentEmail") as string)
-  const activityId = JSON.parse(body.get("activityId") as string)
+  const activityId = JSON.parse(body.get("activityId") as string) as string
   const savedFilePath = await saveFile(works, works.name);
   const fileUpload = await uploadGdrive(works.name, works.type);
   await fs.unlink(savedFilePath);
-
+  const studActId = await prisma.studentActivity.findFirst({
+    where:{
+      studentId,
+      activityId
+    }
+  })
   const submitted =  await prisma.studentActivity.upsert({
     where: {
-      studentId,
-      activityId,
+      id:  studActId?.id
     },
     update: {
       fileSubmittedUrl: fileUpload?.fileUrl ?? null,

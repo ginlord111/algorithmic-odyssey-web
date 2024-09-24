@@ -188,7 +188,7 @@ model Activity {
 
 model StudentActivity {
   id               String    @id @default(cuid())
-  studentId        String    @unique
+  studentId        String    
   activityId       String
   score            Int?
   isCompleted      Boolean   @default(false)
