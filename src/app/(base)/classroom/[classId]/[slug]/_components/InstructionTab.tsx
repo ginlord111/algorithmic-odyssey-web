@@ -17,6 +17,7 @@ const InstructionTab = ({ act }: { act: Activity }) => {
   return (
     <div className="relative mt-16 px-[4rem]">
       <div className="flex flex-col space-y-3 pb-6 border-b-1 border-[#e0e0e0]">
+        <span className="text-lg font-bold">{act.isActivity ? "Activity" : "Assesment"}</span>
         <div className="flex space-x-3">
           <div className="p-1 bg-[#5F6368] rounded-full">
             <NotepadText className="w-6 h-6 text-white  " />
@@ -27,7 +28,7 @@ const InstructionTab = ({ act }: { act: Activity }) => {
         </div>
         <span className="text-muted-foreground text-sm">{timeDiffCalc}</span>
       </div>
-      <div className="flex-col mt-5 space-y-2">
+      <div className="flex flex-col mt-5 space-y-2">
         <span className="font-semibold italic">Instructions:</span>
         <div className="tracking-wide font-semibold">
           {parse(`${instruction}`)}

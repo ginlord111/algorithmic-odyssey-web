@@ -40,7 +40,7 @@ const ForumContainer = ({
   if (content) {
     const extension = tiptapExtensions()
     tempContent = generateHTML(content as JSONContent, extension)
-  }
+  };
   return (
     <div
       className={cn(
@@ -79,7 +79,7 @@ const ForumContainer = ({
           {forumImage && (
             <div className="relative w-full max-w-md md:max-w-xl overflow-hidden">
               <Link
-                href={`/forum/${authorUsername}/comments/${titleId}/${title}`}
+                href={`/forum/${userId}/comments/${titleId}/${title}`}
               >
                 <Image
                   src={forumImage}

@@ -26,43 +26,32 @@ const Footer = () => {
       onClick: () => {},
     },
   ];
-  const supports = [
+  const ourPages = [
     {
-      title: "Contact Us",
-      href: "#",
+      name: "Tutorial",
+      href: "/tutorial",
     },
     {
-      title: "FAQ",
-      href: "#",
+      name: "Play game",
+      href: "https://algody.vercel.app",
     },
     {
-      title: "Docs",
-      href: "#",
+      name: "Classroom",
+      href: "/classroom",
     },
     {
-      title: "Community",
-      href: "#",
-    },
-  ];
-  const features = [
-    {
-      title: "Game",
-      href: "#",
+      name: "Forum",
+      href: "/forum",
     },
     {
-      title: "Tutorial",
-      href: "#",
+      name: "Leaderboard",
+      href: "/leaderboard",
     },
     {
-      title: "Forum",
-      href: "#",
-    },
-    {
-      title: "Shop",
-      href: "#",
+      name: "About us",
+      href: "/about-us",
     },
   ];
-
   return (
     <div className="relative pt-10">
       <div className="w-full h-fit bg-[#00171F] py-10 px-20 dark:bg-[#1b1b1f] border-t-1 border-[#cbd5e11a]">
@@ -77,34 +66,22 @@ const Footer = () => {
                   <social.icon key={index} className="text-white w-6 h-6" />
                 ))}
               </div>
-            </div>
-            <div className="flex flex-col items-center ">
-              <h3 className="text-lg font-bold pb-8 text-gray-300">Support</h3>
-              <div className="flex flex-col gap-4 items-center">
-                {supports.map((support, index) => (
-                  <Link
-                    href={support.href}
-                    key={index}
-                    className="text-white hover:underline"
-                  >
-                    {support.title}
-                  </Link>
-                ))}
+              <div className="text-md text-white">
+                09150429717
+              </div>
+              <div className="text-md text-white">
+                algorithmicodyssey@gmail.com
               </div>
             </div>
             <div className="flex flex-col items-center ">
-              <h3 className="text-lg font-bold pb-8 text-gray-300">Features</h3>
-              <div className="flex flex-col gap-4 items-center">
-                {features.map((feature, index) => (
-                  <Link
-                    href={feature.href}
-                    key={index}
-                    className="text-white hover:underline"
-                  >
-                    {feature.title}
-                  </Link>
-                ))}
-              </div>
+              <h3 className="text-lg font-bold pb-8 text-gray-300">Our pages</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    {ourPages.map((page)=> (
+                      <Link href={page.href} key={page.name} className="text-white">
+                     {page.name}
+                      </Link>
+                    ))}
+                  </div>
             </div>
             <div className="flex flex-col items-center">
                 <div className="flex gap-4">

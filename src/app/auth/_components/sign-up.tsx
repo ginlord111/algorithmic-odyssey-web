@@ -148,9 +148,9 @@ const SignUpTab = ({
             <Github className="w-6 h-6" />
           </Button>
 
-          <Button className="px-10" type="button">
+          {/* <Button className="px-10" type="button">
             <Mail />
-          </Button>
+          </Button> */}
         </div>
       </form>
     </Form>

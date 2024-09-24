@@ -11,6 +11,7 @@ const Header = ({children, className}:{children?:ReactNode, className?:string}) 
       className="brightness-50 object-cover"
       fill
       priority
+      unoptimized
     />
     {children}
   </div>

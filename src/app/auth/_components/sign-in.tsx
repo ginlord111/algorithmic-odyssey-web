@@ -16,12 +16,14 @@ import {
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 const SignInTab = ({
   setSelected,
 }: {
   setSelected: Dispatch<SetStateAction<Key>>;
 }) => {
   const router = useRouter()
+  const { data: session } = useSession();
   const signInForm = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
     mode: "onSubmit",
@@ -53,6 +55,16 @@ const SignInTab = ({
 
    
     
+  }
+
+  const handleSignInGithub = async () => {
+    await signIn("github",
+      {
+        callbackUrl:'/'
+      }
+    );
+
+
   }
   return (
     <Form {...signInForm}>
@@ -113,13 +125,7 @@ const SignInTab = ({
           Or sign in with
         </span>
         <Button
-          onClick={async() => {
-            await signIn("github",
-              {
-                callbackUrl:'/'
-              }
-            );
-          }}
+          onClick={handleSignInGithub}
           className="px-10"
           variant="solid"
           color="primary"
@@ -127,11 +133,11 @@ const SignInTab = ({
         >
           <Github className="w-6 h-6" />
         </Button>
-        <Button className="px-10" variant="solid" color="primary"
+        {/* <Button className="px-10" variant="solid" color="primary"
         type="button"
         >
           <Mail />
-        </Button>
+        </Button> */}
       </div>
     </Form>
   );

@@ -20,6 +20,7 @@ import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Select, SelectItem } from "@nextui-org/react";
 const CreateClasswork = ({
   setClickCreate,
   classId,
@@ -29,6 +30,7 @@ const CreateClasswork = ({
 }) => {
   const [file, setFile] = useState<File | null | undefined>(null);
   const [content, setContent] = useState<JSONContent | null>(null);
+  const [actType, setActType] = useState<string>("activity")
   const { data: session } = useSession();
   const router = useRouter();
   const createActivityForm = useForm<z.infer<typeof createActivitySchema>>({
@@ -39,6 +41,17 @@ const CreateClasswork = ({
       instruc: "",
     },
   });
+
+  const classworkType = [
+    {
+      name:"Assesment",
+      value:"assesment"
+    },
+    {
+      name:"Activity",
+      value:"activity"
+    }
+  ]
 
   async function onSubmit(values: z.infer<typeof createActivitySchema>) {
     const formData = new FormData();
@@ -52,6 +65,7 @@ const CreateClasswork = ({
     formData.append("id", JSON.stringify(session?.user.id));
     formData.append("classId", JSON.stringify(classId));
     formData.append("maxScore", JSON.stringify(values.maxScore));
+    formData.append("actType", JSON.stringify(actType));
     if (values.maxScore > 100) {
       createActivityForm.setError("maxScore", {
         message: "Max score must be 100 or less",
@@ -71,7 +85,6 @@ const CreateClasswork = ({
     toast.success("Classwork created succesfully");
     setClickCreate(false);
   }
-
   return (
     <div>
       <Form {...createActivityForm}>
@@ -92,6 +105,23 @@ const CreateClasswork = ({
               </FormItem>
             )}
           />
+       <div className="mt-4 flex-col space-y-2">
+        <p className="text-sm">Classwork type</p>
+       <Select
+              isRequired
+              className="w-full"
+              defaultSelectedKeys={["activity"]}
+              value={actType}
+              aria-label="Select Lang"
+              onChange={(e)=>setActType(e.target.value)}
+            >
+              {classworkType.map((type) => (
+                <SelectItem key={type.value} value={type.value}>
+                  {type.name}
+                </SelectItem>
+              ))}
+            </Select>
+       </div>
 
           <FormField
             control={createActivityForm.control}

@@ -46,7 +46,7 @@ const ActivityPage = async ({
       : await fetchTeacherView(act.id);
   return (
     <MaxWidthWrapper>
-      <NavBarAct />
+      <NavBarAct isActivity={act.isActivity}/>
       <ActivityContainer
         act={act as Activity}
         studentWorks={

@@ -6,37 +6,41 @@ import type SwiperType from "swiper";
 import { cn } from "@/lib/utils";
 import "swiper/css";
 import "swiper/css/pagination";
-import "../styles/style.css";
 import { ChevronLeft, ChevronRight, Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
-
+const randomizeArray = (length: number) => {
+    return Array.from({ length }, () => Math.floor(Math.random() * 100) + 10);
+  };
 const VisualComponent = () => {
-    const [array, setArray] = useState<number[]>(randomizeArray(7).sort((a, b) => a - b));
-    const [target, setTarget] = useState<number | string>('');
+    const [array, setArray] = useState<number[]>(randomizeArray(7));
     const [result, setResult] = useState<string>('');
-    const [highlightIndexes, setHighlightIndexes] = useState<number[]>([]);
+    const [highlightIndex, setHighlightIndex] = useState<number | null>(null);
     const [foundIndex, setFoundIndex] = useState<number | null>(null);
-    const [inputArray, setInputArray] = useState<string>('');
+    const [isSearching, setIsSearching] = useState<boolean>(false);
+    const [targetInput, setTargetInput] = useState<string>('');
+    const [arrayInput, setArrayInput] = useState<string>('');
   
-    // Helper function to create a random array
+    // Function to randomize the array
     function randomizeArray(length: number): number[] {
-      return Array.from({ length }, () => Math.floor(Math.random() * 100) + 10);
+      return Array.from({ length }, () => Math.floor(Math.random() * 90) + 10);
     }
   
-    // Function to create a bar for each element
+    // Function to create a bar element
     const createBar = (value: number, index: number) => {
-      let barClass = 'bg-[lightblue] border-blue-600 border-2';
-      if (highlightIndexes.includes(index)) {
-        barClass = 'bg-orange-500';
+      let barColor = 'bg-blue-400'; // Default color
+  
+      if (index === highlightIndex) {
+        barColor = 'bg-orange-500'; // Currently being checked
       }
+  
       if (index === foundIndex) {
-        barClass = 'bg-green-500';
+        barColor = 'bg-green-500'; // Found target
       }
   
       return (
         <div
           key={index}
-          className={`flex items-end justify-center relative ${barClass}`}
+          className={`flex items-end justify-center border-2 border-blue-600 relative ${barColor}`}
           style={{ height: `${value}px`, width: '30px', margin: '2px' }}
         >
           <span className="absolute bottom-1 text-black">{value}</span>
@@ -44,117 +48,129 @@ const VisualComponent = () => {
       );
     };
   
-    // Function to update the bars (this is effectively the return JSX in React)
+    // Function to update bars based on the array
     const updateBars = () => {
       return array.map((value, index) => createBar(value, index));
     };
   
-    // Binary Search Algorithm
-    const binarySearch = async (arr: number[], target: number) => {
-      let left = 0;
-      let right = arr.length - 1;
+    // Sleep function to create delays
+    const sleep = (ms: number) => {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    };
   
-      while (left <= right) {
-        const mid = Math.floor((left + right) / 2);
-        setHighlightIndexes([mid]);
-        setResult(`Checking middle element: ${arr[mid]}`);
-        await sleep(1000);
+    // Linear search algorithm with visualization
+    const linearSearch = async (arr: number[], target: number) => {
+      setIsSearching(true);
+      setResult('');
+      setFoundIndex(null);
   
-        if (arr[mid] === target) {
-          setResult(`Target ${target} found at index ${mid}`);
-          setFoundIndex(mid);
+      for (let i = 0; i < arr.length; i++) {
+        setHighlightIndex(i);
+        setResult(`Checking element: ${arr[i]}`);
+        await sleep(1000); // Delay for visualization
+  
+        if (arr[i] === target) {
+          setResult(`Target ${target} found at index ${i}`);
+          setFoundIndex(i);
+          setHighlightIndex(null);
+          setIsSearching(false);
           return;
-        } else if (arr[mid] < target) {
-          setResult(`Target is greater than ${arr[mid]}`);
-          left = mid + 1;
-        } else {
-          setResult(`Target is less than ${arr[mid]}`);
-          right = mid - 1;
         }
-  
-        await sleep(1000);
       }
   
       setResult(`Target ${target} not found in the array`);
+      setHighlightIndex(null);
+      setIsSearching(false);
     };
   
-    // Utility function to simulate sleep
-    function sleep(ms: number) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    }
+    // Function to set array from input
+    const setArrayFromInput = () => {
+      const numbers = arrayInput
+        .split(',')
+        .map(num => parseInt(num.trim(), 10))
+        .filter(num => !isNaN(num));
+      if (numbers.length > 0) {
+        setArray(numbers);
+        setResult('');
+        setHighlightIndex(null);
+        setFoundIndex(null);
+      }
+    };
   
-    // Reset function to randomize a new array
+    // Function to reset the array
     const reset = () => {
-      const newArray = randomizeArray(7).sort((a, b) => a - b);
-      setArray(newArray);
-      setInputArray('');
+      setArray(randomizeArray(7));
       setResult('');
-      setHighlightIndexes([]);
+      setHighlightIndex(null);
       setFoundIndex(null);
     };
   
-    // Set the array from input
-    const setArrayFromInput = () => {
-      const numbers = inputArray
-        .split(',')
-        .map((num) => parseInt(num.trim(), 10))
-        .filter((num) => !isNaN(num));
-  
-      if (numbers.length > 0) {
-        const sortedArray = numbers.sort((a, b) => a - b);
-        setArray(sortedArray);
-        setResult('');
-        setHighlightIndexes([]);
-        setFoundIndex(null);
-      }
-    };
-  
-    // Event handler for search
-    const handleSearch = () => {
-      const parsedTarget = parseInt(target as string, 10);
-      if (!isNaN(parsedTarget)) {
-        setFoundIndex(null);
-        binarySearch(array, parsedTarget);
-      }
-    };
-  
     return (
-      <div className="container max-w-full justify-center py-10">
-        <div id="array" className="flex justify-center items-end" style={{ height: '300px' }}>
+      <div className="container mx-auto py-10">
+        {/* Array Visualization */}
+        <div
+          id="array"
+          className="flex justify-center items-end h-80 border border-gray-300 p-4"
+        >
           {updateBars()}
         </div>
-        <p id="result" className="mt-4 text-center">
+  
+        {/* Result Display */}
+        <p id="result" className="mt-4 text-center text-lg font-semibold">
           {result}
         </p>
-        <div className="controls flex flex-col md:flex-row items-center justify-center mt-4 space-x-2">
-          <button onClick={reset} className="border md:px-1 md:py-1 mr-2 border-black rounded-sm">
+  
+        {/* Controls */}
+        <div className="flex flex-col md:flex-row items-center justify-center mt-6 space-x-2 md:space-y-0 md:space-x-4">
+          {/* Randomize Array Button */}
+          <button
+            onClick={reset}
+            className="px-4 py-2 border border-black rounded hover:bg-gray-200 disabled:opacity-50"
+            disabled={isSearching}
+          >
             Randomize Array
           </button>
-          <div className="flex flex-row items-center">
-            <input
-              type="number"
-              value={target}
-              onChange={(e) => setTarget(e.target.value)}
-              placeholder="Enter target number"
-              className="border md:px-1 md:py-1 w-36 md:w-72 border-black rounded-sm"
-            />
-            <button
-              onClick={handleSearch}
-              className="border md:px-1 md:py-1 ml-2 border-black rounded-sm"
-            >
-              Search Array
-            </button>
-          </div>
-          <div className="flex flex-row items-center md:mt-0 mt-2">
+  
+          {/* Set Array from Input */}
+          <div className="flex items-center space-x-2">
             <input
               type="text"
-              value={inputArray}
-              onChange={(e) => setInputArray(e.target.value)}
-              placeholder="Enter custom array (comma-separated)"
-              className="border md:px-1 md:py-1 w-36 md:w-72 border-black rounded-sm"
+              value={arrayInput}
+              onChange={e => setArrayInput(e.target.value)}
+              placeholder="2, 5, 9, 3, 3"
+              className="px-2 py-1 border border-black rounded w-48"
+              disabled={isSearching}
             />
-            <button onClick={setArrayFromInput} className="border md:px-1 md:py-1 ml-2 border-black rounded-sm">
+            <button
+              onClick={setArrayFromInput}
+              className="px-4 py-2 border border-black rounded hover:bg-gray-200 disabled:opacity-50"
+              disabled={isSearching}
+            >
               Set Array
+            </button>
+          </div>
+  
+          {/* Search Target */}
+          <div className="flex items-center space-x-2">
+            <input
+              type="number"
+              value={targetInput}
+              onChange={e => setTargetInput(e.target.value)}
+              placeholder="Enter target number"
+              className="px-2 py-1 border border-black rounded w-48"
+              disabled={isSearching}
+            />
+            <button
+              onClick={() => {
+                const target = parseInt(targetInput, 10);
+                if (!isNaN(target)) {
+                  linearSearch(array, target);
+                }
+              }}
+              className="px-4 py-2 border border-black rounded hover:bg-gray-200 disabled:opacity-50"
+              disabled={isSearching || targetInput.trim() === ''}
+            >
+              Search Array
             </button>
           </div>
         </div>
@@ -169,28 +185,26 @@ const VisualComponent = () => {
 
 const contents = [
   {
-    desc: "Binary Search Algorithm",
+    desc: "Linear Search Algorithm",
     className: "font-bold lg:text-6xl text-xl",
   },
   {
-    desc: `Binary Search is a searching algorithm used in a sorted array by repeatedly dividing the search interval in half. 
-    The idea behind binary search is to take advantage of the fact that the array is sorted to reduce the time complexity to O(log N).`,
-    imageSrc: '/lessons/img/binary-search/magnifying.png',
-    audioSrc: '/audio/binary-search/definition.mp3',
+    desc: `Linear Search is a sequential search algorithm that starts at one end of a list and goes through each element until the desired element is found,
+     or the search continues till the end of the dataset. It is versatile and can be used on both sorted and unsorted data.`,
+    imageSrc: '/lessons/img/linear-search/linearPep.png',
+    audioSrc: '/audio/linear-search/definition.mp3',
   },
   {
-    desc: `Binary Search begins by comparing the target element with the middle element of the array. 
-    If the target is smaller, the algorithm searches the left half of the array; if larger, it searches the right half. 
-    This halving process continues until the target element is found or the search space is exhausted.`,
-    imageSrc: '/lessons/img/binary-search/binary-visual.gif',
-    audioSrc: '/audio/binary-search/works.mp3',
+    desc: `The algorithm starts by comparing the target element with the first element of the list. 
+    If a match is found, the search stops. If not, the algorithm continues to the next element and repeats this process until the target is found or the end of the list is reached.`,
+    imageSrc: '/lessons/img/linear-search/linear_search.gif',
+    audioSrc: '/audio/linear-search/works.mp3',
   },
   {
-    desc: `The method is efficient for large datasets with a time complexity of O(log n) and reduces the search space by half with each comparison, 
-    but it requires the list to be sorted beforehand, which introduces overhead if the list isn't already sorted, 
-    and it isn't suitable for linked lists due to their lack of random access.`,
-    imageSrc: '/lessons/img/binary-search/robot.jpeg',
-    audioSrc: '/audio/binary-search/advantage.mp3',
+    desc: `The method is easy to set up and works with both sorted and unsorted data without needing extra memory or preparation. 
+    However, it checks every element one by one, making it slow and inefficient for large datasets, and not ideal for applications that need fast performance.`,
+    imageSrc: '/lessons/img/linear-search/linear-nbg.png',
+    audioSrc: '/audio/linear-search/advantage.mp3',
   },
   {
     component: <VisualComponent />,

@@ -1,5 +1,5 @@
 import { Bell } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -12,12 +12,14 @@ import { Notifications } from "@prisma/client";
 import NotificationList from "./NotificationList";
 import { readNotification } from "@/actions/actions";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 const Notification = ({ userId }: { userId: string }) => {
+  const { data: session } = useSession();
   const { data: notifs } = useQuery({
     queryKey: ["get-user-notification", userId],
     queryFn: () => fetchUserNotification(userId),
   });
-  console.log(notifs, userId, "notifss")
+ 
   /// TODO: MAKE A GLOBAL STATE THAT TRACCK IF SOMEONE LIKE AND IF SO, REVALIDATE THE GET USER NOTIFCATION FOR REALTIME NOTIF
   const queryClient = useQueryClient();
   const router = useRouter()
@@ -27,6 +29,7 @@ const Notification = ({ userId }: { userId: string }) => {
     queryClient.invalidateQueries({ queryKey: ["get-user-notification"] });
     router.push(route)
   }
+ 
   return (
     <Dropdown >
       <DropdownTrigger>

@@ -6,7 +6,6 @@ import type SwiperType from "swiper";
 import { cn } from "@/lib/utils";
 import "swiper/css";
 import "swiper/css/pagination";
-import "../styles/style.css";
 import { ChevronLeft, ChevronRight, Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
 

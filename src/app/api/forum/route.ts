@@ -17,6 +17,7 @@ export async function GET(req: NextRequest): Promise<any> {
   try {
     const url = new URL(req.url);
     const session = await getServerSession(authOptions);
+    console.log(session, "SESSION IN FORUM LIKE")
     const cursor = url.searchParams.get("cursor");
     const sort = url.searchParams.get("sort");
    

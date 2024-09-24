@@ -2,15 +2,17 @@
 import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper";
 import { Button } from "@nextui-org/react";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import React, { Fragment, useEffect, useState } from "react";
 import userInfo from "@/store/store";
 import { NavActState } from "@/types/types";
-export const NavBarAct = () => {
+export const NavBarAct = ({isActivity}:{isActivity:boolean}) => {
   const router = useRouter();
   const pathname = usePathname();
   const { fetchUser, user } = userInfo();
   const [currentNav, setCurrentNav] = useState<NavActState>("instruction");
+  const searchParams = useSearchParams()
+  const currentTab = searchParams.get("tab")
   useEffect(() => {
     router.replace(`${pathname}?tab=${currentNav}`);
   }, [currentNav,pathname,router]);
@@ -23,27 +25,37 @@ fetchUser();
   const navigationForStud = [
     {
       name: "Instruction",
-      isActive: currentNav === "instruction",
+      isActive: currentTab === "instruction",
       value: "instruction",
     },
     {
-      name: "Works",
-      isActive: currentNav === "works",
-      value: "works",
+      name: isActivity ? "Work" : "Compiler",
+      isActive:isActivity ? currentTab === "students-work" : currentNav ==="compiler",
+   value: isActivity ? "students-work" : "compiler"
     },
+    // {
+    //   name:"Compiler",
+    //   isActive: currentNav === "compiler",
+    //   value:"compiler"
+    // }
   ];
 
   const navigationForTeacher = [
     {
         name: "Instruction",
-        isActive: currentNav === "instruction",
+        isActive: currentTab === "instruction",
         value: "instruction",
       },
       {
         name: "Student's Work",
-        isActive: currentNav === "students-work",
-        value: "students-work",
+        isActive: currentTab === "students-work",
+        value:"students-work"
       },
+      {
+        name:"Compiler",
+        isActive: currentTab === "compiler",
+        value:"compiler"
+      }
   ]
 
   const navigation = user?.isStudent ? navigationForStud : navigationForTeacher

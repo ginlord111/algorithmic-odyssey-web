@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     const id = JSON.parse(body.get("id") as string);
     const classId = JSON.parse(body.get("classId") as string);
     const maxScore = JSON.parse(body.get("maxScore") as string)
-
+    const actType = JSON.parse(body.get("actType") as string)
     // saving the file inside the upload folder
     const savedFilePath = await saveFile(file, file.name);
 
@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
         fileType: file.type,
         fileUrl: (fileUpload?.fileUrl as string) ?? null,
         fileUrlDownload: (fileUpload?.fileUrlDownload as string) ?? null,
+        isActivity:actType ==="activity"  ? true : false,
         maxScore,
         teacher: {
           connect: {
@@ -88,19 +89,23 @@ export async function PATCH(req: NextRequest) {
 try {
   const body = await req.formData();
   const works = body.get("works") as File
-  const studentId = JSON.parse(body.get("studentId") as string)
-  const studentName = JSON.parse(body.get("studentName") as string)
+  const studentId = JSON.parse(body.get("studentId")  as string) as string
+   const studentName = JSON.parse(body.get("studentName") as string)
   const studentAvatar = JSON.parse(body.get("studentAvatar") as string)
   const studentEmail = JSON.parse(body.get("studentEmail") as string)
-  const activityId = JSON.parse(body.get("activityId") as string)
+  const activityId = JSON.parse(body.get("activityId") as string) as string
   const savedFilePath = await saveFile(works, works.name);
   const fileUpload = await uploadGdrive(works.name, works.type);
   await fs.unlink(savedFilePath);
-
+  const studActId = await prisma.studentActivity.findFirst({
+    where:{
+      studentId,
+      activityId
+    }
+  })
   const submitted =  await prisma.studentActivity.upsert({
     where: {
-      studentId,
-      activityId,
+      id:  studActId?.id
     },
     update: {
       fileSubmittedUrl: fileUpload?.fileUrl ?? null,

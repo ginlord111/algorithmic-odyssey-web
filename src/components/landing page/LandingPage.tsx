@@ -3,78 +3,67 @@ import Image from "next/image";
 import Link from "next/link";
 import MaxWidthWrapper from "../layout/MaxWidthWrapper";
 import { Card, CardHeader, CardBody } from "@nextui-org/react";
-import { Car } from "lucide-react";
 import Header from "../layout/Header";
 
 const LandingPage = () => {
-  const imageAbout = [
+  const textAbout = [
     {
-      image: "https://placehold.co/600x400",
-      title: "TITLE",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
+      title: "Interactive Learning",
+      desc: "Algorithmic Odyssey fosters active problem-solving by offering challenges, helping students build a solid foundation in algorithms through practical tasks.",
     },
     {
-      image: "https://placehold.co/600x400",
-      title: "TITLE",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
+      title: "Gamified Approach",
+      desc: "Learning algorithms has never been more exciting. Algorithmic Odyssey incorporates game-like elements that allow students to progress through levels, overcoming increasingly complex algorithmic challenges.",
     },
     {
-      image: "https://placehold.co/600x400",
-      title: "TITLE",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
+      title: "Custom Assessments",
+      desc: "Teachers can design custom assessments, providing real-time feedback to track students' progress through our classroom feature and built-in code compiler.",
     },
   ];
   const cardsInfo = [
     {
-      image: "https://placehold.co/600x400",
-      title: "TITLE",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
+      image: "/card_pic_1.png",
+      title: "Explore Tutorials",
+      desc: "Dive into step-by-step tutorials that break down complex algorithms into easy-to-follow lessons.",
     },
     {
-      image: "https://placehold.co/600x400",
-      title: "TITLE",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
+      image: "/card_pic_2.png",
+      title: "Collaborative Forum",
+      desc: "Engage with other students, ask questions, and collaborate on algorithm challenges in our vibrant community forum",
     },
     {
-      image: "https://placehold.co/600x400",
-      title: "TITLE",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
-    },
-    {
-      image: "https://placehold.co/600x400",
-      title: "TITLE",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
-    },
-    {
-      image: "https://placehold.co/600x400",
-      title: "TITLE",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
-    },
-    {
-      image: "https://placehold.co/600x400",
-      title: "TITLE",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
+      image: "/card_pic_3.png",
+      title: "Classroom Feature",
+      desc: "Our classroom feature enables teachers to create personalized assessments, track student progress, and provide real-time feedback, making learning both engaging and effective",
     },
   ];
+  
   return (
     <div className="relative">
       <Header className="md:h-[70vh] h-[100vh] relative flex flex-col">
         <div className=" mx-auto w-full max-w-screen-xl px-2.5 md:px-20 relative flex flex-col justify-center md:items-start items-center h-full gap-5 text-center md:text-start">
-          <div className="font-bold md:text-[60px] text-[30px] max-w-2xl text-[#FFFFF5DB]">
-            Unlock Algorithm Skills with Every Level
+          <div className="font-bold md:text-[60px] text-[30px] max-w-3xl text-[#EBF2FA]">
+            Your Journey to Mastering Algorithms!
           </div>
-          <div className="text-lg font-bold tracking-wide text-[#FFFFF5DB] max-w-2xl">
+          <div className="text-lg font-bold tracking-wide text-[#EBF2FA] max-w-2xl">
             <p>
-              Embark on a 2D Gaming Journey to Master Algorithms and Boost Your
-              Problem-Solving Abilities
+              Welcome to Algorithmic Odyssey! Step into a gamified world where
+              learning algorithms is fun, interactive, and rewarding.
             </p>
           </div>
-          <div className="w-fit mt-16">
+          <div className="w-fit mt-16 flex space-x-4">
             <Link
-              href={"#"}
+              href={"/tutorial"}
               className="bg-white p-3 px-6 rounded-md text-lg font-bold text-[#333F67]"
             >
-              Download Here
+              Learn now
+            </Link>
+            <Link
+              href="https://algody.vercel.app"
+              target="_blank"
+              className="bg-[#003459] p-3 px-6 rounded-md text-lg font-bold text-[white]"
+            >
+              Play now
             </Link>
           </div>
         </div>
@@ -82,45 +71,37 @@ const LandingPage = () => {
       <div className="relative  h-fit p-4">
         <div className="pt-20">
           <MaxWidthWrapper>
-            <h1 className="font-bold md:text-5xl text-2xl tracking-wide">
-              About
+            <h1 className="font-bold md:text-5xl text-2xl tracking-wide pb-8">
+              About Algorithmic Odyssey
             </h1>
-            <div className="pt-10 flex gap-10 lg:flex-row md:flex-col overflow-hidden">
+            <div className="pt-10 flex gap-10 lg:flex-row  flex-col overflow-hidden">
               <div className="flex flex-col gap-5 md:w-[50%] w-full">
                 <div className="relative md:w-[500px] md:h-[300px] w-full h-[200px]">
                   <Image
-                    src="https://placehold.co/600x400"
+                    src="/about_pic_1.png"
                     alt="IMAGE"
                     fill
                     className="rounded-md object-cover"
                   />
                 </div>
                 <div className="flex flex-col items-start">
-                  <h1 className="font-bold text-xl tracking-wide">TITLE</h1>
-                  <p className="text-md">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    Duis aute irure dolor in reprehenderit in voluptate velit
-                    esse cillum dolore eu fugiat nulla pariatur.
+                  <p className="text-md leading-7">
+                    Algorithmic Odyssey is an innovative platform designed to
+                    make mastering algorithms engaging and interactive. Through
+                    hands-on coding challenges, real-time feedback, and visual
+                    aids, students can deepen their understanding of key
+                    algorithms such as Bubble Sort, DFS, and Quick Sort. Our
+                    mission is to enhance algorithm learning by making the
+                    process accessible and enjoyable.
                   </p>
                 </div>
               </div>
               <div className="flex flex-col gap-8">
-                {imageAbout.map((content, index) => (
+                {textAbout.map((content, index) => (
                   <div className="flex gap-5" key={index}>
-                    <div className="relative md:w-[150px] w-full h-[100px]">
-                      <Image
-                        src={content.image}
-                        alt="IMAGE"
-                        fill
-                        className="rounded-md object-cover"
-                      />
-                    </div>
                     <div className="flex flex-col">
                       <h3 className="font-bold text-xl">{content.title}</h3>
-                      <p className="text-sm">{content.desc}</p>
+                      <p className="text-sm leading-7">{content.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -132,7 +113,9 @@ const LandingPage = () => {
       {/* LANDING PAGE CARD */}
       <div className="relative mt-[150px]">
         <MaxWidthWrapper>
-          <h2 className="text-4xl tracking-wide font-bold pb-16">TITLE</h2>
+          <h2 className="text-4xl tracking-wide font-bold pb-16">
+            OUR FEATURES
+          </h2>
           <div className="grid md:grid-cols-3 grid-cols-1 gap-10">
             {cardsInfo.map((card, index) => (
               <Card
@@ -166,9 +149,9 @@ const LandingPage = () => {
       <div className="h-fit mt-[250px] pb-[150px]">
         <MaxWidthWrapper>
           <h1 className="font-bold tracking-wide md:text-5xl text-2xl mb-10">
-            Tutorial
+          Learn and have fun!
           </h1>
-          <div className="relative ">
+          <div className="relative  flex-col space-y-4">
             <iframe
               src="https://www.youtube.com/embed/EC7BoilfBSk?si=FaSx4j5eQXA6zAPS"
               title="Tutorial"
@@ -178,6 +161,20 @@ const LandingPage = () => {
               allowFullScreen
               className="md:w-[1060px] md:h-[700px] w-full h-[300px] cursor-pointer"
             ></iframe>
+            <div className="pt-16 flex justify-center max-w-4xl items-center space-x-24">
+            <Link
+              href={"#"}
+              className="bg-[#00A8E8] p-3 px-6 rounded-md text-lg font-bold text-white border border-[#cbd5e11a]"
+            >
+              Learn now
+            </Link>
+            <Link
+              href={"#"}
+              className="bg-[#003459] p-3 px-6 rounded-md text-lg font-bold text-[white]"
+            >
+              Play now
+            </Link>
+          </div>
           </div>
         </MaxWidthWrapper>
       </div>

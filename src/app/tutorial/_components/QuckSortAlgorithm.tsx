@@ -6,179 +6,160 @@ import type SwiperType from "swiper";
 import { cn } from "@/lib/utils";
 import "swiper/css";
 import "swiper/css/pagination";
-import "../styles/style.css";
 import { ChevronLeft, ChevronRight, Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
 const randomizeArray = (length: number) => {
     return Array.from({ length }, () => Math.floor(Math.random() * 100) + 10);
   };
 const VisualComponent = () => {
+
     const [array, setArray] = useState<number[]>(randomizeArray(7));
     const [result, setResult] = useState<string>('');
-    const [highlightIndex, setHighlightIndex] = useState<number | null>(null);
-    const [foundIndex, setFoundIndex] = useState<number | null>(null);
-    const [isSearching, setIsSearching] = useState<boolean>(false);
-    const [targetInput, setTargetInput] = useState<string>('');
-    const [arrayInput, setArrayInput] = useState<string>('');
+    const [highlightIndexes, setHighlightIndexes] = useState<number[]>([]);
+    const [pivotIndex, setPivotIndex] = useState<number | null>(null);
+    const [inputValue, setInputValue] = useState<string>('');
+    const [isSorting, setIsSorting] = useState<boolean>(false);
   
-    // Function to randomize the array
-    function randomizeArray(length: number): number[] {
-      return Array.from({ length }, () => Math.floor(Math.random() * 90) + 10);
-    }
+    const createBar = (height: number, value: number, index: number) => {
+      let barClass = 'bg-[lightblue]'; // Default bar color
   
-    // Function to create a bar element
-    const createBar = (value: number, index: number) => {
-      let barColor = 'bg-blue-400'; // Default color
-  
-      if (index === highlightIndex) {
-        barColor = 'bg-orange-500'; // Currently being checked
+      if (highlightIndexes.includes(index)) {
+        barClass = 'bg-orange-500'; // Bars being compared
       }
-  
-      if (index === foundIndex) {
-        barColor = 'bg-green-500'; // Found target
+      if (index === pivotIndex) {
+        barClass = 'bg-red-500'; // Highlight pivot
       }
   
       return (
         <div
+          className={`flex items-end justify-center border-blue-600 border-2 relative ${barClass}`}
+          style={{ height: `${height}px`, width: '30px', margin: '2px' }}
           key={index}
-          className={`flex items-end justify-center border-2 border-blue-600 relative ${barColor}`}
-          style={{ height: `${value}px`, width: '30px', margin: '2px' }}
         >
           <span className="absolute bottom-1 text-black">{value}</span>
         </div>
       );
     };
   
-    // Function to update bars based on the array
     const updateBars = () => {
-      return array.map((value, index) => createBar(value, index));
+      return array.map((value, index) => createBar(value, value, index));
     };
   
-    // Sleep function to create delays
     const sleep = (ms: number) => {
       return new Promise(resolve => setTimeout(resolve, ms));
     };
   
-    // Linear search algorithm with visualization
-    const linearSearch = async (arr: number[], target: number) => {
-      setIsSearching(true);
-      setResult('');
-      setFoundIndex(null);
+    const partition = async (array: number[], low: number, high: number) => {
+      const pivot = array[high];
+      let i = low - 1;
   
-      for (let i = 0; i < arr.length; i++) {
-        setHighlightIndex(i);
-        setResult(`Checking element: ${arr[i]}`);
-        await sleep(1000); // Delay for visualization
+      setPivotIndex(high);
+      setResult(`Pivot selected: ${pivot}`);
+      await sleep(1000);
   
-        if (arr[i] === target) {
-          setResult(`Target ${target} found at index ${i}`);
-          setFoundIndex(i);
-          setHighlightIndex(null);
-          setIsSearching(false);
-          return;
+      for (let j = low; j < high; j++) {
+        setHighlightIndexes([j]);
+        await sleep(800);
+        setResult(`Comparing ${array[j]} with pivot ${pivot}`);
+  
+        if (array[j] < pivot) {
+          i++;
+          [array[i], array[j]] = [array[j], array[i]];
+          setHighlightIndexes([i, j]);
+          setResult(`Swapping ${array[i]} and ${array[j]}`);
+          await sleep(1000);
+          setArray([...array]); // Trigger re-render
         }
       }
   
-      setResult(`Target ${target} not found in the array`);
-      setHighlightIndex(null);
-      setIsSearching(false);
+      [array[i + 1], array[high]] = [array[high], array[i + 1]];
+      setHighlightIndexes([i + 1, high]);
+      setResult(`Swapping pivot ${array[high]} with ${array[i + 1]}`);
+      await sleep(1000);
+      setArray([...array]); // Trigger re-render
+  
+      return i + 1;
     };
   
-    // Function to set array from input
+    const quickSort = async (array: number[], low: number, high: number) => {
+      if (low < high) {
+        const pi = await partition(array, low, high);
+        await quickSort(array, low, pi - 1);
+        await quickSort(array, pi + 1, high);
+      }
+      if (low === 0 && high === array.length - 1) {
+        setResult(`Sorted array = [${array.join(', ')}]`);
+      }
+    };
+ 
+  
+    const reset = () => {
+      setArray(randomizeArray(7));
+      setResult('');
+      setHighlightIndexes([]);
+      setPivotIndex(null);
+    };
+  
     const setArrayFromInput = () => {
-      const numbers = arrayInput
+      const numbers = inputValue
         .split(',')
         .map(num => parseInt(num.trim(), 10))
         .filter(num => !isNaN(num));
       if (numbers.length > 0) {
         setArray(numbers);
         setResult('');
-        setHighlightIndex(null);
-        setFoundIndex(null);
+        setHighlightIndexes([]);
+        setPivotIndex(null);
       }
     };
   
-    // Function to reset the array
-    const reset = () => {
-      setArray(randomizeArray(7));
-      setResult('');
-      setHighlightIndex(null);
-      setFoundIndex(null);
-    };
-  
     return (
-      <div className="container mx-auto py-10">
-        {/* Array Visualization */}
-        <div
-          id="array"
-          className="flex justify-center items-end h-80 border border-gray-300 p-4"
-        >
+      <div className="container max-w-full justify-center py-10">
+        <div id="array" className="flex justify-center items-end" style={{ height: '300px' }}>
           {updateBars()}
         </div>
-  
-        {/* Result Display */}
-        <p id="result" className="mt-4 text-center text-lg font-semibold">
-          {result}
-        </p>
-  
-        {/* Controls */}
-        <div className="flex flex-col md:flex-row items-center justify-center mt-6 space-x-2 md:space-y-0 md:space-x-4">
-          {/* Randomize Array Button */}
+        <p id="result" className="mt-4 text-center">{result}</p>
+        <div className="controls flex md:flex-row flex-col items-center justify-center mt-4 space-x-2">
           <button
             onClick={reset}
-            className="px-4 py-2 border border-black rounded hover:bg-gray-200 disabled:opacity-50"
-            disabled={isSearching}
+            className="border md:px-1 md:py-1 mr-2 border-black z-40"
+            disabled={isSorting}
           >
             Randomize Array
           </button>
-  
-          {/* Set Array from Input */}
-          <div className="flex items-center space-x-2">
-            <input
-              type="text"
-              value={arrayInput}
-              onChange={e => setArrayInput(e.target.value)}
-              placeholder="2, 5, 9, 3, 3"
-              className="px-2 py-1 border border-black rounded w-48"
-              disabled={isSearching}
-            />
-            <button
-              onClick={setArrayFromInput}
-              className="px-4 py-2 border border-black rounded hover:bg-gray-200 disabled:opacity-50"
-              disabled={isSearching}
-            >
-              Set Array
-            </button>
-          </div>
-  
-          {/* Search Target */}
-          <div className="flex items-center space-x-2">
-            <input
-              type="number"
-              value={targetInput}
-              onChange={e => setTargetInput(e.target.value)}
-              placeholder="Enter target number"
-              className="px-2 py-1 border border-black rounded w-48"
-              disabled={isSearching}
-            />
-            <button
-              onClick={() => {
-                const target = parseInt(targetInput, 10);
-                if (!isNaN(target)) {
-                  linearSearch(array, target);
-                }
-              }}
-              className="px-4 py-2 border border-black rounded hover:bg-gray-200 disabled:opacity-50"
-              disabled={isSearching || targetInput.trim() === ''}
-            >
-              Search Array
-            </button>
-          </div>
+          <button
+            onClick={async () => {
+              setIsSorting(true);
+              await quickSort([...array], 0, array.length - 1);
+              setIsSorting(false);
+            }}
+            className="border md:px-1 md:py-1 border-black z-40"
+            disabled={isSorting}
+          >
+            Sort Array
+          </button>
+          <div className="controls flex md:flex-row flex-col">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder="2, 5, 9, 3, 3"
+            className="border md:px-1 md:py-1 md:w-72 w-36 border-black z-40"
+            disabled={isSorting}
+          />
+          <button
+            onClick={setArrayFromInput}
+            className="border md:px-1 md:py-1 border-black z-40"
+            disabled={isSorting}
+          >
+            Set Array
+          </button>
         </div>
+        </div>
+   
       </div>
     );
   };
-
 
   
   
@@ -186,26 +167,30 @@ const VisualComponent = () => {
 
 const contents = [
   {
-    desc: "Linear Search Algorithm",
+    desc: "Quick Sort Algorithm",
     className: "font-bold lg:text-6xl text-xl",
   },
   {
-    desc: `Linear Search is a sequential search algorithm that starts at one end of a list and goes through each element until the desired element is found,
-     or the search continues till the end of the dataset. It is versatile and can be used on both sorted and unsorted data.`,
-    imageSrc: '/lessons/img/linear-search/linearPep.png',
-    audioSrc: '/audio/linear-search/definition.mp3',
+    desc: `Quick Sort is a popular and efficient sorting algorithm used to organize a list of items. 
+    It’s known for its ability to handle large lists quickly by using a divide-and-conquer strategy. 
+    The main goal of Quick Sort is to sort a list by dividing it into smaller sections, sorting those sections, and then combining them. 
+    This algorithm is widely used because of its effectiveness in managing and sorting data efficiently.`,
+    imageSrc: '/lessons/img/quick-sort/quick-sort-intro.png',
+    audioSrc: '/audio/quick-sort/intro.mp3',
   },
   {
-    desc: `The algorithm starts by comparing the target element with the first element of the list. 
-    If a match is found, the search stops. If not, the algorithm continues to the next element and repeats this process until the target is found or the end of the list is reached.`,
-    imageSrc: '/lessons/img/linear-search/linear_search.gif',
-    audioSrc: '/audio/linear-search/works.mp3',
+    desc: `Quick Sort operates by selecting an item from the list called a pivot. 
+    The list is then rearranged so that all items smaller than the pivot are placed before it, and all items larger are placed after it. 
+    Once the pivot is correctly positioned, Quick Sort is applied recursively to the smaller sections on either side of the pivot. 
+    This process continues until each section is sorted, resulting in a fully ordered list.`,
+    imageSrc: '/lessons/img/quick-sort/quicksort-visual.gif',
+    audioSrc: '/audio/quick-sort/works.mp3',
   },
   {
-    desc: `The method is easy to set up and works with both sorted and unsorted data without needing extra memory or preparation. 
-    However, it checks every element one by one, making it slow and inefficient for large datasets, and not ideal for applications that need fast performance.`,
-    imageSrc: '/lessons/img/linear-search/linear-nbg.png',
-    audioSrc: '/audio/linear-search/advantage.mp3',
+    desc: `Quick Sort is very fast and efficient for sorting large lists and uses minimal extra memory. 
+    However, it can become slow if the pivot is poorly chosen, and it doesn’t maintain the original order of items with equal values.`,
+    imageSrc: '/lessons/img/quick-sort/rabbit.png',
+    audioSrc: '/audio/quick-sort/benefits.mp3',
   },
   {
     component: <VisualComponent />,
