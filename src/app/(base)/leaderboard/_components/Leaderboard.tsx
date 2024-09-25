@@ -15,7 +15,7 @@ const Leaderboard: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("http://localhost:3000/api/game");
+      const response = await fetch("/api/game");
       const data = await response.json();
       setUsers(data.users);
     };
