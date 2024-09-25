@@ -61,7 +61,6 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
     if (code) {
       const iframe = iframeRef.current;
       if (iframe && iframe.contentWindow) {
-        console.log(code, "THIS IS CODE IN UPDATE FUNC");
         iframe.onload = () => {
           iframe.contentWindow?.postMessage(
             {
@@ -124,10 +123,30 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
 
   const handleLanguageChange = (value: string) => {
     setCurrentLanguage(value);
+    console.log(value, "CONSOLE INSIDE LANG FUNC")
     const initialContent = getInitialContent(value);
-    setContent(initialContent); // Update content to initial code for new language
-  };
+    setContent(initialContent);
+      const iframe = iframeRef.current;
+      if (iframe && iframe.contentWindow) {
+          iframe.contentWindow?.postMessage(
+            {
+              eventType: "populateCode",
+              language: value,
+              files: [
+                {
+                  name: `${value}${getFileExtension(
+                    value
+                  )}`,
+                  content: initialContent,
+                },
+              ],
+            },
+            "*"
+          )
+      }
 
+  };
+console.log(currentLanguage, "OUTSIDE")
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
@@ -237,7 +256,7 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
             ref={iframeRef}
             id="oc-editor"
             className="w-full h-[400px] border-none"
-            src="https://onecompiler.com/embed?availableLanguages=cpp%2Cjava%2Cpython%2Cjavascript%2Cphp&hideNew=true&hideNewFileOption=true&hideTitle=true&hideStdin=true&theme=dark&listenToEvents=true&codeChangeEvent=true&fontSize=16&hideLanguageSelection=true"
+            src="https://onecompiler.com/embed?availableLanguages=cpp%2Cjava%2Cpython%2Cjavascript%2Cphp&hideNew=true&hideNewFileOption=true&hideTitle=true&hideStdin=true&theme=dark&listenToEvents=true&codeChangeEvent=true&fontSize=16"
           ></iframe>
         </div>
       )}
