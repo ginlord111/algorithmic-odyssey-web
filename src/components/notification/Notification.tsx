@@ -45,7 +45,7 @@ const Notification = ({ userId }: { userId: string }) => {
       >
           {(notif:Notifications) => {
                return (
-                <DropdownItem key={notif.id} className="w-full p-5" onClick={()=>handleClickNotif(notif.id, notif.resourceId)}>
+                <DropdownItem key={notif.id} className="w-full p-5" onClick={()=>handleClickNotif(notif.id, notif.resourceId as string)}>
                     <NotificationList notif={notif} />
 
                  </DropdownItem>

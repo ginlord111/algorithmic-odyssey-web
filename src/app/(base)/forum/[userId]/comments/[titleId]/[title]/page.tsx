@@ -46,11 +46,9 @@ const CommentPage = async ({
         className="lg:mx-[200px]"
       />
       <CommentsContainer
+         postOwner={forum.userId}
         forumId={forum.id}
-        postOwner={forum.userId}
-        title={forum.title}
-        titleId={forum.titleId}
-        postOwnerUsername={forum.authorUsername as string}
+        route={`/forum/${userId}/comments/${titleId}/${title}`}
       />
     </Fragment>
   );

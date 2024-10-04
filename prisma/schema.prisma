@@ -139,7 +139,7 @@ model Notifications {
   userId        String
   type          String
   from          String
-  resourceId    String
+  resourceId    String?
   isRead        Boolean  @default(false)
   fromUserImage String
   createdAt     DateTime @default(now())
