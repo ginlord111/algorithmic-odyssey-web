@@ -18,7 +18,7 @@ import { ForumComment } from "@prisma/client";
 import CommentsList from "./CommentsList";
 import { Loader2 } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
-const CommentsContainer = ({ forumId,postOwner,title,titleId,postOwnerUsername }: { forumId: string,postOwner:string,title:string,titleId:string,postOwnerUsername:string}) => {
+const CommentsContainer = ({ forumId,route,postOwner }: { forumId: string,route:string,postOwner:string}) => {
   const [showBtn, setShowBtn] = useState<boolean>(false);
   const [hideComment, setHideComment] = useState<boolean>(false);
   const queryClient = useQueryClient();
@@ -42,7 +42,7 @@ const CommentsContainer = ({ forumId,postOwner,title,titleId,postOwnerUsername }
       const { comment } = values;
       await fetch("/api/forum/comment", {
         method: "POST",
-        body: JSON.stringify({ comment, forumId,postOwner,title,postOwnerUsername,titleId }),
+        body: JSON.stringify({ comment, postOwner,forumId,route }),
       });
       queryClient.invalidateQueries({ queryKey: ["forum-comment"] });
       setShowBtn((prev) => (prev = false));

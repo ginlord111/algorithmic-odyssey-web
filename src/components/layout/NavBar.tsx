@@ -95,11 +95,11 @@ useEffect(() => {
       href: "/leaderboard",
       className: "",
     },
-    {
-      name: "About us",
-      href: "/about-us",
-      className: "",
-    },
+    // {
+    //   name: "About us",
+    //   href: "/about-us",
+    //   className: "",
+    // },
   ];
   return (
     <Navbar

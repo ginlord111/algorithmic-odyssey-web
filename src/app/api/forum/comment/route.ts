@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req:NextRequest){
 try {
-    const { comment,forumId,postOwner,postOwnerUsername,title,titleId } = await req.json();
+    const { comment,forumId,postOwner,route } = await req.json();
     const session = await getServerSession(authOptions)
   await prisma.forumComment.create({
         data:{
@@ -35,7 +35,7 @@ try {
         userId:postOwner,
         from: session?.user.id as string,
         fromUserImage:user?.userImage as string,    
-        resourceId:`/forum/${postOwnerUsername}/comments/${titleId}/${title}`,
+        resourceId:route,
         type:"comment",
         fromUsername:user?.username as string
       }
