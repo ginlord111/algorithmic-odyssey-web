@@ -9,6 +9,7 @@ import generateRandomString from "@/helper/generateRandomString";
 async function saveFile(file: File, filename: string) {
   const buffer = Buffer.from(await file.arrayBuffer());
   const filePath = path.join(process.cwd(), "uploads", filename);
+  //@ts-ignore
   await fs.writeFile(filePath, buffer);
   return filePath;
 }

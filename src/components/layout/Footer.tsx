@@ -53,12 +53,12 @@ const Footer = () => {
     },
   ];
   return (
-    <div className="relative pt-10">
+    <div className="relative pt-10 mg:text-xl text-sm">
       <div className="w-full h-fit bg-[#00171F] py-10 px-20 dark:bg-[#1b1b1f] border-t-1 border-[#cbd5e11a]">
         <MaxWidthWrapper>
           <div className="flex justify-between md:flex-row flex-col ">
-            <div className="flex flex-col gap-5">
-              <h1 className=" text-white tracking-wide text-2xl font-bold">
+            <div className="flex flex-col gap-5 items-center">
+              <h1 className=" text-white md:tracking-wide whitespace-nowrap text-2xl font-bold">
                 Algorithmic Odyssey
               </h1>
               <div className="flex items-center gap-4">
@@ -73,7 +73,7 @@ const Footer = () => {
                 algorithmicodyssey@gmail.com
               </div>
             </div>
-            <div className="flex flex-col items-center ">
+            <div className="flex flex-col items-center mt-4 ">
               <h3 className="text-lg font-bold pb-8 text-gray-300">Our pages</h3>
                   <div className="grid grid-cols-2 gap-4">
                     {ourPages.map((page)=> (
@@ -83,10 +83,10 @@ const Footer = () => {
                     ))}
                   </div>
             </div>
-            <div className="flex flex-col items-center">
-                <div className="flex gap-4">
+            <div className="flex flex-col items-center mt-4">
+                <div className="flex gap-4 items-center">
                 <Mail className="h-5 w-5 text-white"/>
-                <h4 className="text-white text-sm font-semibold w-full">
+                <h4 className="text-white md:text-sm text-xs font-semibold w-full ">
                 Stay up to date on the latest from Algorithmic Odyssey
                 </h4>
                 </div>
