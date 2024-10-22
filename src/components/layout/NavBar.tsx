@@ -18,6 +18,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import Image from "next/image";
+import SearchComponent from "./SearchComponent";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -120,6 +121,9 @@ useEffect(() => {
             />
           </div>
         </Link>
+      </NavbarContent>
+      <NavbarContent>
+      <SearchComponent />
       </NavbarContent>
       <NavbarContent className="w-full hidden lg:flex gap-10" justify="center">
         {navItems.map((item, index) => (

@@ -57,7 +57,7 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
   const [isTaskDone, setIsTaskDone] = useState<boolean>(false);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const searchParams = useSearchParams();
-  const updateCompilerContent = (code: string) => {
+  const updateCompilerContent = (code: string,initLang?:string) => {
     if (code) {
       const iframe = iframeRef.current;
       if (iframe && iframe.contentWindow) {
@@ -65,11 +65,11 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
           iframe.contentWindow?.postMessage(
             {
               eventType: "populateCode",
-              language: currentLanguage,
+              language: initLang ?? currentLanguage,
               files: [
                 {
-                  name: `${currentLanguage}${getFileExtension(
-                    currentLanguage
+                  name: `${initLang ?? currentLanguage}${getFileExtension(
+                    initLang ??  currentLanguage
                   )}`,
                   content: code,
                 },
@@ -93,7 +93,7 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
           student as string
         );
         console.log(studentSubmittedCode, "USER CODE");
-        return updateCompilerContent(studentSubmittedCode as string);
+        return updateCompilerContent(studentSubmittedCode?.codeSubmitted as string, studentSubmittedCode?.codeLang);
       }
 
       return;
@@ -123,7 +123,6 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
 
   const handleLanguageChange = (value: string) => {
     setCurrentLanguage(value);
-    console.log(value, "CONSOLE INSIDE LANG FUNC")
     const initialContent = getInitialContent(value);
     setContent(initialContent);
       const iframe = iframeRef.current;
@@ -146,7 +145,6 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
       }
 
   };
-console.log(currentLanguage, "OUTSIDE")
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
@@ -156,6 +154,7 @@ console.log(currentLanguage, "OUTSIDE")
           studentId: user.id,
           code: codeSubmitted,
           actId: act.id,
+          codeLang:currentLanguage
         }),
         headers: {
           "Content-Type": "application/json",
@@ -174,9 +173,8 @@ console.log(currentLanguage, "OUTSIDE")
   // Listen for responses from the iframe
   useEffect(() => {
     const handleMessage = (e: any) => {
-      console.log("Received message:", e.data);
+      console.log("Received message:", e.data.language);
       if (e.data.action === "runComplete") {
-        console.log("RUNNING");
         if (e.data.result.success) {
           getFileContent(e.data.files);
         }
@@ -210,7 +208,6 @@ console.log(currentLanguage, "OUTSIDE")
 
     fetchTaskDone();
   }, [act, user, handleSubmit]);
-
   return (
     <div className="relative mt-10">
       {isTaskDone ? (
@@ -232,7 +229,7 @@ console.log(currentLanguage, "OUTSIDE")
               isRequired
               value={currentLanguage}
               className="max-w-xs"
-              defaultSelectedKeys={["java"]}
+              defaultSelectedKeys={[ currentLanguage]}
               onChange={(e) => handleLanguageChange(e.target.value)}
               aria-label="Select Lang"
             >
@@ -256,7 +253,7 @@ console.log(currentLanguage, "OUTSIDE")
             ref={iframeRef}
             id="oc-editor"
             className="w-full h-[400px] border-none"
-            src="https://onecompiler.com/embed?availableLanguages=cpp%2Cjava%2Cpython%2Cjavascript%2Cphp&hideNew=true&hideNewFileOption=true&hideTitle=true&hideStdin=true&theme=dark&listenToEvents=true&codeChangeEvent=true&fontSize=16"
+            src="https://onecompiler.com/embed?availableLanguages=cpp%2Cjava%2Cpython%2Cjavascript%2Cphp&hideNew=true&hideNewFileOption=true&hideTitle=true&hideStdin=true&theme=dark&listenToEvents=true&codeChangeEvent=true&fontSize=16&hideLanguageSelection=true"
           ></iframe>
         </div>
       )}

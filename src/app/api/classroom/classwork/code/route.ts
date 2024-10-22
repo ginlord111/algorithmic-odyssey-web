@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req:NextRequest){
   try {
-    const {studentId,code,actId} = await req.json()
+    const {studentId,code,actId,codeLang} = await req.json()
 
     const studActId = await prisma.studentActivity.findFirst({
       where:{
@@ -20,6 +20,7 @@ export async function POST(req:NextRequest){
         data:{
 codeSubmitted:code,
 isCompleted:true,
+codeLang,
         }
     }) 
 

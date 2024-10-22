@@ -160,20 +160,20 @@ export const fetchTaskProgress = async(activityId:string, studentId:string) =>{
 
 export const fetchStudentCode = async(activityId:string, studentId:string)=>{
  try {
-  const data = await prisma.studentActivity.findFirst({
+  const data = await prisma.studentActivity.findFirstOrThrow({
     where:{
       activityId,
       studentId
     },
     select:{
-      codeSubmitted:true
+      codeSubmitted:true,
+      codeLang:true
     }
   })
+  if(data && data.codeLang && data.codeSubmitted){
+    return {codeLang:data.codeLang, codeSubmitted:data.codeSubmitted}
+  }
 
- if(data){
-  return data.codeSubmitted
- }
- return null;
  } catch (error) {
   console.log(error)
  }
