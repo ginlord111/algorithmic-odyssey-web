@@ -60,9 +60,10 @@ const SearchResult = ({
                 <div className="border-b-1 border-gray-300 py-2">Forum</div>
                 <div className="flex flex-col space-y-2">
                   {searchResults.forumData.map((forum) => (
-                    <div
+                    <Link
                       className="flex items-center space-x-2 pt-2"
                       key={forum.userId}
+                      href={`/forum/${forum.userId}/comments/${forum.titleId}/${forum.title}`}
                     >
                       <Avatar
                         showFallback
@@ -71,7 +72,7 @@ const SearchResult = ({
                         className="border border-[#cbd5e11a]"
                       />
                       <p className="text-xs">{forum.title}</p>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </Fragment>
