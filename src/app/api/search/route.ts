@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req:NextRequest){
     const url = new URL(req.url)
     const query = url.searchParams.get("query") as string
+    console.log(query, "QUERYYY")
  
 try {
     const usernameResult = await prisma.user.findMany({

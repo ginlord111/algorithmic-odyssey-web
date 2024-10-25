@@ -1,4 +1,4 @@
-import { Forum, ForumLike } from "@prisma/client";
+import { Forum, ForumLike, User } from "@prisma/client";
 
 export interface AccountDetail{
     username:string;
@@ -31,7 +31,10 @@ export interface ForumWithCount extends Forum {
     forums: ForumWithCount[];
     userLikes: ForumLike[];
   }
-
+  export interface SearchResultProps {
+    forumData: Forum[];
+    userData: User[];
+  }
 
 export type UserRole = "student" | "teacher"
   export type NavClasState = "announcement" | "pending-task" | "graded-task" | "classwork";

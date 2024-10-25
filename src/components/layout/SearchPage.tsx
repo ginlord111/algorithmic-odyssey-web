@@ -92,7 +92,7 @@ const SearchResult = ({
     </div>
   );
 };
-const SearchComponent = () => {
+const SearchPage = () => {
   const [searchValue, setSearchValue] = useState<string>("");
   const debounceValue = useDebounce(searchValue, 1000);
   const containRef = useRef<HTMLDivElement>(null);
@@ -138,8 +138,9 @@ const SearchComponent = () => {
   }, [containRef, searchValue]);
 
   return (
+<Fragment>   
     <div ref={containRef}>
-      <div className="relative w-[13rem] md:flex hidden">
+      <div className="relative w-[13rem] ">
         <div className="absolute top-2 left-1">
           <Search className=" text-[#000000CC] w-5 h-5 ml-1   " />
         </div>
@@ -159,12 +160,12 @@ const SearchComponent = () => {
         />
       )}
 
-      {/* MOBILE VIEW */}
-      <div className="relative block md:hidden">
-        <Search className=" text-white w-5 h-5 ml-1   " />
-      </div>
+ 
+
+
     </div>
+    </Fragment>
   );
 };
 
-export default SearchComponent;
+export default SearchPage;
