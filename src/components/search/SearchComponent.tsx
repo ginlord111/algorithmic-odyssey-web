@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import useDebounce from "@/hooks/useDebounce";
 import SearchResult from "./SearchResult";
+import Link from "next/link";
 const SearchComponent = () => {
   const [searchValue, setSearchValue] = useState<string>("");
   const debounceValue = useDebounce(searchValue, 1000);
@@ -73,9 +74,11 @@ const SearchComponent = () => {
       )}
 
       {/* MOBILE VIEW */}
-      <div className="relative block md:hidden">
+      <Link className="relative block md:hidden"
+      href={'/search'}
+      >
         <Search className=" text-white w-5 h-5 ml-1   " />
-      </div>
+      </Link>
 
 
     </div>

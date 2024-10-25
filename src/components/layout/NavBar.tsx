@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/drawer";
 import Image from "next/image";
 import SearchComponent from "../search/SearchComponent";
+import SearchMobileView from "@/app/search/_components/SearchMobileView";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -102,6 +103,7 @@ export default function NavBar() {
     //   className: "",
     // },
   ];
+  const isSearchPage = pathname.includes("search")
   return (
     <Navbar
       className={cn(
@@ -123,9 +125,9 @@ export default function NavBar() {
         </Link>
       </NavbarContent>
       <NavbarContent>
-        <SearchComponent />
+       {isSearchPage  ? null :  <SearchComponent />}
       </NavbarContent>
-      <NavbarContent className="w-full hidden lg:flex gap-10" justify="center">
+      <NavbarContent className={`w-full hidden lg:flex gap-10 `} justify="center">
         {navItems.map((item, index) => (
           <NavbarItem key={index}>
             <Link
