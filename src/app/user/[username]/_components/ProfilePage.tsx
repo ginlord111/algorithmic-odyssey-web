@@ -39,6 +39,7 @@ const ProfilePage = ({
   twitter,
   followerImages,
   followingImages,
+  fullName
 }: User & {
   followerImages: { userFollowerImage: string }[];
   followingImages: { userFollowingImage: string }[];
@@ -133,9 +134,9 @@ const ProfilePage = ({
             </p>
           <div className="flex space-x-2">
           <p className="text-muted-foreground lg:text-start text-center">
-              {email} 
+              {fullName} 
             </p>
-          <Tooltip content="Email is not verified" color="danger" 
+          {/* <Tooltip content="Email is not verified" color="danger" 
            delay={0}
            closeDelay={0}
            motionProps={{
@@ -158,7 +159,7 @@ const ProfilePage = ({
            }}
           >
           <CircleAlert  className="bg-gray-500 w-fit rounded-full text-white"/>
-          </Tooltip>
+          </Tooltip> */}
           </div>
             <FollowingsList
               followerImages={followerImages}
