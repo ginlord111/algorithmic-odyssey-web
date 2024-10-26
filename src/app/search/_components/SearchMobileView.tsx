@@ -29,7 +29,8 @@ const SearchResultMobile = ({
               <Link
                 className="flex rounded-sm border py-2 w-full items-center space-x-4 px-3 "
                 key={user.userId}
-                href={`/23`}
+                href={`/user/${user.username}`}
+                scroll
               >
                 <Avatar
                   showFallback
@@ -50,7 +51,8 @@ const SearchResultMobile = ({
               <Link
                 className="flex rounded-sm border py-2 w-full items-center space-x-4 px-3 "
                 key={forum.id}
-                href={`/23`}
+                href={`/forum/${forum.userId}/comments/${forum.titleId}/${forum.title}`}
+                scroll
               >
                 <Avatar
                   showFallback
@@ -59,11 +61,18 @@ const SearchResultMobile = ({
                   className="border border-[#cbd5e11a]"
                 />
                 <p className="text-xs">{forum.title}</p>
-                <p className="text-sm text-end flex-1 ">Publication</p>
+                <p className="text-sm text-end flex-1 ">
+                  Forum
+                </p>
               </Link>
             ))}
           </Fragment>
         )}
+      {searchResults.forumData && searchResults.forumData.length === 0 && searchResults.userData && searchResults.userData.length ===0 && (
+          <div className="text-sm py-4 text-center">
+          No result found
+          </div>
+      )}
       </div>
       <div className="text-center text-muted-foreground text-sm pt-2">
         End of result

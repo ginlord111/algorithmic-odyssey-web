@@ -5,10 +5,12 @@ import { useQuery } from "@tanstack/react-query";
 import useDebounce from "@/hooks/useDebounce";
 import SearchResult from "./SearchResult";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 const SearchComponent = () => {
   const [searchValue, setSearchValue] = useState<string>("");
   const debounceValue = useDebounce(searchValue, 1000);
   const containRef = useRef<HTMLDivElement>(null);
+  const currentParams = useParams()
   const params = new URLSearchParams({
     query: debounceValue,
   });
@@ -50,6 +52,10 @@ const SearchComponent = () => {
     };
   }, [containRef, searchValue]);
 
+  /// TO REFRESH THE INPUT VALUE WHEN THE CURRENT URL CHANGE
+useEffect(() => {
+    setSearchValue("")
+},[currentParams])
   return (
 <Fragment>   
     <div ref={containRef}>

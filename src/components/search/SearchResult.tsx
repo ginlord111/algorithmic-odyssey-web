@@ -1,7 +1,8 @@
 import { SearchResultProps } from "@/types/types";
 import { Avatar } from "@nextui-org/react";
-import { Link, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Fragment } from "react";
+import Link from "next/link";
 
 const SearchResult = ({
     searchResults,
@@ -26,7 +27,7 @@ const SearchResult = ({
             ))}
           <div className="relative text-black font-normal">
             <Fragment>
-              {searchResults?.userData && searchResults.userData.length > 0 && (
+              {searchResults.userData && searchResults.userData.length > 0 && (
                 <Fragment>
                   <div className="border-b-1 border-gray-300 pb-2">People</div>
                   <div className="flex flex-col space-y-2">
