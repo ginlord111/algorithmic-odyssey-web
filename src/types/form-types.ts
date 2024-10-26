@@ -131,3 +131,8 @@ export const createActivitySchema = z.object({
     .refine((val) => !isNaN(val), {
       message: "Max score must be a valid number",
     })})
+
+
+    export const searchSchema = z.object({
+      search:z.string()
+    })

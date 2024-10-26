@@ -18,7 +18,8 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import Image from "next/image";
-import SearchComponent from "./SearchComponent";
+import SearchComponent from "../search/SearchComponent";
+import SearchMobileView from "@/app/search/_components/SearchMobileView";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -45,30 +46,30 @@ export default function NavBar() {
     fetchUser();
   }, [session?.user.id, fetchUser, pathname]);
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body:JSON.stringify({user,session})
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/signin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ user, session }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.error("Error occurred during fetch:", error || error);
       }
+    };
 
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error('Error occurred during fetch:', error || error);
-    }
-  };
-
-  fetchData();
-}, [session,user,fetchUser]);
+    fetchData();
+  }, [session, user, fetchUser]);
   /// TODO: WHEN OVERING THE USER AVATAR SHOW THE DROPDOWN OPTION FOR USER PROFILE , CREATE POST AND
   const navItems = [
     {
@@ -102,6 +103,7 @@ useEffect(() => {
     //   className: "",
     // },
   ];
+  const isSearchPage = pathname.includes("search")
   return (
     <Navbar
       className={cn(
@@ -123,13 +125,15 @@ useEffect(() => {
         </Link>
       </NavbarContent>
       <NavbarContent>
-      <SearchComponent />
+       {isSearchPage  ? null :  <SearchComponent />}
       </NavbarContent>
-      <NavbarContent className="w-full hidden lg:flex gap-10" justify="center">
+      <NavbarContent className={`w-full hidden lg:flex gap-10 `} justify="center">
         {navItems.map((item, index) => (
           <NavbarItem key={index}>
-            <Link href={item.href} className="text-xl"
-            target={item.name === "Game" ? "_blank"  : ""}
+            <Link
+              href={item.href}
+              className="text-xl"
+              target={item.name === "Game" ? "_blank" : ""}
             >
               {item.name}
             </Link>
