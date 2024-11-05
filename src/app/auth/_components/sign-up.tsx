@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Key, SetStateAction, Dispatch } from "react";
 import { useRouter } from "next/navigation";
-import { Github, Loader2 } from "lucide-react";
+import { Github, Loader2, Mail } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { Radio, RadioGroup } from "@nextui-org/react";
 import { UserRole } from "@/types/types";
@@ -64,6 +64,9 @@ const SignUpTab = ({
   }
   const handleSignUpGithub = async () => {
     await signIn("github");
+  };
+  const handleSignUpGoogle = async () => {
+    await signIn("google");
   };
   return (
     <Form {...signUpForm}>
@@ -161,9 +164,9 @@ const SignUpTab = ({
             <Github className="w-6 h-6" />
           </Button>
 
-          {/* <Button className="px-10" type="button">
+          <Button className="px-10" type="button" onClick={handleSignUpGoogle}>
             <Mail />
-          </Button> */}
+          </Button>
         </div>
       </form>
     </Form>
