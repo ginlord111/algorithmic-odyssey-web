@@ -27,7 +27,7 @@ const AuthContainer = () => {
             <>
               {/* <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader> */}
               <ModalBody>
-                <Card className="max-w-full lg:w-[540px] lg:h-[820px] md:w-[440px] md:h-[600px] w-[340px] h-[500px] ">
+                <Card className="max-w-full lg:w-[540px] lg:h-[80vh] md:w-[440px] md:h-[600px] w-[340px] h-[500px] ">
                   <CardBody className="overflow-hidden w-full ">
                     <Tabs
                       size="md"
@@ -45,7 +45,7 @@ const AuthContainer = () => {
                       <Tab
                         key="sign-up"
                         title="Sign up"
-                        className="lg:overflow-hidden sm:overflow-y-scroll overflow-y-scroll"
+                        className="sm:overflow-y-scroll overflow-y-scroll"
                       >
                         <SignUpTab setSelected={setSelected} />
                       </Tab>
