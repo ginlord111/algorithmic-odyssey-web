@@ -66,19 +66,37 @@ export async function POST(req: NextRequest) {
       },
     });
     const studentIds = students.flatMap((stud) => stud.students);
+    
 
     // destructuring the data for the student id and class id to be in input in student act model
-    const data = studentIds.flatMap((student) => ({
-      studentId: student.id, // The student's ID
-      studentName:student.username as string,
-      studentAvatar:student.userImage as string,
-      studentEmail:student.email as string,
-      activityId: actId.id, // The activity's ID
-    }));
+    // const data = studentIds.flatMap((student) => ({
+    //   studentId: student.id, // The student's ID
+    //   studentName:student.username as string,
+    //   studentAvatar:student.userImage as string,
+    //   studentEmail:student.email as string,
+    //   activityId: actId.id, // The activity's ID
+    // }));
+    for (const student of studentIds){
+      await prisma.studentActivity.create({
+        data:{
+          student:{
+            connect:{
+              id:student.id,
+            }
+          },
+          activity:{
+            connect:{
+              id:actId.id
+            }
+          }
+        }
+      })
+    }
+//     await prisma.studentActivity.createMany({
+// data,
+//   skipDuplicates:true,
+//     });
 
-    await prisma.studentActivity.createMany({
-      data,
-    });
     return NextResponse.json({ message: "SUCCESS" }, { status: 200 });
   } catch (error) {
     console.log(error, "ERROR");
