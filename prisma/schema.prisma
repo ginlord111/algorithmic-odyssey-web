@@ -46,8 +46,8 @@ model User {
   @@unique([id, username, userImage])
   @@unique([id, userImage])
   @@unique([id, fullName])
-   @@unique([id, fullName, userImage, email])
   @@unique([id, fullName, userImage])
+  @@unique([id, fullName, email, userImage])
   @@schema("users")
 }
 

@@ -23,8 +23,8 @@ export async function POST(req: NextRequest) {
     const instruction = JSON.parse(body.get("instruc") as string);
     const id = JSON.parse(body.get("id") as string);
     const classId = JSON.parse(body.get("classId") as string);
-    const maxScore = JSON.parse(body.get("maxScore") as string)
-    const actType = JSON.parse(body.get("actType") as string)
+    const maxScore = JSON.parse(body.get("maxScore") as string);
+    const actType = JSON.parse(body.get("actType") as string);
     // saving the file inside the upload folder
     const savedFilePath = await saveFile(file, file.name);
 
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
         fileType: file.type,
         fileUrl: (fileUpload?.fileUrl as string) ?? null,
         fileUrlDownload: (fileUpload?.fileUrlDownload as string) ?? null,
-        isActivity:actType ==="activity"  ? true : false,
+        isActivity: actType === "activity" ? true : false,
         maxScore,
         teacher: {
           connect: {
@@ -66,7 +66,6 @@ export async function POST(req: NextRequest) {
       },
     });
     const studentIds = students.flatMap((stud) => stud.students);
-    
 
     // destructuring the data for the student id and class id to be in input in student act model
     // const data = studentIds.flatMap((student) => ({
@@ -76,26 +75,26 @@ export async function POST(req: NextRequest) {
     //   studentEmail:student.email as string,
     //   activityId: actId.id, // The activity's ID
     // }));
-    for (const student of studentIds){
+    for (const student of studentIds) {
       await prisma.studentActivity.create({
-        data:{
-          student:{
-            connect:{
-              id:student.id,
-            }
+        data: {
+          student: {
+            connect: {
+              id: student.id,
+            },
           },
-          activity:{
-            connect:{
-              id:actId.id
-            }
-          }
-        }
-      })
+          activity: {
+            connect: {
+              id: actId.id,
+            },
+          },
+        },
+      });
     }
-//     await prisma.studentActivity.createMany({
-// data,
-//   skipDuplicates:true,
-//     });
+    //     await prisma.studentActivity.createMany({
+    // data,
+    //   skipDuplicates:true,
+    //     });
 
     return NextResponse.json({ message: "SUCCESS" }, { status: 200 });
   } catch (error) {
@@ -105,51 +104,57 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-try {
-  const body = await req.formData();
-  const works = body.get("works") as File
-  const studentId = JSON.parse(body.get("studentId")  as string) as string
-   const studentName = JSON.parse(body.get("studentName") as string)
-  const studentAvatar = JSON.parse(body.get("studentAvatar") as string)
-  const studentEmail = JSON.parse(body.get("studentEmail") as string)
-  const activityId = JSON.parse(body.get("activityId") as string) as string
-  const savedFilePath = await saveFile(works, works.name);
-  const fileUpload = await uploadGdrive(works.name, works.type);
-  await fs.unlink(savedFilePath);
-  const studActId = await prisma.studentActivity.findFirst({
-    where:{
-      studentId,
-      activityId
-    }
-  })
-  const submitted =  await prisma.studentActivity.upsert({
-    where: {
-      id:  studActId?.id
-    },
-    update: {
-      fileSubmittedUrl: fileUpload?.fileUrl ?? null,
-      completedAt:new Date(),
-      fileName:works.name,
-      fileType:works.type,
-      isCompleted:true,
-    },
-    create:{
-      activityId,
-      studentId,
-      fileSubmittedUrl: fileUpload?.fileUrl ?? null,
-      completedAt:new Date(),
-      fileName:works.name,
-      fileType:works.type,
-      studentName,
-      studentAvatar,
-      studentEmail,
-      isCompleted:true,
-    }
-  }); 
+  try {
+    const body = await req.formData();
+    const works = body.get("works") as File;
+    const studentId = JSON.parse(body.get("studentId") as string) as string;
+    const studentName = JSON.parse(body.get("studentName") as string);
+    const studentAvatar = JSON.parse(body.get("studentAvatar") as string);
+    const studentEmail = JSON.parse(body.get("studentEmail") as string);
+    const activityId = JSON.parse(body.get("activityId") as string) as string;
+    const savedFilePath = await saveFile(works, works.name);
+    const fileUpload = await uploadGdrive(works.name, works.type);
+    await fs.unlink(savedFilePath);
+    const studActId = await prisma.studentActivity.findFirst({
+      where: {
+        studentId,
+        activityId,
+      },
+    });
+    const submitted = await prisma.studentActivity.upsert({
+      where: {
+        id: studActId?.id ?? "",
+      },
+      update: {
+        fileSubmittedUrl: fileUpload?.fileUrl ?? null,
+        completedAt: new Date(),
+        fileName: works.name,
+        fileType: works.type,
+        isCompleted: true,
+      },
+      create: {
+        activity: {
+          connect: {
+            id: activityId,
+          },
+        },
+        student: {
+          connect: {
+            id: studentId,
+          },
+        },
+        fileSubmittedUrl: fileUpload?.fileUrl ?? null,
+        completedAt: new Date(),
+        fileName: works.name,
+        fileType: works.type,
 
-  return NextResponse.json({submitted}, {status:200})
-} catch (error) {
-  console.log(error, "ERROR");
-  return NextResponse.json({ message: "ERROR" }, { status: 500 });
-}
+        isCompleted: true,
+      },
+    });
+
+    return NextResponse.json({ submitted }, { status: 200 });
+  } catch (error) {
+    console.log(error, "ERROR");
+    return NextResponse.json({ message: "ERROR" }, { status: 500 });
+  }
 }
