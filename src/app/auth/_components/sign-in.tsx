@@ -22,61 +22,57 @@ const SignInTab = ({
 }: {
   setSelected: Dispatch<SetStateAction<Key>>;
 }) => {
-  const router = useRouter()
+  const router = useRouter();
   const { data: session } = useSession();
   const signInForm = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
     mode: "onSubmit",
   });
 
-
   async function onSubmit(data: z.infer<typeof signInFormSchema>) {
-    const {email, password} = data
-  
+    const { email, password } = data;
+
     const res = await signIn("credentials", {
       email,
       password,
-      redirect:false
-    })
+      redirect: false,
+    });
 
-    if(res && !res.ok ){
+    if (res && !res.ok) {
       signInForm.setError("email", {
-        message:res.error as string
-      })
+        message: res.error as string,
+      });
       signInForm.setError("email", {
-        message:res.error as string
-      })
+        message: res.error as string,
+      });
+    } else {
+      router.push("/");
+      toast.success("Login succesfully");
     }
-    else{
-      router.push('/')
-      toast.success('Login succesfully')
-    }
-
-
-   
-    
   }
 
   const handleSignInGithub = async () => {
-    await signIn("github",
-      {
-        callbackUrl:'/'
-      }
-    );
-
-
-  }
+    await signIn("github", {
+      callbackUrl: "/",
+    });
+  };
+  const handleSignUpGoogle = async () => {
+    await signIn("google", {
+      callbackUrl: "/",
+    });
+  };
   return (
     <Form {...signInForm}>
-      <form className="flex flex-col gap-4"
-      onSubmit={signInForm.handleSubmit(onSubmit)}
+      <form
+        className="flex flex-col gap-4"
+        onSubmit={signInForm.handleSubmit(onSubmit)}
       >
         <FormField
           control={signInForm.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-                 <FormLabel>Email</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input placeholder="Enter your email" {...field} />
               </FormControl>
@@ -91,8 +87,10 @@ const SignInTab = ({
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your password" {...field} 
-                type="password"
+                <Input
+                  placeholder="Enter your password"
+                  {...field}
+                  type="password"
                 />
               </FormControl>
               <FormMessage />
@@ -102,21 +100,22 @@ const SignInTab = ({
 
         <p className="text-center text-small">
           Need to create an account?{" "}
-          <Link size="sm"
-          className="cursor-pointer hover:underline ml-1"
-          onPress={() => setSelected("sign-up")}>
+          <Link
+            size="sm"
+            className="cursor-pointer hover:underline ml-1"
+            onPress={() => setSelected("sign-up")}
+          >
             Sign up
           </Link>
         </p>
         <div className="flex gap-2 justify-end">
-          <Button fullWidth color="primary"
-          type='submit'
-          >
-          {
-          signInForm.formState.isLoading || signInForm.formState.isSubmitting ? (
-            <Loader2 className="w-7 h-7 animate-spin" />
-          ) : (<span>Sign in</span>)
-        }
+          <Button fullWidth color="primary" type="submit">
+            {signInForm.formState.isLoading ||
+            signInForm.formState.isSubmitting ? (
+              <Loader2 className="w-7 h-7 animate-spin" />
+            ) : (
+              <span>Sign in</span>
+            )}
           </Button>
         </div>
       </form>
@@ -133,8 +132,12 @@ const SignInTab = ({
         >
           <Github className="w-6 h-6" />
         </Button>
-        <Button className="px-10" variant="solid" color="primary"
-        type="button"
+        <Button
+          className="px-10"
+          variant="solid"
+          color="primary"
+          type="button"
+          onClick={handleSignUpGoogle}
         >
           <Mail />
         </Button>
