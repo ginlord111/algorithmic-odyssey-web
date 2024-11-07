@@ -108,9 +108,6 @@ export async function PATCH(req: NextRequest) {
     const body = await req.formData();
     const works = body.get("works") as File;
     const studentId = JSON.parse(body.get("studentId") as string) as string;
-    const studentName = JSON.parse(body.get("studentName") as string);
-    const studentAvatar = JSON.parse(body.get("studentAvatar") as string);
-    const studentEmail = JSON.parse(body.get("studentEmail") as string);
     const activityId = JSON.parse(body.get("activityId") as string) as string;
     const savedFilePath = await saveFile(works, works.name);
     const fileUpload = await uploadGdrive(works.name, works.type);
