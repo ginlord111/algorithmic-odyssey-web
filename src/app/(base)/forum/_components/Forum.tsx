@@ -17,7 +17,7 @@ const Forums = ({ userId }: { userId: string | null }) => {
   const pathname = usePathname();
   const [sortAs, setSortAs] = useState<string>(
     searchParams.get("sort") as SortType
-  );
+  ); 
   const getForums = async ({ cursor }: { cursor: string }) => {
     const params = new URLSearchParams({
       cursor: cursor,

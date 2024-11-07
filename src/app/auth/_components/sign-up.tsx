@@ -15,11 +15,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Key, SetStateAction, Dispatch } from "react";
 import { useRouter } from "next/navigation";
-import { Github, Loader2, Mail } from "lucide-react";
+import {  Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { Radio, RadioGroup } from "@nextui-org/react";
 import { UserRole } from "@/types/types";
 import { generateToken } from "@/utils/tokenGenerator";
+import Image from "next/image";
 interface signUpError {
   emailError: string;
   usernameError: string;
@@ -148,7 +149,7 @@ const SignUpTab = ({
           <Radio value="student">Student</Radio>
           <Radio value="teacher">Teacher</Radio>
         </RadioGroup>
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full bg-[#003459]">
           {signUpForm.formState.isLoading ||
           signUpForm.formState.isSubmitting ? (
             <Loader2 className="w-7 h-7 animate-spin" />
@@ -160,12 +161,12 @@ const SignUpTab = ({
           <span className="text-sm text-muted-foreground font-bold">
             Or sign up with
           </span>
-          <Button onClick={handleSignUpGithub} className="px-10" type="button">
-            <Github className="w-6 h-6" />
+          <Button onClick={handleSignUpGithub} className="px-10 space-x-2" variant={"secondary"} type="button" >
+          <span>Github</span>  <Image src="/github-icon.png"  alt="Github icon" width={40} height={40} />
           </Button>
 
-          <Button className="px-10" type="button" onClick={handleSignUpGoogle}>
-            <Mail />
+          <Button className="px-10 flex space-x-2" type="button" variant={'secondary'} onClick={handleSignUpGoogle}>
+           <span>Google</span> <Image src="/google-icon.png"  alt="Google icon" width={25} height={25} />
           </Button>
         </div>
       </form>
