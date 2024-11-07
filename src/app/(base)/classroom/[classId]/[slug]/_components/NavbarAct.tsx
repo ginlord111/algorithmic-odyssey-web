@@ -63,6 +63,12 @@ fetchUser();
   const handleClick = (state: NavActState) => {
     setCurrentNav((prevNav) => (prevNav = state));
   };
+  console.log(currentTab,currentNav, "currentTab")
+  useEffect(() => {
+    if(currentTab!=="instruction" && currentTab){
+      router.replace(`${pathname}?tab=${currentTab}`);
+    }
+}, [currentTab])
   return (
     <MaxWidthWrapper className="bg-gray-100 border-b border-gray-200">
       <div className="container mx-auto flex justify-between items-center py-4">

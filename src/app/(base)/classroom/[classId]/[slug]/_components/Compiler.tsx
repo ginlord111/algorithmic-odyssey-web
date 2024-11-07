@@ -40,7 +40,15 @@ echo "Hello, World!";
       return "// Your code here\n"; // fallback for unsupported languages
   }
 };
-
+const saveCodeLocalStorage = (code: string,lang:string) => {  
+  const currentCode = [
+    {
+      code,
+      lang
+    }
+  ]
+  localStorage.setItem('currentCode', JSON.stringify(currentCode));
+}
 const Compiler = ({ user, act }: { user: User; act: Activity }) => {
   const languages: Language[] = [
     { name: "C++", value: "cpp" },
@@ -118,7 +126,15 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
   };
 
   useEffect(() => {
-    updateCompilerContent(content);
+    const saveCode = JSON.parse(localStorage.getItem('currentCode') as string);
+    console.log(saveCode, "SAVE CODE")
+
+    if(saveCode){
+      updateCompilerContent(saveCode[0].code,saveCode[0].lang); 
+    }
+    else{
+      updateCompilerContent(content);
+    }
   }, [content, currentLanguage]);
 
   const handleLanguageChange = (value: string) => {
@@ -171,9 +187,13 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
   };
 
   // Listen for responses from the iframe
+  console.log(currentLanguage, "CURRENT LANGUAGE OUTSIDE")
   useEffect(() => {
     const handleMessage = (e: any) => {
-      console.log("Received message:", e.data.language);
+      console.log("Received message:", e.data.files[0].content);
+      const codeLang = e.data.files[0].name.split(".").pop();
+      console.log(codeLang, "namee")
+      saveCodeLocalStorage(e.data.files[0].content,codeLang);  
       if (e.data.action === "runComplete") {
         if (e.data.result.success) {
           getFileContent(e.data.files);
@@ -208,6 +228,7 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
 
     fetchTaskDone();
   }, [act, user, handleSubmit]);
+
   return (
     <div className="relative mt-10">
       {isTaskDone ? (

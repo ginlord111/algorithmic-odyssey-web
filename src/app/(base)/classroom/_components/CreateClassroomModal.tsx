@@ -32,8 +32,9 @@ const CreateClassroomModal = ({
     mode: "onSubmit",
   });
   const onSubmit = async (data: z.infer<typeof createClassroomForm>) => {
+    console.log("KEKWWWW")
     try {
-      const { classroomName, sectionName, classCode } = data;
+      const { classroomName, sectionName, classCode,fullName } = data;
       const { id } = user || {};
       const res = await fetch("api/classroom", {
         method: "POST",
@@ -69,6 +70,25 @@ const CreateClassroomModal = ({
                   className="flex flex-col space-y-4"
                   onSubmit={form.handleSubmit(onSubmit)}
                 >
+                  {/* {user && !user.fullName && (
+                     <FormField
+                     control={form.control}
+                     name="fullName"
+                     render={({ field }) => (
+                       <FormItem>
+                         <FormLabel>Full name</FormLabel>
+                         <FormControl>
+                           <Input
+                             placeholder="Your full name"
+                             {...field}
+                           />
+                         </FormControl>
+                         <FormMessage />
+                       </FormItem>
+                     )}
+                   />
+                  )} */}
+
                   <FormField
                     control={form.control}
                     name="classroomName"

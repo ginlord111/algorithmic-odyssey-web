@@ -1,5 +1,6 @@
 import type { NextAuthOptions } from "next-auth";
 import GitHubProvider from "next-auth/providers/github"
+import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Adapter } from "next-auth/adapters";
 import { randomUsername } from "./randUsername";
@@ -65,8 +66,25 @@ providers:[
        },
       
     }),
- 
+GoogleProvider({
+  clientId:process.env.GOOGLE_CLIENT_ID as string,
+  clientSecret:process.env.GOOGLE_CLIENT_SECRET as string,
+  profile(profile) {
+    /// TODO : DEFAULT IMAGE SHOULD BE THE IMAGE OF THE USER IN GOOGLE AS WELL IN GITHUB
+    const defaultImage = 'https://res.cloudinary.com/dv6qpahip/image/upload/v1718451921/algorithmic-oddysey/cyftkayeh6c0hsuaihtc.png'
+    return {
+          id: profile.sub,
+          username:username, /// GENERATE RANDOM USERNAME
+          email:profile.email,
+          userImage:defaultImage, // DEFAULT IMAGE
+          isEmailVerified:true,
+          role:profile.role ?? "user",
+          isStudent:profile.isStudent ?? true
+      }
+}})
+
 ],
+
 // cookies: {
 //   sessionToken: {
 //     name: `next-auth.session-token`,

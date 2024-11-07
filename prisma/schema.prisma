@@ -27,6 +27,7 @@ model User {
   isStudent              Boolean                 @default(true)
   level                  Int?                    @default(1)
   score                  Json?
+  fullName               String?
   accounts               Account[]
   teacherActivity        Activity[]              @relation("TeacherWhoCreateActivity")
   activityComments       ActivityComments[]
@@ -44,8 +45,9 @@ model User {
   @@unique([id, username, userImage, facebook, twitter, github, instagram])
   @@unique([id, username, userImage])
   @@unique([id, userImage])
-  @@unique([id, username])
-  @@unique([id, username, email, userImage])
+  @@unique([id, fullName])
+   @@unique([id, fullName, userImage, email])
+  @@unique([id, fullName, userImage])
   @@schema("users")
 }
 
@@ -158,7 +160,7 @@ model Classroom {
   teacherName  String
   code         String                  @unique
   activity     Activity[]              @relation("ClassroomActivities")
-  teacher      User                    @relation("TeacherClassrooms", fields: [teacherName, teacherId, teacherImage], references: [username, id, userImage], onDelete: Cascade)
+  teacher      User                    @relation("TeacherClassrooms", fields: [teacherName, teacherId, teacherImage], references: [fullName, id, userImage], onDelete: Cascade)
   announcement ClassroomAnnouncement[] @relation("ClassroomAnnouncement")
   students     User[]                  @relation("StudentClassrooms")
 
@@ -180,7 +182,7 @@ model Activity {
   maxScore         Int
   isActivity       Boolean            @default(false)
   classroom        Classroom          @relation("ClassroomActivities", fields: [classroomId], references: [id])
-  teacher          User               @relation("TeacherWhoCreateActivity", fields: [teacherId, teacherName], references: [id, username])
+  teacher          User               @relation("TeacherWhoCreateActivity", fields: [teacherId, teacherName], references: [id, fullName])
   activityComments ActivityComments[]
   StudentActivity  StudentActivity[]
 
@@ -204,7 +206,7 @@ model StudentActivity {
   codeSubmitted    String?
   codeLang         String?
   activity         Activity  @relation(fields: [activityId], references: [id])
-  student          User      @relation("StudentActivities", fields: [studentId, studentName, studentAvatar, studentEmail], references: [id, username, userImage, email])
+  student          User      @relation("StudentActivities", fields: [studentId, studentName, studentAvatar, studentEmail], references: [id, fullName, userImage, email])
 
   @@schema("activity")
 }
@@ -213,13 +215,13 @@ model ClassroomAnnouncement {
   id          String    @id @default(cuid())
   image       String?
   classroomId String
-  userName    String
   userImage   String
   userId      String
   createdAt   DateTime  @default(now())
   content     Json?
+  fullName    String
   classroom   Classroom @relation("ClassroomAnnouncement", fields: [classroomId], references: [id])
-  user        User      @relation("TeacherStudentAnnouncement", fields: [userId, userImage, userName], references: [id, userImage, username])
+  user        User      @relation("TeacherStudentAnnouncement", fields: [userId, userImage, fullName], references: [id, userImage, fullName])
 
   @@schema("classroom")
 }
@@ -233,7 +235,7 @@ model ActivityComments {
   activityId String
   createdAt  DateTime @default(now())
   activity   Activity @relation(fields: [activityId], references: [id])
-  user       User     @relation(fields: [userId, username, userImage], references: [id, username, userImage])
+  user       User     @relation(fields: [userId, username, userImage], references: [id, fullName, userImage])
 
   @@schema("activity")
 }
