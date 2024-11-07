@@ -19,10 +19,10 @@ const InstructionTab = ({ act }: { act: Activity }) => {
       <div className="flex flex-col space-y-3 pb-6 border-b-1 border-[#e0e0e0]">
         <span className="text-lg font-bold">{act.isActivity ? "Activity" : "Assesment"}</span>
         <div className="flex space-x-3">
-          <div className="p-1 bg-[#5F6368] rounded-full">
+          <div className="p-1 bg-[#5F6368] h-fit rounded-full">
             <NotepadText className="w-6 h-6 text-white  " />
           </div>
-          <span className="text-3xl font-semibold tracking-wider">
+          <span className="md:text-3xl text-xl font-semibold tracking-wider">
             {act.title}
           </span>
         </div>

@@ -35,7 +35,7 @@ const AuthContainer = () => {
                       selectedKey={selected as string}
                       onSelectionChange={(key) => setSelected(key)}
                       fullWidth
-                      color="warning"
+                     color="primary"
                       variant="bordered"
                     >
                       <Tab key="sign-in" title="Sign in">

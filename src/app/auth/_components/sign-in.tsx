@@ -1,10 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Link } from "@nextui-org/react";
-import { Github, Loader2, Mail } from "lucide-react";
+import { Input, Link } from "@nextui-org/react";
+import {  Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { Key, SetStateAction, Dispatch } from "react";
 import { useForm } from "react-hook-form";
 import { signInFormSchema } from "@/types/form-types";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -109,7 +111,7 @@ const SignInTab = ({
           </Link>
         </p>
         <div className="flex gap-2 justify-end">
-          <Button fullWidth color="primary" type="submit">
+          <Button className="w-full bg-[#003459]"   type="submit">
             {signInForm.formState.isLoading ||
             signInForm.formState.isSubmitting ? (
               <Loader2 className="w-7 h-7 animate-spin" />
@@ -123,24 +125,13 @@ const SignInTab = ({
         <span className="text-muted-foreground text-sm font-semibold mt-8">
           Or sign in with
         </span>
-        <Button
-          onClick={handleSignInGithub}
-          className="px-10"
-          variant="solid"
-          color="primary"
-          type="button"
-        >
-          <Github className="w-6 h-6" />
-        </Button>
-        <Button
-          className="px-10"
-          variant="solid"
-          color="primary"
-          type="button"
-          onClick={handleSignUpGoogle}
-        >
-          <Mail />
-        </Button>
+        <Button onClick={handleSignInGithub} className="px-10 space-x-2" variant={"secondary"} type="button" >
+          <span>Github</span>  <Image src="/github-icon.png"  alt="Github icon" width={40} height={40} />
+          </Button>
+
+          <Button className="px-10 flex space-x-2" type="button" variant={'secondary'} onClick={handleSignUpGoogle}>
+           <span>Google</span> <Image src="/google-icon.png"  alt="Google icon" width={25} height={25} />
+          </Button>
       </div>
     </Form>
   );
