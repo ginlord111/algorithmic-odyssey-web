@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { fetchStudentCode, fetchTaskProgress } from "@/actions/actions";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import { Ban } from 'lucide-react';
 
 interface Language {
   name: string;
@@ -40,11 +41,12 @@ echo "Hello, World!";
       return "// Your code here\n"; // fallback for unsupported languages
   }
 };
-const saveCodeLocalStorage = (code: string,lang:string) => {  
+const saveCodeLocalStorage = (code: string,lang:string,result?:any) => {  
   const currentCode = [
     {
       code,
-      lang
+      lang,
+      result,
     }
   ]
   localStorage.setItem('currentCode', JSON.stringify(currentCode));
@@ -63,6 +65,7 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
   const [codeSubmitted, setCodeSubmitted] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isTaskDone, setIsTaskDone] = useState<boolean>(false);
+  const [showError, setShowError] = useState<boolean>(false);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const searchParams = useSearchParams();
   const updateCompilerContent = (code: string,initLang?:string) => {
@@ -126,16 +129,19 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
   };
 
   useEffect(() => {
+   const saveCodeFunc = () => {
     const saveCode = JSON.parse(localStorage.getItem('currentCode') as string);
     console.log(saveCode, "SAVE CODE")
 
     if(saveCode){
-      updateCompilerContent(saveCode[0].code,saveCode[0].lang); 
+      return updateCompilerContent(saveCode[0].code,saveCode[0].lang); 
     }
     else{
-      updateCompilerContent(content);
+     return updateCompilerContent(content);
     }
-  }, [content, currentLanguage]);
+   }
+   saveCodeFunc();
+  }, [useSearchParams]);
 
   const handleLanguageChange = (value: string) => {
     setCurrentLanguage(value);
@@ -164,22 +170,34 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch("/api/classroom/classwork/code", {
-        method: "POST",
-        body: JSON.stringify({
-          studentId: user.id,
-          code: codeSubmitted,
-          actId: act.id,
-          codeLang:currentLanguage
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      setIsLoading(false);
-      if (!response.ok) {
-        throw new Error("ERROR");
+      setShowError(false);
+      const saveCode = JSON.parse(localStorage.getItem('currentCode') as string);
+      const result = saveCode[0].result;
+      console.log(result, "IS SUCCESS")
+      if(result && result.success){
+        const response = await fetch("/api/classroom/classwork/code", {
+          method: "POST",
+          body: JSON.stringify({
+            studentId: user.id,
+            code: saveCode[0].code, 
+            actId: act.id,
+            codeLang:saveCode[0].lang,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        setIsLoading(false);
+        if (!response.ok) {
+          throw new Error("ERROR");
+        }
+        return;
       }
+      else{
+        setIsLoading(false);
+        setShowError(true);
+      }
+  
     } catch (error) {
       console.log(error, "ERROR");
       throw new Error("ERROR");
@@ -190,15 +208,10 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
   console.log(currentLanguage, "CURRENT LANGUAGE OUTSIDE")
   useEffect(() => {
     const handleMessage = (e: any) => {
-      console.log("Received message:", e.data.files[0].content);
-      const codeLang = e.data.files[0].name.split(".").pop();
-      console.log(codeLang, "namee")
-      saveCodeLocalStorage(e.data.files[0].content,codeLang);  
-      if (e.data.action === "runComplete") {
-        if (e.data.result.success) {
-          getFileContent(e.data.files);
-        }
-      }
+      console.log("Received message:", e.data.language);
+    const codeLang = e.data.language
+      saveCodeLocalStorage(e.data.files[0].content,codeLang,e.data.result);  
+  
     };
 
     window.addEventListener("message", handleMessage);
@@ -207,15 +220,6 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
     };
   }, []);
 
-  function getFileContent(files: any) {
-    if (files && files.length > 0) {
-      const fileContent = files[0].content;
-      console.log("File content:", fileContent);
-      setCodeSubmitted(fileContent);
-    } else {
-      console.log("No files available.");
-    }
-  }
   useEffect(() => {
     const fetchTaskDone = async () => {
       const data = await fetchTaskProgress(act?.id, user?.id);
@@ -270,6 +274,7 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
               </Button>
             )}
           </div>
+          <span className={`text-red-500 md:text-base text-sm  ${showError ? 'block' : 'hidden'}`}> <Ban className="inline-block w-4 h-4"/> Please run the code first or correct any errors</span>
           <iframe
             ref={iframeRef}
             id="oc-editor"
