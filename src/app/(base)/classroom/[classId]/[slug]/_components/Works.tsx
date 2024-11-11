@@ -35,9 +35,6 @@ const SubmittingWorks = ({
     formData.append("works", works as File);
     formData.append("studentId", JSON.stringify(user.id));
     formData.append("activityId", JSON.stringify(act.id));
-    formData.append("studentName", JSON.stringify(user.username))
-    formData.append("studentAvatar", JSON.stringify(user.userImage))
-    formData.append("studentEmail", JSON.stringify(user.email))
     const res = await fetch("/api/classroom/classwork", {
       method: "PATCH",
       body: formData,

@@ -22,7 +22,7 @@ const AnnouncementCard = ({ data }: { data: ClassroomAnnouncement }) => {
         <Avatar showFallback src={data.userImage} size="sm" />
         <div className="flex flex-col">
           <p className="font-semibold text-sm md:text-md tracking-wide">
-            {data.userName}
+            {data.fullName}
           </p>
           <p className="text-muted-foreground text-xs md:text-sm">
            {timeDiffCalc}

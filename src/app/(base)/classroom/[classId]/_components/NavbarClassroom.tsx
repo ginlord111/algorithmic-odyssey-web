@@ -59,7 +59,7 @@ fetchUser();
   };
   return (
     <MaxWidthWrapper className="bg-gray-100 border-b border-gray-200">
-      <div className="container mx-auto flex justify-between items-center py-4">
+      <div className="container mx-auto flex md:justify-between justify-center items-center py-4">
         <div className=" flex space-x-4">
           {navigation.map((nav, index) => (
             <Fragment key={index}>

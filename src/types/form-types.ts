@@ -54,28 +54,34 @@ export const accountDetailsFormSchema = z.object({
   ),
 });
 
-export const signUpFormSchema = z.object({
-  email: z.string().email(),
-  username: z.optional(
-    z
+export const signUpFormSchema = z
+  .object({
+    email: z.string().email(),
+    username: z.optional(
+      z
+        .string()
+        .regex(noSpecialCharRegex, "Username cannot contain special characters")
+        .min(5, {
+          message: "Username must be atleast 5 characters",
+        })
+    ),
+    fullName: z
       .string()
-      .regex(noSpecialCharRegex, "Username cannot contain special characters")
+      .regex(noSpecialCharRegex, "Full name cannot contain special characters")
       .min(5, {
-        message: "Username must be atleast 5 characters",
-      })
-  ),
-  password: z.string().min(6, {
-    message: "Password must be atleast 6 characters",
-  }),
-  confirmPass: z.string().min(6, {
-    message: "Password must be at least 6 characters",
-  }),
-}).refine(data => data.password === data.confirmPass, {
-  path: ['confirmPass'],
-  message: "Passwords do not match",
-});
-
-
+        message: "Fullname must be atleast 5 characters",
+      }),
+    password: z.string().min(6, {
+      message: "Password must be atleast 6 characters",
+    }),
+    confirmPass: z.string().min(6, {
+      message: "Password must be at least 6 characters",
+    }),
+  })
+  .refine((data) => data.password === data.confirmPass, {
+    path: ["confirmPass"],
+    message: "Passwords do not match",
+  });
 
 export const signInFormSchema = z.object({
   email: z.string().email(),
@@ -92,47 +98,55 @@ export const signInFormSchema = z.object({
   }),
 });
 
-
-
 export const classroomCodeForm = z.object({
-  code:z.string().min(6, {
-    message:"Code must be atleast 6 character"
-  })
-})
+  code: z.string().min(6, {
+    message: "Code must be atleast 6 character",
+  }),
+  fullName: z.optional(z
+    .string()
+    .regex(noSpecialCharRegex, "Full name cannot contain special characters")
+    .min(5, {
+      message: "Fullname must be atleast 5 characters",
+    })),
+});
 
 export const createClassroomForm = z.object({
-  classroomName:z.string().min(6,{
-    message:"Classroom name must be atleast 6 characters"
+  classroomName: z.string().min(6, {
+    message: "Classroom name must be atleast 6 characters",
   }),
-  sectionName:z.string(),
-  classCode:z.string().min(6,{
-    message:"Classroom code must be atleast 6 characters and unique"
+  fullName: z.optional(z
+    .string()
+    .regex(noSpecialCharRegex, "Full name cannot contain special characters")
+    .min(5, {
+      message: "Fullname must be atleast 5 characters",
+    })),
+  sectionName: z.string(),
+  classCode: z.string().min(6, {
+    message: "Classroom code must be atleast 6 characters and unique",
   }),
-})
+});
 
 export const announcementSchema = z.object({
-  announcement:z.string().min(10, {
-    message:"Your classroom announcement must be atleast 10 characters"
-  })
-})
-
-
+  announcement: z.string().min(10, {
+    message: "Your classroom announcement must be atleast 10 characters",
+  }),
+});
 
 export const createActivitySchema = z.object({
-  instruc:z.string().min(5, {
-    message:"Your classroom instruction must be atleast 5 characters"
+  instruc: z.string().min(5, {
+    message: "Your classroom instruction must be atleast 5 characters",
   }),
-  title:z.string().min(5, {
-      message:"Title must be atleast 5 characters"
+  title: z.string().min(5, {
+    message: "Title must be atleast 5 characters",
   }),
   maxScore: z
     .string()
     .transform((val) => Number(val)) // Transform the string to a number
     .refine((val) => !isNaN(val), {
       message: "Max score must be a valid number",
-    })})
+    }),
+});
 
-
-    export const searchSchema = z.object({
-      search:z.string()
-    })
+export const searchSchema = z.object({
+  search: z.string(),
+});

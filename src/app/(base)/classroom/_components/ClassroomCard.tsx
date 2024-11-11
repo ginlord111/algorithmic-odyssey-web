@@ -14,15 +14,17 @@ const ClassroomCard = ({ sub }: { sub: Classroom, }) => {
   }
   return (
     <div  onClick={handleClickCard}> 
-    <Card className="py-2 w-fit relative z-[1] h-[17em] transition transform hover:scale-105 hover:shadow-2xl hover:bg-gray-100" >
-      <CardHeader className="flex relative flex-col items-start cursor-pointer">
-        <Image
+    <Card className="py-2 w-full relative z-[1] h-[17em] transition transform hover:scale-105 hover:shadow-2xl hover:bg-gray-100" >
+      <CardHeader className="flex relative flex-col items-start cursor-pointer h-[50%] rounded-md">
+    <div className="relative w-full h-full ">
+    <Image
           src="https://www.gstatic.com/classroom/themes/English.jpg"
-          width={350}
-          height={250}
           alt="Subject Pic"
-          className=" rounded-md"
+          layout="fill" 
+          objectFit="cover" 
+          className=" rounded-md "
         />
+    </div>
 
         <div className="absolute !text-white px-3">
           <p className="text-xl font-bold hover:underline transition">{sub.className}</p>

@@ -12,7 +12,7 @@ import {
 import SignInTab from "./sign-in";
 import SignUpTab from "./sign-up";
 const AuthContainer = () => {
-  const [selected, setSelected] = useState<"login" | Key>("sign-in" || "sign-up" ||"otp");
+  const [selected, setSelected] = useState<"login" | Key>("sign-in");
   return (
     <div className="flex flex-col w-screen h-screen items-center justify-center ">
       <Modal
@@ -27,7 +27,7 @@ const AuthContainer = () => {
             <>
               {/* <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader> */}
               <ModalBody>
-                <Card className="max-w-full lg:w-[540px] lg:h-[800px] md:w-[440px] md:h-[600px] w-[340px] h-[500px] ">
+                <Card className="max-w-full lg:w-[540px] lg:h-[80vh] md:w-[440px] md:h-[600px] w-[340px] h-[500px] ">
                   <CardBody className="overflow-hidden w-full ">
                     <Tabs
                       size="md"
@@ -35,24 +35,22 @@ const AuthContainer = () => {
                       selectedKey={selected as string}
                       onSelectionChange={(key) => setSelected(key)}
                       fullWidth
-                      color="warning"
+                     color="primary"
                       variant="bordered"
                     >
                       <Tab key="sign-in" title="Sign in">
-                      <SignInTab setSelected={setSelected} />
-                    </Tab>
+                        <SignInTab setSelected={setSelected} />
+                      </Tab>
 
-                 
-                    <Tab key="sign-up" title="Sign up" className="md:overflow-hidden overflow-y-scroll">
-                     <SignUpTab
-                      setSelected={setSelected} />
-                    </Tab>
-                
-                  
-
+                      <Tab
+                        key="sign-up"
+                        title="Sign up"
+                        className="sm:overflow-y-scroll overflow-y-scroll"
+                      >
+                        <SignUpTab setSelected={setSelected} />
+                      </Tab>
 
                       {/* OTP */}
-                 
                     </Tabs>
                   </CardBody>
                 </Card>

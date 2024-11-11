@@ -15,11 +15,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Key, SetStateAction, Dispatch } from "react";
 import { useRouter } from "next/navigation";
-import { Github, Loader2, Mail } from "lucide-react";
+import {  Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
-import { Radio, RadioGroup, useDisclosure } from "@nextui-org/react";
+import { Radio, RadioGroup } from "@nextui-org/react";
 import { UserRole } from "@/types/types";
 import { generateToken } from "@/utils/tokenGenerator";
+import Image from "next/image";
 interface signUpError {
   emailError: string;
   usernameError: string;
@@ -29,25 +30,24 @@ const SignUpTab = ({
 }: {
   setSelected: Dispatch<SetStateAction<Key>>;
 }) => {
-  const [role,setRole] = useState<UserRole>("student")
+  const [role, setRole] = useState<UserRole>("student");
   const router = useRouter();
   const signUpForm = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
     mode: "onSubmit",
   });
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   async function onSubmit(data: z.infer<typeof signUpFormSchema>) {
-    const { email, password, username } = data;
-    const token = generateToken()
-    await fetch("api/email" , {
-      method:"POST",
-      body:JSON.stringify({email,username,token})
-    })
+    const { email, password, username,fullName } = data;
+    const token = generateToken();
+    await fetch("api/email", {
+      method: "POST",
+      body: JSON.stringify({ email, username, token }),
+    });
     const res = await fetch("api/sign-up", {
       method: "POST",
-      body: JSON.stringify({ email, password, username,role,token }),
+      body: JSON.stringify({ email, password, username, role, token,fullName }),
     });
-        /// SEND VERIFICATION CODE HERE
+    /// SEND VERIFICATION CODE HERE
     if (!res.ok && res.status === 409) {
       const error: signUpError = await res.json();
       if (error.emailError) {
@@ -63,9 +63,12 @@ const SignUpTab = ({
       router.replace(`/otp?to=${email}`);
     }
   }
-  const handleSignUpGithub = async() => {
-   await  signIn("github");
-  }
+  const handleSignUpGithub = async () => {
+    await signIn("github");
+  };
+  const handleSignUpGoogle = async () => {
+    await signIn("google");
+  };
   return (
     <Form {...signUpForm}>
       <form onSubmit={signUpForm.handleSubmit(onSubmit)} className="space-y-5">
@@ -91,6 +94,20 @@ const SignUpTab = ({
               <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input placeholder="Username" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={signUpForm.control}
+          name="fullName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Full name</FormLabel>
+              <p className="text-xs "><span className="text-red-400 font-semibold">Note: </span>This will display in classroom</p>
+              <FormControl>
+                <Input placeholder="Full name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -124,15 +141,15 @@ const SignUpTab = ({
             </FormItem>
           )}
         />
-          <RadioGroup
-                label="Select type of account"
-                value={role}
-                onChange={(e) => setRole(e.target.value as UserRole)}
-              >
-                <Radio value="student">Student</Radio>
-                <Radio value="teacher">Teacher</Radio>
-              </RadioGroup>
-        <Button type="submit" className="w-full">
+        <RadioGroup
+          label="Select type of account"
+          value={role}
+          onChange={(e) => setRole(e.target.value as UserRole)}
+        >
+          <Radio value="student">Student</Radio>
+          <Radio value="teacher">Teacher</Radio>
+        </RadioGroup>
+        <Button type="submit" className="w-full bg-[#003459]">
           {signUpForm.formState.isLoading ||
           signUpForm.formState.isSubmitting ? (
             <Loader2 className="w-7 h-7 animate-spin" />
@@ -140,17 +157,17 @@ const SignUpTab = ({
             <span>Sign up</span>
           )}
         </Button>
-        <div className="flex flex-col items-center justify-center mt-7 space-y-3">
+        <div className="flex flex-col items-center justify-center mt-4 space-y-3 pb-2">
           <span className="text-sm text-muted-foreground font-bold">
             Or sign up with
           </span>
-          <Button onClick={handleSignUpGithub} className="px-10" type="button">
-            <Github className="w-6 h-6" />
+          <Button onClick={handleSignUpGithub} className="px-10 space-x-2" variant={"secondary"} type="button" >
+          <span>Github</span>  <Image src="/github-icon.png"  alt="Github icon" width={40} height={40} />
           </Button>
 
-          {/* <Button className="px-10" type="button">
-            <Mail />
-          </Button> */}
+          <Button className="px-10 flex space-x-2" type="button" variant={'secondary'} onClick={handleSignUpGoogle}>
+           <span>Google</span> <Image src="/google-icon.png"  alt="Google icon" width={25} height={25} />
+          </Button>
         </div>
       </form>
     </Form>

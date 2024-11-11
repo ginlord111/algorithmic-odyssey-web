@@ -36,11 +36,11 @@ const JoinClassroomModal = ({
   });
 
   const onSubmit = async (data: z.infer<typeof classroomCodeForm>) => {
-    const {code} = data;
+    const {code,fullName} = data;
     const {id} = user || {};
     const res = await fetch("api/classroom" , {
       method:"PATCH",
-      body:JSON.stringify({code,id})
+      body:JSON.stringify({code,id,fullName})
     });
 
     const response = await res.json()
@@ -68,6 +68,25 @@ const JoinClassroomModal = ({
             <ModalBody className="p-10">
               <Form {...form}>
                 <form className="flex flex-col space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+
+           {user && !user.fullName && (
+                 <FormField
+                 control={form.control}
+                 name="fullName"
+                 render={({ field }) => (
+                   <FormItem>
+                     <FormLabel>Enter your Full name</FormLabel>
+                     <FormControl>
+                       <Input
+                         placeholder="Full name"
+                         {...field}
+                       />
+                     </FormControl>
+                     <FormMessage />
+                   </FormItem>
+                 )}
+               />
+           )}
                   <FormField
                     control={form.control}
                     name="code"
