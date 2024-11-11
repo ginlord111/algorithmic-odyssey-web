@@ -7,7 +7,7 @@ import { randomUsername } from "./randUsername";
 import prisma from "@/db";
 import CredentialsProvider from "next-auth/providers/credentials"
 import { verifyPassword } from "./verifyHashPass";
-
+import { defaultGameState } from "./defaultGamestate";
 const username = randomUsername()
 let email;
 export const authOptions:NextAuthOptions = {
@@ -61,7 +61,8 @@ providers:[
             userImage:defaultImage, // DEFAULT IMAGE
             isEmailVerified:true,
             role:profile.role ?? "user",
-            isStudent:profile.isStudent ?? true
+            isStudent:profile.isStudent ?? true,
+            gameState:defaultGameState
         }
        },
       
@@ -79,7 +80,8 @@ GoogleProvider({
           userImage:defaultImage, // DEFAULT IMAGE
           isEmailVerified:true,
           role:profile.role ?? "user",
-          isStudent:profile.isStudent ?? true
+          isStudent:profile.isStudent ?? true,
+          gameState:defaultGameState,
       }
 }})
 
