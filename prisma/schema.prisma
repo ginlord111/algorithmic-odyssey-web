@@ -25,6 +25,7 @@ model User {
   isEmailVerified        Boolean                 @default(false)
   role                   String                  @default("user")
   isStudent              Boolean                 @default(true)
+  gameState              Json?
   level                  Int?                    @default(1)
   score                  Json?
   fullName               String?
