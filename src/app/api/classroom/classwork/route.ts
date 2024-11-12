@@ -8,7 +8,7 @@ import generateRandomString from "@/helper/generateRandomString";
 /// function for temporary saving the file in the local folder
 async function saveFile(file: File, filename: string) {
   const buffer = Buffer.from(await file.arrayBuffer());
-  const filePath = path.join(process.cwd(), "uploads", filename);
+  const filePath = path.join("/tmp", filename);
   //@ts-ignore
   await fs.writeFile(filePath, buffer);
   return filePath;
@@ -29,7 +29,8 @@ export async function POST(req: NextRequest) {
     const savedFilePath = await saveFile(file, file.name);
 
     // upload in my gdrive api and return the link
-    const fileUpload = await uploadGdrive(file.name, mimeType);
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const fileUpload = await uploadGdrive(file.name, mimeType,buffer as unknown as NodeJS.ArrayBufferView);
     // delete the file
     await fs.unlink(savedFilePath);
     const slug = generateRandomString();
@@ -110,7 +111,8 @@ export async function PATCH(req: NextRequest) {
     const studentId = JSON.parse(body.get("studentId") as string) as string;
     const activityId = JSON.parse(body.get("activityId") as string) as string;
     const savedFilePath = await saveFile(works, works.name);
-    const fileUpload = await uploadGdrive(works.name, works.type);
+    const buffer = Buffer.from(await works.arrayBuffer());
+    const fileUpload = await uploadGdrive(works.name, works.type,buffer as unknown as NodeJS.ArrayBufferView);
     await fs.unlink(savedFilePath);
     const studActId = await prisma.studentActivity.findFirst({
       where: {

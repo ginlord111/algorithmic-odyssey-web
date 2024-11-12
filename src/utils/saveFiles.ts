@@ -2,7 +2,7 @@ import multer from 'multer';
 export async function saveFile(){
     try {
         const storage = multer.diskStorage({
-            destination: '/uploads', // Directory where the files will be saved
+            destination: '/tmp', // Directory where the files will be saved
             filename: (req, file, cb) => {
               cb(null,file.originalname); // Save with a timestamp to avoid duplicates
             },

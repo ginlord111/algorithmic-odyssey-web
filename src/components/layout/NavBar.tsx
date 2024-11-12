@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/drawer";
 import Image from "next/image";
 import SearchComponent from "../search/SearchComponent";
-import SearchMobileView from "@/app/search/_components/SearchMobileView";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -49,11 +48,12 @@ export default function NavBar() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5120/api/signin", {
+        const response = await fetch("https://algo-thesis.onrender.com/api/signin", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          credentials:"include",
           body: JSON.stringify({ user, session }),
         });
 
@@ -83,6 +83,7 @@ export default function NavBar() {
       className: "",
     },
     {
+
       name: "Classroom",
       href: "/classroom",
       className: "",
@@ -114,9 +115,9 @@ export default function NavBar() {
     >
       <NavbarContent justify="start">
         <Link href="/">
-          <div className="relative w-[50px] h-[40px]">
+          <div className="relative w-[45px] h-[40px]">
             <Image
-              src="/algorithmic-logo.png"
+              src="/web-logo.png"
               alt="LOGO"
               className="object-cover rounded-lg"
               layout="fill"
@@ -124,10 +125,10 @@ export default function NavBar() {
           </div>
         </Link>
       </NavbarContent>
-      <NavbarContent>
+      <NavbarContent >
        {isSearchPage  ? null :  <SearchComponent />}
       </NavbarContent>
-      <NavbarContent className={`w-full hidden lg:flex gap-10 `} justify="center">
+      <NavbarContent className={`w-full hidden md:flex gap-10 `} justify="center">
         {navItems.map((item, index) => (
           <NavbarItem key={index}>
             <Link

@@ -6,43 +6,43 @@ const LessonPage = () => {
       title: "What is algorithm",
       description:
         "An algorithm is a step-by-step process to solve a problem or complete a task efficiently.",
-      href: "/tutorial/algorithm",
+      href: "https://algo-thesis.onrender.com/algorithm",
     },
     {
       title: "Euclid Algorithm",
       description:
         "The Euclidean Algorithm finds the GCD of two numbers by repeatedly dividing and taking remainders until the remainder is zero.",
-      href: "/tutorial/euclid-algorithm",
+      href: "https://algo-thesis.onrender.com/euclid-algorithm",
     },
     {
       title: "Knuth Morris Pratt",
       description:
         "The KMP algorithm finds patterns in text efficiently by using a preprocessed table to skip redundant comparisons.",
-      href: "/tutorial/knuth-morris-pratt",
+      href: "https://algo-thesis.onrender.com/knuth-morris-pratt",
     },
   ];
   const sortingAlgoCards = [
     {
-        href: '/tutorial/insertion-sort',
+        href: 'https://algo-thesis.onrender.com/insertion-sort',
         title: 'Insertion Sort',
         description: 'Insertion Sort is a simple sorting algorithm that builds the final sorted array one item at a time by repeatedly inserting each element into its correct position.',
       },
       {
-        href: '/tutorial/selection-sort',
+        href: 'https://algo-thesis.onrender.com/selection-sort',
         title: 'Selection Sort',
         description: 'Selection Sort is a sorting algorithm that repeatedly selects the smallest (or largest) element from the unsorted portion and moves it to the end of the sorted portion.',
       },
       {
-        href: '/tutorial/bubble-sort',
+        href: 'https://algo-thesis.onrender.com/bubble-sort',
         title: 'Bubble Sort',
         description: 'Bubble Sort repeatedly swaps adjacent elements if they are in the wrong order until the list is sorted.',
       },
       {
-        href:'/tutorial/merge-sort',
+        href:'https://algo-thesis.onrender.com/merge-sort',
         title:'Merging Sort',
         description:'Merge Sort is a divide-and-conquer algorithm that splits the list into halves, sorts each half, and then merges the sorted halves back together.'
       },{
-        href:'/tutorial/quick-sort',
+        href:'https://algo-thesis.onrender.com/quick-sort',
         title:'Quick Sort',
         description:'Quick Sort is a divide-and-conquer algorithm that selects a "pivot" element, partitions the list into elements less than and greater than the pivot, and recursively sorts the partitions.'
       }
@@ -50,27 +50,27 @@ const LessonPage = () => {
 
   const searchingAlgoCards = [
     {
-        href: '/tutorial/linear-search',
+        href: 'https://algo-thesis.onrender.com/linear-search',
         title: 'Linear Search',
         description: 'Linear Search checks each element in a list sequentially until the target element is found or the end of the list is reached.',
       },
       {
-        href: '/tutorial/binary-search',
+        href: 'https://algo-thesis.onrender.com/binary-search',
         title: 'Binary Search',
         description: 'Binary Search efficiently finds an element in a sorted list by repeatedly dividing the search interval in half.',
       },
       {
-        href: '/tutorial/breadth-first',
+        href: 'https://algo-thesis.onrender.com/breadth-first-search',
         title: 'Breadth First Search',
         description: 'Breadth-First Search explores a graph or tree level by level, starting from the root or initial node and visiting all neighbors before moving to the next level.',
       },
       {
-        href: '/tutorial/depth-first',
+        href: 'https://algo-thesis.onrender.com/depth-first-search',
         title: 'Depth First Search',
         description: 'Depth-First Search (DFS) explores a graph or tree by diving as deep as possible into each branch before backtracking.',
       },
       {
-        href: '/tutorial/sequential-search',
+        href: 'https://algo-thesis.onrender.com/sequential-search',
         title: 'Sequential Search',
         description: 'Sequential Search checks each element in a list one by one until it finds the target or reaches the end.',
       },
