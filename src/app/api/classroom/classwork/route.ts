@@ -8,7 +8,7 @@ import generateRandomString from "@/helper/generateRandomString";
 /// function for temporary saving the file in the local folder
 async function saveFile(file: File, filename: string) {
   const buffer = Buffer.from(await file.arrayBuffer());
-  const filePath = path.join(process.cwd(), "/tmp", filename);
+  const filePath = path.join("/tmp", filename);
   //@ts-ignore
   await fs.writeFile(filePath, buffer);
   return filePath;
