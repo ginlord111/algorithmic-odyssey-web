@@ -48,12 +48,12 @@ export default function NavBar() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log(user, session, "USER AND SESSION");
         const response = await fetch("https://algo-thesis.onrender.com/api/signin", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials:"include",
           body: JSON.stringify({ user, session }),
         });
 
