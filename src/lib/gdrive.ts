@@ -15,7 +15,7 @@ const drive = GdriveApi.drive({
 });
 export async function uploadGdrive(fileName:string,mimeType:string) {
     try {
-      const uploadsDir = path.join(process.cwd(), 'tmp');
+      const uploadsDir = path.join(process.cwd(), '/tmp');
       const filePath = path.join(uploadsDir, fileName);
         const response = await drive.files.create({
             requestBody:{
