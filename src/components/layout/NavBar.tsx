@@ -49,11 +49,12 @@ export default function NavBar() {
     const fetchData = async () => {
       try {
         console.log(user, session, "USER AND SESSION");
-        const response = await fetch("https://algo-thesis.onrender.com/api/signin", {
+        const response = await fetch("http://localhost:5120/api/signin", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({ user, session }),
         });
 
