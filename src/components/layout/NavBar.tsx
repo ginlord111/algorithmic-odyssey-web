@@ -79,7 +79,7 @@ export default function NavBar() {
     },
     {
       name: "Game",
-      href: "https://algody.vercel.app",
+      href: "https://algo-thesis.onrender.com",
       className: "",
     },
     {
