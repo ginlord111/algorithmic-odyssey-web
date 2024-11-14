@@ -2,6 +2,7 @@ import prisma from "@/db";
 import { NextRequest, NextResponse } from "next/server";
 import { generateToken } from "@/utils/tokenGenerator";
 import { hashPassword } from "@/utils/hashPassword";
+import { defaultGameState } from "@/utils/defaultGamestate";
 export async function POST(req: NextRequest) {
   try {
     const { email, username, password,role,token,fullName } = await req.json();
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
         }
       ]
       }
-    })
+    });
     // TODO : USER NAME MUST BE UNUQIE ALSO
 
     if(isEmailOrUsernameUnique?.email === email){
@@ -37,7 +38,8 @@ export async function POST(req: NextRequest) {
         emailVerificationToken:token,
         userImage:defaultImage,
         fullName,
-        isStudent:role === "student" ?  true : role==="teacher" ? false : true
+        isStudent:role === "student" ?  true : role==="teacher" ? false : true,
+        gameState:defaultGameState,
       },
     });
 
