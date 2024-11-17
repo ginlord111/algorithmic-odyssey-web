@@ -38,7 +38,7 @@ const AboutUsPage = () => {
             Our team consists of{" "}
             <span className="font-bold text-black">
               Ronnie Nicandro, Chris Jay Santos, Carl Anne Reyes, Lorenzo Manansala,
-              Bryan Montanez.
+              Bryan Montanez.Zapanta Carl Justin
             </span>{" "}
             Together, we bring a diverse set of skills to the table, including
             software development, project management, and problem-solving, all built

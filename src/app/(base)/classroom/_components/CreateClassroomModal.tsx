@@ -39,7 +39,7 @@ const CreateClassroomModal = ({
       const res = await fetch("api/classroom", {
         method: "POST",
         body: JSON.stringify({ classroomName, sectionName
-          , classCode, id }),
+          , classCode, id,fullName }),
       });
       const response = await res.json()
       if (res.ok) {
@@ -70,7 +70,7 @@ const CreateClassroomModal = ({
                   className="flex flex-col space-y-4"
                   onSubmit={form.handleSubmit(onSubmit)}
                 >
-                  {/* {user && !user.fullName && (
+                  {user && !user.fullName && (
                      <FormField
                      control={form.control}
                      name="fullName"
@@ -87,7 +87,7 @@ const CreateClassroomModal = ({
                        </FormItem>
                      )}
                    />
-                  )} */}
+                  )}
 
                   <FormField
                     control={form.control}

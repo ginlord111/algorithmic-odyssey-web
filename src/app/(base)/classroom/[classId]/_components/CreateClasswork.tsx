@@ -60,12 +60,30 @@ const CreateClasswork = ({
       formData.append("file", file);
       formData.append("mimeType", JSON.stringify(file.type));
     }
+    if(!values.dueDate && values.time){
+      return createActivityForm.setError("dueDate", {
+        message:"Please select a due date for the due time."
+      })
+      }
+    if(values.dueDate){
+      const dueDate = new Date(values.dueDate as string);
+      if(values.time){
+        const [hours, minutes]:Array<number> = values.time.split(":").map((val) => parseInt(val));  
+        dueDate.setHours(hours);
+        dueDate.setMinutes(minutes);
+      }
+      formData.append("dueDate", JSON.stringify(dueDate.toISOString()));
+    }
+
+
+    
     formData.append("title", JSON.stringify(values.title));
     formData.append("instruc", JSON.stringify(content));
     formData.append("id", JSON.stringify(session?.user.id));
     formData.append("classId", JSON.stringify(classId));
     formData.append("maxScore", JSON.stringify(values.maxScore));
     formData.append("actType", JSON.stringify(actType));
+  
     if (values.maxScore > 100) {
       createActivityForm.setError("maxScore", {
         message: "Max score must be 100 or less",
@@ -122,6 +140,32 @@ const CreateClasswork = ({
               ))}
             </Select>
        </div>
+       <FormField
+            control={createActivityForm.control}
+            name="dueDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Due date (optional)</FormLabel>
+                <FormControl>
+                  <Input placeholder="Due date" {...field} type="date"  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+                 <FormField
+            control={createActivityForm.control}
+            name="time"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Time (optional)</FormLabel>
+                <FormControl>
+                  <Input placeholder="Time (optional)" {...field} type="time"  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <FormField
             control={createActivityForm.control}
