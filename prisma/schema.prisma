@@ -25,10 +25,11 @@ model User {
   isEmailVerified        Boolean                 @default(false)
   role                   String                  @default("user")
   isStudent              Boolean                 @default(true)
-  gameState              Json?
   level                  Int?                    @default(1)
   score                  Json?
   fullName               String?
+  gameState              Json?
+  lessonProgress         Json?                   @default("{\"progress\": {\"merge_sort\": \"\", \"quick_sort\": \"\", \"bubble_sort\": \"\", \"binary_search\": \"\", \"kmp_algorithm\": \"\", \"linear_search\": \"\", \"insertion_sort\": \"\", \"selection_sort\": \"\", \"sequential_search\": \"\", \"depth_first_search\": \"\", \"euclidean_algorithm\": \"\", \"breadth_first_search\": \"\"}}")
   accounts               Account[]
   teacherActivity        Activity[]              @relation("TeacherWhoCreateActivity")
   activityComments       ActivityComments[]
@@ -182,6 +183,7 @@ model Activity {
   fileType         String
   maxScore         Int
   isActivity       Boolean            @default(false)
+  dueDate          DateTime?
   classroom        Classroom          @relation("ClassroomActivities", fields: [classroomId], references: [id])
   teacher          User               @relation("TeacherWhoCreateActivity", fields: [teacherId, teacherName], references: [id, fullName])
   activityComments ActivityComments[]
