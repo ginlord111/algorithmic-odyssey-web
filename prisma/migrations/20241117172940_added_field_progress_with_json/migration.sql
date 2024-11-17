@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "users"."User" ADD COLUMN     "lessonProgress" JSONB DEFAULT '{"progress": {"euclidean_algorithm": false, "kmp_algorithm": false, "insertion_sort": false, "selection_sort": false, "bubble_sort": false, "merge_sort": false, "quick_sort": false, "linear_search": false, "binary_search": false, "breadth_first_search": false, "depth_first_search": false, "sequential_search": false}}';

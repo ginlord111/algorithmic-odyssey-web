@@ -29,6 +29,7 @@ model User {
   score                  Json?
   fullName               String?
   gameState              Json?
+  lessonProgress         Json?                   @default("{\"progress\": {\"merge_sort\": false, \"quick_sort\": false, \"bubble_sort\": false, \"binary_search\": false, \"kmp_algorithm\": false, \"linear_search\": false, \"insertion_sort\": false, \"selection_sort\": false, \"sequential_search\": false, \"depth_first_search\": false, \"euclidean_algorithm\": false, \"breadth_first_search\": false}}")
   accounts               Account[]
   teacherActivity        Activity[]              @relation("TeacherWhoCreateActivity")
   activityComments       ActivityComments[]

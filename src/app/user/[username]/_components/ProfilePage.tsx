@@ -2,10 +2,6 @@
 import { Button as ButtonShadCn } from "@/components/ui/button";
 import { User } from "@prisma/client";
 import {
-  Instagram,
-  Twitter,
-  Facebook,
-  Github,
   Settings,
   Camera,
   Loader2,
@@ -23,20 +19,15 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "next-auth/react";
-import { Button,Tooltip } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import FollowBtn from "./FollowBtn";
 import FollowingsList from "./FollowingsList";
 import { toast } from "sonner";
-import { CircleAlert } from "lucide-react";
 const ProfilePage = ({
   username,
   id,
   email,
   userImage,
-  facebook,
-  instagram,
-  github,
-  twitter,
   followerImages,
   followingImages,
   fullName
@@ -46,7 +37,6 @@ const ProfilePage = ({
 }) => {
   const [userProfile, setUserProfile] = useState<File | null>(null);
   const pathname = usePathname();
-  const currentTab = pathname.split("/").slice(-1)[0];
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -165,7 +155,7 @@ const ProfilePage = ({
               followerImages={followerImages}
               followingImages={followingImages}
             />
-            <div className="flex lg:flex-row flex-col gap-10 pt-10 cursor-pointer lg:items-start items-center ">
+            {/* <div className="flex lg:flex-row flex-col gap-10 pt-10 cursor-pointer lg:items-start items-center ">
               <div className="flex gap-1">
                 <Facebook className="w-5 h-5" />
                 <span className="text-sm text-muted-foreground tracking-wide">
@@ -190,10 +180,10 @@ const ProfilePage = ({
                   {`${instagram ? `@${instagram}` : "@username"}`}
                 </span>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="mt-10 flex flex-row lg:justify-start justify-center">
-            {session?.user.id === id && (
+            {/* {session?.user.id === id && (
               <Link href={`/user/${username}`}>
                 <ButtonShadCn
                   variant="link"
@@ -204,23 +194,21 @@ const ProfilePage = ({
                   Account Details
                 </ButtonShadCn>
               </Link>
-            )}
+            )} */}
             <Link href={`/user/${username}/posts/`}>
               <ButtonShadCn
                 variant="link"
-                className={`font-bold ${
-                  currentTab === "posts" ? "underline" : ""
-                }`}
+                className={`font-bold underline`}
               >
-                Post
+                Posts
               </ButtonShadCn>
             </Link>
 
-            <Link href="#">
+            {/* <Link href="#">
               <ButtonShadCn variant="link" className="font-bold">
                 Game
               </ButtonShadCn>
-            </Link>
+            </Link> */}
           </div>
         </div>
         {session?.user.email === email ? (

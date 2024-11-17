@@ -3,9 +3,15 @@ import React, { useEffect, useState } from "react";
 import { Avatar, cn } from "@nextui-org/react";
 import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import Link from "next/link";
-import { Menu } from "lucide-react";
-import DarkModeButton from "./DarkModeButton";
-import { signIn, useSession } from "next-auth/react";
+import { LogOut, Menu, User } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { signIn, useSession, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import userInfo from "@/store/store";
 import Notification from "../notification/Notification";
@@ -19,8 +25,10 @@ import {
 } from "@/components/ui/drawer";
 import Image from "next/image";
 import SearchComponent from "../search/SearchComponent";
+import { toast } from "sonner";
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const { data: session } = useSession();
   const pathname = usePathname();
   const router = useRouter();
@@ -48,14 +56,16 @@ export default function NavBar() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(user, session, "USER AND SESSION");
-        const response = await fetch("https://algo-thesis.onrender.com/api/signin", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ user, session }),
-        });
+        const response = await fetch(
+          "https://algo-thesis.onrender.com/api/signin",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ user, session }),
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -74,7 +84,7 @@ export default function NavBar() {
   const navItems = [
     {
       name: "Tutorial",
-      href: "/tutorial",
+      href: "https://algo-thesis.onrender.com/tutorial",
       className: "",
     },
     {
@@ -83,7 +93,6 @@ export default function NavBar() {
       className: "",
     },
     {
-
       name: "Classroom",
       href: "/classroom",
       className: "",
@@ -104,7 +113,12 @@ export default function NavBar() {
     //   className: "",
     // },
   ];
-  const isSearchPage = pathname.includes("search")
+  const isSearchPage = pathname.includes("search");
+  const handleSignOut = async () => {
+    const data = await signOut({ redirect: false, callbackUrl: "/" });
+    router.push(data.url);
+    toast.success("Log out succesfully");
+  };
   return (
     <Navbar
       className={cn(
@@ -125,10 +139,13 @@ export default function NavBar() {
           </div>
         </Link>
       </NavbarContent>
-      <NavbarContent >
-       {isSearchPage  ? null :  <SearchComponent />}
+      <NavbarContent className="ml-14">
+        {isSearchPage ? null : <SearchComponent />}
       </NavbarContent>
-      <NavbarContent className={`w-full hidden md:flex gap-10 `} justify="center">
+      <NavbarContent
+        className={`w-full hidden md:flex gap-10 `}
+        justify="center"
+      >
         {navItems.map((item, index) => (
           <NavbarItem key={index}>
             <Link
@@ -173,7 +190,27 @@ export default function NavBar() {
               className="hidden lg:flex text-xl"
               onClick={() => router.push(`/user/${user?.username as string}`)}
             >
-              <Avatar showFallback src={user?.userImage as string} size="md" />
+              <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+                <DropdownMenuTrigger asChild>
+                  <Avatar
+                    showFallback
+                    src={user?.userImage as string}
+                    size="md"
+                    className="cursor-pointer"
+                  />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="w-fit">
+                  <DropdownMenuItem onClick={()=>router.push(`/user/${user?.username as string}`)}>
+                    <User className="mr-2 h-4 w-4" />
+                    <span>View Profile</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log Out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </NavbarItem>
           </>
         ) : (
@@ -184,9 +221,9 @@ export default function NavBar() {
             Login
           </NavbarItem>
         )}
-        <NavbarItem>
+        {/* <NavbarItem>
           <DarkModeButton />
-        </NavbarItem>
+        </NavbarItem> */}
       </NavbarContent>
     </Navbar>
   );

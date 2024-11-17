@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Key, SetStateAction, Dispatch } from "react";
 import { useRouter } from "next/navigation";
-import {  Loader2 } from "lucide-react";
+import {  ArrowLeft, Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { Radio, RadioGroup } from "@nextui-org/react";
 import { UserRole } from "@/types/types";
@@ -167,6 +167,15 @@ const SignUpTab = ({
 
           <Button className="px-10 flex space-x-2" type="button" variant={'secondary'} onClick={handleSignUpGoogle}>
            <span>Google</span> <Image src="/google-icon.png"  alt="Google icon" width={25} height={25} />
+          </Button>
+
+          <Button
+            variant="ghost"
+            onClick={() => router.back()}
+            className="mb-4 -ml-4 text-muted-foreground"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Go Back
           </Button>
         </div>
       </form>
