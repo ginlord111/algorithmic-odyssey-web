@@ -1,7 +1,11 @@
 import prisma from "@/db";
 import { LessonProgressProps } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
-
+const corsHeaders = {
+    "Access-Control-Allow-Origin": "https://algo-thesis.onrender.com", // Replace with a specific origin if needed
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  };
 export async function POST(req: NextRequest, res: NextResponse) {
   const { student_id, key, value } = await req.json();
   try {
@@ -29,9 +33,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
       }
     }
    );
-    return NextResponse.json({message:"Success"}, {status:200}) 
+    return NextResponse.json({message:"Success"}, {status:200, headers:corsHeaders}); 
   } catch (error) {
     console.log(error);
-   return NextResponse.json({ error }, { status: 500 });
+   return NextResponse.json({ error }, { status: 500, headers:corsHeaders });
   }
 }
