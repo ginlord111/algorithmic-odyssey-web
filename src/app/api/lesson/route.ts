@@ -5,6 +5,7 @@ const corsHeaders = {
     "Access-Control-Allow-Origin": "*", // Replace with a specific origin if needed
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Credentials": "true", // Enables credentials
   };
 export async function POST(req: NextRequest, res: NextResponse) {
   const { student_id, key, value } = await req.json();
