@@ -2,7 +2,7 @@ import prisma from "@/db";
 import { LessonProgressProps } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
 const corsHeaders = {
-    "Access-Control-Allow-Origin": "https://algo-thesis.onrender.com", // Replace with a specific origin if needed
+    "Access-Control-Allow-Origin": "algo-thesis.onrender.com", // Replace with a specific origin if needed
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
   };
