@@ -12,7 +12,19 @@ export interface AccountDetail{
     // mobileNum:number | null;
 
 }
-
+interface AlgoProps{
+  merge_sort:string;
+  quick_sort:string;
+  bubble_sort:string;
+  binary_search:string;
+  linear_search:string;
+  insertion_sort:string;
+  selection_sort:string;
+  sequential_search:string;
+  depth_first_search:string;
+  euclidean_algorithm:string;
+  breadth_first_search:string;
+}
 export interface AlgoDataProps{
   name:string;
   href:string;
@@ -41,6 +53,10 @@ export interface ForumWithCount extends Forum {
     forumData: Forum[];
     userData: User[];
     filteredAlgoData:AlgoDataProps[];
+  }
+
+  export interface LessonProgressProps {
+    progress:AlgoProps[];
   }
 
 export type UserRole = "student" | "teacher"

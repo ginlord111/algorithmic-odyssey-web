@@ -1,6 +1,6 @@
 import { SearchResultProps } from "@/types/types";
 import { Avatar } from "@nextui-org/react";
-import { Loader2 } from "lucide-react";
+import { ChevronRight, Loader2 } from "lucide-react";
 import { Fragment } from "react";
 import Link from "next/link";
 
@@ -29,14 +29,15 @@ const SearchResult = ({
           <Fragment>
             {searchResults.userData && searchResults.userData.length > 0 && (
               <Fragment>
-                <div className="border-b-1 border-gray-300 pb-2">People</div>
+                <div className="border-b-1 border-gray-300 pb-2 py-1 px-3">People</div>
                 <div className="flex flex-col space-y-2">
                   {searchResults.userData.map((user, index) => (
                     <Link
-                      className="flex items-center space-x-2 pt-2"
+                        className="group flex items-center justify-between py-2 px-3 rounded-md space-x-2 transition-all duration-200 ease-in-out hover:bg-primary/10 hover:scale-105 hover:shadow-md"
                       key={index}
                       href={`/user/${user.username}`}
                     >
+                       <div className="flex items-center space-x-2">  
                       <Avatar
                         showFallback
                         src={user.userImage as string}
@@ -44,6 +45,8 @@ const SearchResult = ({
                         className="border border-[#cbd5e11a]"
                       />
                       <p className="text-xs">{user.username}</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                     </Link>
                   ))}
                 </div>
@@ -51,14 +54,15 @@ const SearchResult = ({
             )}
             {searchResults?.forumData && searchResults.forumData.length > 0 && (
               <Fragment>
-                <div className="border-b-1 border-gray-300 py-2">Forum</div>
+                <div className="border-b-1 border-gray-300 py-1 px-3">Forum</div>
                 <div className="flex flex-col space-y-2">
                   {searchResults.forumData.map((forum, index) => (
                     <Link
-                      className="flex items-center space-x-2 pt-2"
+                      className="group flex items-center justify-between py-2 px-3 rounded-md space-x-2 transition-all duration-200 ease-in-out hover:bg-primary/10 hover:scale-105 hover:shadow-md"
                       key={index}
                       href={`/forum/${forum.userId}/comments/${forum.titleId}/${forum.title}`}
                     >
+                           <div className="flex items-center space-x-2">
                       <Avatar
                         showFallback
                         src={forum.forumImage as string}
@@ -66,6 +70,8 @@ const SearchResult = ({
                         className="border border-[#cbd5e11a]"
                       />
                       <p className="text-xs">{forum.title}</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                     </Link>
                   ))}
                 </div>
@@ -75,19 +81,26 @@ const SearchResult = ({
             {searchResults?.filteredAlgoData &&
               searchResults.filteredAlgoData.length > 0 && (
                 <Fragment>
-                  <div className="border-b-1 border-gray-300 py-2">
+                  <div className="border-b-1 border-gray-300 py-1 px-3 ">
                     Algorithm
                   </div>
                   <div className="flex flex-col space-y-2">
                     {searchResults.filteredAlgoData.map((algo, index) => (
-                      <Link
-                        className="flex items-center space-x-2 pt-2"
-                        key={index}
-                        href={algo.href}
-                      >
-                        {algo.icon}
-                        <p className="text-xs">{algo.name}</p>
-                      </Link>
+                  <Link
+                  className="group flex items-center justify-between py-2 px-3 rounded-md space-x-2 transition-all duration-200 ease-in-out hover:bg-primary/10 hover:scale-105 hover:shadow-md"
+                  key={index}
+                  href={algo.href}
+                >
+                  <div className="flex items-center space-x-2">
+                    <span className="text-gray-600 group-hover:text-primary transition-colors duration-200">
+                      {algo.icon}
+                    </span>
+                    <p className="text-sm text-gray-700 group-hover:text-primary transition-colors duration-200">
+                      {algo.name}
+                    </p>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                </Link>
                     ))}
                   </div>
                 </Fragment>
