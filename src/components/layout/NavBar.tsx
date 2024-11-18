@@ -56,17 +56,15 @@ export default function NavBar() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "https://algo-thesis.onrender.com/api/signin",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials:"include",
-            body: JSON.stringify({ user, session }),
-          }
-        );
+        console.log(user, session, "USER AND SESSION");
+        const response = await fetch("https://algo-thesis.onrender.com/api/signin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials:'include',
+          body: JSON.stringify({ user, session }),
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
