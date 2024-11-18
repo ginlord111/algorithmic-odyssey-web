@@ -12,6 +12,12 @@ export interface AccountDetail{
     // mobileNum:number | null;
 
 }
+
+export interface AlgoDataProps{
+  name:string;
+  href:string;
+  icon:any;
+}
 export interface CommentProps {
   id: string;
   comment: string;
@@ -34,6 +40,7 @@ export interface ForumWithCount extends Forum {
   export interface SearchResultProps {
     forumData: Forum[];
     userData: User[];
+    filteredAlgoData:AlgoDataProps[];
   }
 
 export type UserRole = "student" | "teacher"
