@@ -25,12 +25,17 @@ export async function POST(req: NextRequest) {
     const classId = JSON.parse(body.get("classId") as string);
     const maxScore = JSON.parse(body.get("maxScore") as string);
     const actType = JSON.parse(body.get("actType") as string);
+    const dueDate = JSON.parse(body.get("dueDate") as string);
     // saving the file inside the upload folder
     const savedFilePath = await saveFile(file, file.name);
 
     // upload in my gdrive api and return the link
     const buffer = Buffer.from(await file.arrayBuffer());
-    const fileUpload = await uploadGdrive(file.name, mimeType,buffer as unknown as NodeJS.ArrayBufferView);
+    const fileUpload = await uploadGdrive(
+      file.name,
+      mimeType,
+      buffer as unknown as NodeJS.ArrayBufferView
+    );
     // delete the file
     await fs.unlink(savedFilePath);
     const slug = generateRandomString();
@@ -44,6 +49,7 @@ export async function POST(req: NextRequest) {
         fileUrlDownload: (fileUpload?.fileUrlDownload as string) ?? null,
         isActivity: actType === "activity" ? true : false,
         maxScore,
+        ...(dueDate && { dueDate }),
         teacher: {
           connect: {
             id,
@@ -112,7 +118,11 @@ export async function PATCH(req: NextRequest) {
     const activityId = JSON.parse(body.get("activityId") as string) as string;
     const savedFilePath = await saveFile(works, works.name);
     const buffer = Buffer.from(await works.arrayBuffer());
-    const fileUpload = await uploadGdrive(works.name, works.type,buffer as unknown as NodeJS.ArrayBufferView);
+    const fileUpload = await uploadGdrive(
+      works.name,
+      works.type,
+      buffer as unknown as NodeJS.ArrayBufferView
+    );
     await fs.unlink(savedFilePath);
     const studActId = await prisma.studentActivity.findFirst({
       where: {

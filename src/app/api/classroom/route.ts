@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
   try {
     const { classroomName, sectionName, classCode, id, fullName } =
       await req.json();
-
+    console.log(fullName, "THIS IS FULL NAME")
     // check if the classcode is unique
     const isClasscodeUnique = await prisma.classroom.findUnique({
       where: {
@@ -13,14 +13,17 @@ export async function POST(req: NextRequest) {
       },
     });
     if (!isClasscodeUnique) {
-      await prisma.user.update({
-        where: {
-          id,
-        },
-        data: {
-          fullName,
-        },
-      });
+      if (fullName) {
+        await prisma.user.update({
+          where: {
+            id,
+          },
+          data: {
+            fullName,
+          },
+        });
+      }
+
       await prisma.classroom.create({
         data: {
           className: classroomName,

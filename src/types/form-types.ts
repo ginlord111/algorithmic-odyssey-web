@@ -1,5 +1,6 @@
 import { z } from "zod";
-
+const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/;
+const noSpecialCharRegex: RegExp = /^[a-zA-Z0-9 _-]*$/; // REGEX FOR USER TO NOT PUT ANY SPEICAL CHARACTERS IN USERNAME
 export const commentFormSchema = z.object({
   comment: z
     .string()
@@ -17,7 +18,7 @@ export const postFormSchema = z.object({
   }),
   caption: z.optional(z.string()),
 });
-const noSpecialCharRegex: RegExp = /^[a-zA-Z0-9 _-]*$/; // REGEX FOR USER TO NOT PUT ANY SPEICAL CHARACTERS IN USERNAME
+
 export const accountDetailsFormSchema = z.object({
   username: z.optional(
     z
@@ -145,6 +146,8 @@ export const createActivitySchema = z.object({
     .refine((val) => !isNaN(val), {
       message: "Max score must be a valid number",
     }),
+    dueDate:z.optional(z.string()),
+    time:z.optional(z.string())
 });
 
 export const searchSchema = z.object({

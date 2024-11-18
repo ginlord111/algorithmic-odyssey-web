@@ -1,23 +1,49 @@
-import { authOptions } from "@/utils/authOptions";
-import { getServerSession } from "next-auth";
-import React from "react";
-import AccountDetails from "./_components/AccountDetails";
 import prisma from "@/db";
-
-const Page = async ({ params }: { params: { username: string } }) => {
-  const session = await getServerSession(authOptions);
+import { authOptions } from "@/utils/authOptions";
+import { ForumLike } from "@prisma/client";
+import { Loader2 } from "lucide-react";
+import { getServerSession } from "next-auth";
+import React, { Fragment, Suspense } from "react";
+import UserProfilePosts from "./posts/_components/UserProfilePosts";
+const UserPostsPage = async ({ params }: { params: { username: string } }) => {
+  const session = await getServerSession(authOptions)
   const { username } = params;
-  const user = await prisma.user.findUnique({
+  let userLikes:ForumLike[] = [];
+  const userPosts = await prisma.user.findUnique({
     where: {
       username: decodeURIComponent(username),
     },
-    select: {
-      id: true,
+    include: {
+      forums: {
+        orderBy:{
+          createdAt:"desc"
+        },
+        include: {
+          _count: {
+            select: {
+              forumLikes: true,
+            },
+          },
+        },
+      },
     },
   });
-  if (!user) return;
-  /// TODO: RENDER ELSE CONDITION HERE FOR THE USER DETAILS
-  return <div>{session?.user.id === user.id && <AccountDetails />}</div>;
+    if (!userPosts) return null;
+  const { forums } = userPosts;
+
+  if(session?.user.id){
+     userLikes = await prisma.forumLike.findMany({
+      where: {
+          userId:session.user.id
+      },
+    }) ?? [];
+  }
+
+  return (
+    <Suspense fallback={<Loader2 className="h-16 w-16 animate-spin"/>}> 
+<UserProfilePosts forums={forums} userLikes={userLikes}/>
+      </Suspense>
+    )
 };
 
-export default Page;
+export default UserPostsPage;

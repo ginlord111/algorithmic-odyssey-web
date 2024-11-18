@@ -51,11 +51,11 @@ fetchUser();
         isActive: currentTab === "students-work",
         value:"students-work"
       },
-      {
-        name:"Compiler",
-        isActive: currentTab === "compiler",
-        value:"compiler"
-      }
+   {...!isActivity && {
+      name:"Compiler",
+      isActive: currentTab === "compiler",
+      value:"compiler"
+   }}
   ]
 
   const navigation = user?.isStudent ? navigationForStud : navigationForTeacher

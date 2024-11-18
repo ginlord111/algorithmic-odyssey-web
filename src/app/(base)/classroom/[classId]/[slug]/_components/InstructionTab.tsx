@@ -1,4 +1,4 @@
-import { NotepadText } from "lucide-react";
+import { NotepadText,Calendar } from "lucide-react";
 import { Activity } from "@prisma/client";
 import React, { useMemo } from "react";
 import tiptapExtensions from "@/utils/tiptapExtension";
@@ -8,6 +8,7 @@ import parse from "html-react-parser";
 import Link from "next/link";
 import timeDiff from "@/utils/timeCalc";
 import ActivityComment from "./ActivityComment";
+import dueDateDiff from "@/utils/dueDateCalc";
 const InstructionTab = ({ act }: { act: Activity }) => {
   const extension = tiptapExtensions();
   const instruction = generateHTML(act.instruction as JSONContent, extension);
@@ -17,7 +18,11 @@ const InstructionTab = ({ act }: { act: Activity }) => {
   return (
     <div className="relative mt-16 px-[4rem]">
       <div className="flex flex-col space-y-3 pb-6 border-b-1 border-[#e0e0e0]">
+        <div className="flex justify-between w-full">
         <span className="text-lg font-bold">{act.isActivity ? "Activity" : "Assesment"}</span>
+        {act.dueDate && <span className="text-muted-foreground   font-semibold"><Calendar className="w-5 h-5  inline-block"/> {dueDateDiff(act.dueDate)}</span>}
+        </div>
+       
         <div className="flex space-x-3">
           <div className="p-1 bg-[#5F6368] h-fit rounded-full">
             <NotepadText className="w-6 h-6 text-white  " />

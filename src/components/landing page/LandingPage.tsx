@@ -59,7 +59,7 @@ const LandingPage = () => {
               Learn now
             </Link>
             <Link
-              href="https://algody.vercel.app"
+              href="https://algo-thesis.onrender.com"
               target="_blank"
               className="bg-[#003459] p-3 px-6 rounded-md text-lg font-bold text-[white]"
             >
@@ -169,7 +169,7 @@ const LandingPage = () => {
               Learn now
             </Link>
             <Link
-              href={"#"}
+              href={"https://algo-thesis.onrender.com"}
               className="bg-[#003459] p-3 px-6 rounded-md text-lg font-bold text-[white]"
             >
               Play now
