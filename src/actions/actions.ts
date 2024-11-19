@@ -2,7 +2,7 @@
 import prisma from "@/db"
 import { UserRole } from "@/types/types"
 import { authOptions } from "@/utils/authOptions"
-import { Activity, User } from "@prisma/client"
+import { Activity, StudentActivity, User } from "@prisma/client"
 import { getServerSession } from "next-auth"
 export const fetchUserProfile = async () => {
     try {
@@ -177,4 +177,17 @@ export const fetchStudentCode = async(activityId:string, studentId:string)=>{
  } catch (error) {
   console.log(error)
  }
+}
+
+export const shouldRenderSubmitButton = async (activityId:string,studentId:string):Promise<StudentActivity | null> =>{
+  console.log(studentId, "STUDENT ID ewqeqweqweqw")
+ const studAct = await prisma.studentActivity.findFirst({
+  where:{
+    activityId,
+    studentId 
+  }
+})
+if(!studAct)return null ;
+
+return studAct
 }

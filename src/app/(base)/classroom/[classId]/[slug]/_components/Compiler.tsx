@@ -1,13 +1,14 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
-import { Select, SelectItem } from "@nextui-org/react";
+import { Select, SelectItem, useDisclosure } from "@nextui-org/react";
 import { Button } from "@/components/ui/button";
-import { Activity, User } from "@prisma/client";
+import { Activity, StudentActivity, User } from "@prisma/client";
 import { Loader2 } from "lucide-react";
-import { fetchStudentCode, fetchTaskProgress } from "@/actions/actions";
+import { fetchStudentCode, fetchTaskProgress, shouldRenderSubmitButton } from "@/actions/actions";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { Ban } from 'lucide-react';
+import { InputGradeModal } from "@/components/modal/InputGradeModal";
 
 interface Language {
   name: string;
@@ -51,7 +52,7 @@ const saveCodeLocalStorage = (code: string,lang:string,result?:any) => {
   ]
   localStorage.setItem('currentCode', JSON.stringify(currentCode));
 }
-const Compiler = ({ user, act }: { user: User; act: Activity }) => {
+const Compiler = ({ user, act,studentWork }: { user: User; act: Activity,studentWork?:StudentActivity }) => {
   const languages: Language[] = [
     { name: "C++", value: "cpp" },
     { name: "Java", value: "java" },
@@ -62,12 +63,14 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
 
   const [currentLanguage, setCurrentLanguage] = useState<string>("java");
   const [content, setContent] = useState<string>(getInitialContent("java"));
-  const [codeSubmitted, setCodeSubmitted] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isTaskDone, setIsTaskDone] = useState<boolean>(false);
   const [showError, setShowError] = useState<boolean>(false);
+  const [targetStud, setTargetStud] = useState<StudentActivity | null> (null)
+  const [renderSubmitBtn, setRenderSubmitBtn] = useState<boolean>(false)  
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const searchParams = useSearchParams();
+  const {isOpen, onOpenChange, onOpen,onClose} = useDisclosure();
   const updateCompilerContent = (code: string,initLang?:string) => {
     if (code) {
       const iframe = iframeRef.current;
@@ -204,8 +207,21 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
     }
   };
 
-  // Listen for responses from the iframe
-  console.log(currentLanguage, "CURRENT LANGUAGE OUTSIDE")
+  useEffect(() => {
+    const renderSubmitButton = async () => {
+      const studentId =  searchParams.get("student");   
+    if(!user.isStudent && studentId){
+      const data = await shouldRenderSubmitButton(act?.id, studentId as string);
+      setRenderSubmitBtn(data?.isCompleted as boolean);
+      setTargetStud(data)
+    }
+    else{
+      return;
+    }
+    };
+    renderSubmitButton();
+  }, [act,searchParams]);
+  
   useEffect(() => {
     const handleMessage = (e: any) => {
       console.log("Received message:", e.data.language);
@@ -232,9 +248,15 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
 
     fetchTaskDone();
   }, [act, user, handleSubmit]);
+  const handleGrade = () => {
 
+    onOpen()
+
+  }
+  console.log(studentWork, "STUDENT WORK")  
   return (
     <div className="relative mt-10">
+      <InputGradeModal  isOpen={isOpen} onOpenChange={onOpenChange} targetStud={targetStud} onClose={onClose}/>
       {isTaskDone ? (
         <div className="flex items-center justify-center flex-col space-y-2">
           <Image
@@ -264,7 +286,7 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
                 </SelectItem>
               ))}
             </Select>
-            {user?.isStudent === true && (
+            {user?.isStudent  && (
               <Button onClick={handleSubmit}>
                 {isLoading ? (
                   <Loader2 className="animate-spin w-6 h-6" />
@@ -272,7 +294,14 @@ const Compiler = ({ user, act }: { user: User; act: Activity }) => {
                   "Submit"
                 )}
               </Button>
-            )}
+            ) }
+      {renderSubmitBtn && (
+           <Button className="bg-purple-700 hover:bg-purple-700 text-white" 
+           onClick={()=>handleGrade()}
+              >
+                Grade
+              </Button>
+       )}
           </div>
           <span className={`text-red-500 md:text-base text-sm  ${showError ? 'block' : 'hidden'}`}> <Ban className="inline-block w-4 h-4"/> Please run the code first or correct any errors</span>
           <iframe
