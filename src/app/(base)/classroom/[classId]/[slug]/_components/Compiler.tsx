@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { Ban } from 'lucide-react';
 import { InputGradeModal } from "@/components/modal/InputGradeModal";
+import TeacherComment from "./TeacherComment";
 
 interface Language {
   name: string;
@@ -259,15 +260,16 @@ const Compiler = ({ user, act,studentWork }: { user: User; act: Activity,student
       <InputGradeModal  isOpen={isOpen} onOpenChange={onOpenChange} targetStud={targetStud} onClose={onClose}/>
       {isTaskDone ? (
         <div className="flex items-center justify-center flex-col space-y-2">
-          <Image
+          {/* <Image
             src={"/no-pending-task.svg"}
             alt="Submitted Task"
-            width={400}
-            height={300}
+            width={300}
+            height={250}
           />
           <span className="text-muted-foreground text-sm">
             Your work is submitted
-          </span>
+          </span> */}
+        <TeacherComment />
         </div>
       ) : (
         <div className="flex flex-col space-y-3">
