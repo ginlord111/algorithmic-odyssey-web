@@ -1,14 +1,10 @@
 "use client";
 import { Button as ButtonShadCn } from "@/components/ui/button";
 import { User } from "@prisma/client";
-import {
-  Settings,
-  Camera,
-  Loader2,
-} from "lucide-react";
+import { Settings, Camera, Loader2, Pencil } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   DropdownMenu,
@@ -23,6 +19,7 @@ import { Button } from "@nextui-org/react";
 import FollowBtn from "./FollowBtn";
 import FollowingsList from "./FollowingsList";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
 const ProfilePage = ({
   username,
   id,
@@ -30,13 +27,15 @@ const ProfilePage = ({
   userImage,
   followerImages,
   followingImages,
-  fullName
+  fullName,
 }: User & {
   followerImages: { userFollowerImage: string }[];
   followingImages: { userFollowingImage: string }[];
 }) => {
   const [userProfile, setUserProfile] = useState<File | null>(null);
-  const pathname = usePathname();
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [tempUsername, setTempUsername] = useState<string>(username);
+  const [isLoadingUsername, setIsLoadingUsername] = useState<boolean>(false);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -75,6 +74,36 @@ const ProfilePage = ({
       router.push(`/user/${username}/posts`);
     }
   }, []);
+const onSaveUsername = async (username:string) => {  
+  setIsLoadingUsername(true); 
+  const response = await fetch("/api/profile/edit/", {
+    method: "POST",
+    body: JSON.stringify({ userId:id,username:username }),
+  });
+  setIsLoadingUsername(false);
+  if (response.ok && response.status === 200) {
+    router.refresh();
+    router.push(`/user/${username}`);
+    toast.success("Edit profile successfully");
+  }
+}
+  const handleBlur = () => {
+    setTempUsername(username);
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      // setUsername(tempUsername)
+      setIsEditing(false);
+      console.log(tempUsername, "USERNAMEEE")
+      // onSaveUsername(tempUsername)
+    } else if (e.key === "Escape") {
+      setTempUsername(username);
+      setIsEditing(false);
+    }
+  };
+
   return (
     <div className="relative">
       <div className="flex lg:flex-row flex-col lg:items-start items-center">
@@ -119,14 +148,32 @@ const ProfilePage = ({
         </div>
         <div className=" relative w-full lg:mt-2 mx-[200px] mt-[120px]">
           <div className="flex flex-col">
-            <p className="lg:text-4xl text-xl font-bold lg:text-start text-center mb-2">
-              {username}
-            </p>
-          <div className="flex space-x-2">
-          <p className="text-muted-foreground lg:text-start text-center">
-              {fullName} 
-            </p>
-          {/* <Tooltip content="Email is not verified" color="danger" 
+            {isEditing ? (
+           <div className="flex items-center space-x-4">
+               <Input
+                type="text"
+                value={tempUsername}
+                onChange={(e) => setTempUsername(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="text-xl font-bold h-9 w-[200px]"
+              />
+              <ButtonShadCn className="bg-blue-500 w-14 text-xs md:text-base md:w-fit" onClick={()=>onSaveUsername(tempUsername)}>{isLoadingUsername ? <Loader2 className="animate-spin h-4 w-4"/> : "Save"}</ButtonShadCn>
+              <ButtonShadCn className="bg-red-500 w-14 text-xs md:text-base md:w-fit" onClick={handleBlur}>Cancel</ButtonShadCn>
+           </div>
+            ) : (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="group flex items-center gap-2 text-xl font-bold cursor-text hover:cursor-pointer"
+              >
+                <span>{username}</span>
+                <Pencil className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </button>
+            )}
+            <div className="flex space-x-2">
+              <p className="text-muted-foreground lg:text-start text-center">
+                {fullName}
+              </p>
+              {/* <Tooltip content="Email is not verified" color="danger" 
            delay={0}
            closeDelay={0}
            motionProps={{
@@ -150,7 +197,7 @@ const ProfilePage = ({
           >
           <CircleAlert  className="bg-gray-500 w-fit rounded-full text-white"/>
           </Tooltip> */}
-          </div>
+            </div>
             <FollowingsList
               followerImages={followerImages}
               followingImages={followingImages}
@@ -196,10 +243,7 @@ const ProfilePage = ({
               </Link>
             )} */}
             <Link href={`/user/${username}/posts/`}>
-              <ButtonShadCn
-                variant="link"
-                className={`font-bold underline`}
-              >
+              <ButtonShadCn variant="link" className={`font-bold underline`}>
                 Posts
               </ButtonShadCn>
             </Link>
@@ -227,7 +271,7 @@ const ProfilePage = ({
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <FollowBtn followingId={id} />
+          <FollowBtn className="pt-3" followingId={id} />
         )}
       </div>
     </div>

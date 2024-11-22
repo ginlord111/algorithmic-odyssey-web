@@ -2,7 +2,7 @@
 import prisma from "@/db"
 import { UserRole } from "@/types/types"
 import { authOptions } from "@/utils/authOptions"
-import { Activity, User } from "@prisma/client"
+import { Activity, StudentActivity, User } from "@prisma/client"
 import { getServerSession } from "next-auth"
 export const fetchUserProfile = async () => {
     try {
@@ -148,10 +148,12 @@ export const fetchTaskProgress = async(activityId:string, studentId:string) =>{
         },
      select:{
         isCompleted:true,
+        score:true,
      }
-    }) 
+    })  
 
-    return task?.isCompleted 
+    if(!task) return null
+    return task
   } catch (error) {
     console.log(error)
   }
@@ -177,4 +179,32 @@ export const fetchStudentCode = async(activityId:string, studentId:string)=>{
  } catch (error) {
   console.log(error)
  }
+}
+
+export const shouldRenderSubmitButton = async (activityId:string,studentId:string):Promise<StudentActivity | null> =>{
+ const studAct = await prisma.studentActivity.findFirst({
+  where:{
+    activityId,
+    studentId 
+  }
+})
+if(!studAct)return null ;
+
+return studAct
+}
+
+export const fetchTeacherFeedback = async(studActId:string) =>{
+try {
+  const data = await prisma.teacherFeedBack.findFirst({
+    where:{
+  studActId,
+    }
+  })
+  if(!data) return null;
+  
+  return data 
+} catch (error) {
+  console.log(error)
+}
+
 }
