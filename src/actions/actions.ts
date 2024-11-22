@@ -148,10 +148,12 @@ export const fetchTaskProgress = async(activityId:string, studentId:string) =>{
         },
      select:{
         isCompleted:true,
+        score:true,
      }
-    }) 
+    })  
 
-    return task?.isCompleted 
+    if(!task) return null
+    return task
   } catch (error) {
     console.log(error)
   }
@@ -180,7 +182,6 @@ export const fetchStudentCode = async(activityId:string, studentId:string)=>{
 }
 
 export const shouldRenderSubmitButton = async (activityId:string,studentId:string):Promise<StudentActivity | null> =>{
-  console.log(studentId, "STUDENT ID ewqeqweqweqw")
  const studAct = await prisma.studentActivity.findFirst({
   where:{
     activityId,
@@ -190,4 +191,20 @@ export const shouldRenderSubmitButton = async (activityId:string,studentId:strin
 if(!studAct)return null ;
 
 return studAct
+}
+
+export const fetchTeacherFeedback = async(studActId:string) =>{
+try {
+  const data = await prisma.teacherFeedBack.findFirst({
+    where:{
+  studActId,
+    }
+  })
+  if(!data) return null;
+  
+  return data 
+} catch (error) {
+  console.log(error)
+}
+
 }

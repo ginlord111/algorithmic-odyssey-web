@@ -13,7 +13,7 @@ const FollowingsList = ({
     <div className="flex mt-5 justify-between">
       <div className="font-semibold ">
         <span>Post:</span>
-        <span className="ml-1">2</span>
+        {/* <span className="ml-1">2</span> */}
       </div>
       <div className="flex items-start gap-2 font-semibold ">
         <span className="text-lg">Followers: </span>

@@ -15,6 +15,10 @@ interface Language {
   name: string;
   value: string;
 }
+interface TaskProgressProps{
+  isCompleted: boolean;
+  score: number |null;
+}
 const getInitialContent = (language: string): string => {
   switch (language) {
     case "cpp":
@@ -65,13 +69,14 @@ const Compiler = ({ user, act,studentWork }: { user: User; act: Activity,student
   const [currentLanguage, setCurrentLanguage] = useState<string>("java");
   const [content, setContent] = useState<string>(getInitialContent("java"));
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isTaskDone, setIsTaskDone] = useState<boolean>(false);
+  const [isTaskDone, setIsTaskDone] = useState<TaskProgressProps | null>(null);
   const [showError, setShowError] = useState<boolean>(false);
   const [targetStud, setTargetStud] = useState<StudentActivity | null> (null)
   const [renderSubmitBtn, setRenderSubmitBtn] = useState<boolean>(false)  
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const searchParams = useSearchParams();
   const {isOpen, onOpenChange, onOpen,onClose} = useDisclosure();
+  const studentId = searchParams.get("student");
   const updateCompilerContent = (code: string,initLang?:string) => {
     if (code) {
       const iframe = iframeRef.current;
@@ -215,14 +220,15 @@ const Compiler = ({ user, act,studentWork }: { user: User; act: Activity,student
       const data = await shouldRenderSubmitButton(act?.id, studentId as string);
       setRenderSubmitBtn(data?.isCompleted as boolean);
       setTargetStud(data)
+      console.log("RENDER DATAA", data)
     }
     else{
       return;
     }
     };
     renderSubmitButton();
-  }, [act,searchParams]);
-  
+  }, [act,searchParams]); /// TODO: AFTER SUBMIT THE CODE, THE CODE SUBMITTED SHOULD BE RENDER
+
   useEffect(() => {
     const handleMessage = (e: any) => {
       console.log("Received message:", e.data.language);
@@ -248,19 +254,17 @@ const Compiler = ({ user, act,studentWork }: { user: User; act: Activity,student
     };
 
     fetchTaskDone();
-  }, [act, user, handleSubmit]);
+  }, [act, user]);
   const handleGrade = () => {
-
     onOpen()
-
   }
-  console.log(studentWork, "STUDENT WORK")  
+  console.log(targetStud, "target sutd WORK")  
   return (
     <div className="relative mt-10">
       <InputGradeModal  isOpen={isOpen} onOpenChange={onOpenChange} targetStud={targetStud} onClose={onClose}/>
-      {isTaskDone ? (
+      {isTaskDone?.isCompleted && !isTaskDone.score ? (
         <div className="flex items-center justify-center flex-col space-y-2">
-          {/* <Image
+          <Image
             src={"/no-pending-task.svg"}
             alt="Submitted Task"
             width={300}
@@ -268,10 +272,12 @@ const Compiler = ({ user, act,studentWork }: { user: User; act: Activity,student
           />
           <span className="text-muted-foreground text-sm">
             Your work is submitted
-          </span> */}
-        <TeacherComment />
+          </span>
+      
         </div>
-      ) : (
+      ) : isTaskDone?.score ? (
+        <TeacherComment studActId={targetStud?.id as string} />
+      ): (
         <div className="flex flex-col space-y-3">
           <div className="flex justify-end space-x-3">
             <Select
@@ -297,7 +303,7 @@ const Compiler = ({ user, act,studentWork }: { user: User; act: Activity,student
                 )}
               </Button>
             ) }
-      {renderSubmitBtn && (
+      {renderSubmitBtn || !targetStud?.score || !studentId  && (
            <Button className="bg-purple-700 hover:bg-purple-700 text-white" 
            onClick={()=>handleGrade()}
               >

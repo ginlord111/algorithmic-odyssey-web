@@ -2,8 +2,7 @@ import prisma from "@/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req:NextRequest){
-const {data,userId} = await req.json()
-const {username, facebook, github, instagram,twitter} = data;
+const {username,userId} = await req.json()
 //TODO: VALIDATE THE USERNAME IF ITS UNIQUE OR NOT THE SAME TO THE OTHER USER USERNAME
 try {
     await prisma.user.update({
@@ -12,10 +11,6 @@ try {
         },
         data:{
           username,
-          facebook,
-          github,
-          instagram,
-          twitter,
         }
       })
 

@@ -66,6 +66,7 @@ const ActivityContainer = ({
           <StudentWorkTab
             teacherViewWork={teacherViewWork as StudentActivity[]}
             setCurrentTab={setCurrentTab as Dispatch<SetStateAction<NavActState>>}
+            teacherId={user?.id as string}
           />
         )}
       </Fragment>
