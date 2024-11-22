@@ -41,7 +41,7 @@ export default function TeacherComment({
   return (
     <Card className="w-full max-w-2xl mx-auto mt-6 pb-8 px-3">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <h2 className="text-xl font-bold">Teacher's Feedback</h2>
+        <h2 className="text-xl font-bold">Teacher&apos;s Feedback</h2>
         <div className="flex items-center space-x-2">
           <Badge variant="secondary">ewqewqewq</Badge>
           <Badge variant="outline">Grade: {teacherData?.studentScore}</Badge>
