@@ -59,6 +59,17 @@ export interface ForumWithCount extends Forum {
     progress:AlgoProps[];
   }
 
+  interface Level {
+    points: number;
+    hintsUsed: number;
+    levelName: string;
+    isCompleted: boolean;
+  }
+  
+  export interface GameState {
+    levels: Level[];
+  }
+
 export type UserRole = "student" | "teacher"
   export type NavClasState = "announcement" | "pending-task" | "graded-task" | "classwork";
 
