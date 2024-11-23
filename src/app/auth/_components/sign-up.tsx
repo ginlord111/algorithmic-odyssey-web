@@ -70,7 +70,7 @@ const SignUpTab = ({
     await signIn("google");
   };
   return (
-    <Form {...signUpForm}>
+    <Form {...signUpForm} >
       <form onSubmit={signUpForm.handleSubmit(onSubmit)} className="space-y-5">
         <FormField
           control={signUpForm.control}

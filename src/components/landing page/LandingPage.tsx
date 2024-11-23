@@ -116,7 +116,7 @@ const LandingPage = () => {
           <h2 className="text-4xl tracking-wide font-bold pb-16">
             OUR FEATURES
           </h2>
-          <div className="grid md:grid-cols-3 grid-cols-1 gap-10">
+          <div className="grid lg:grid-cols-3 md:grid-cols-1  grid-cols-1 gap-10">
             {cardsInfo.map((card, index) => (
               <Card
                 className="bg-transparent w-[350px] h-[480px] flex flex-col z-[1]"
@@ -159,7 +159,7 @@ const LandingPage = () => {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerPolicy="strict-origin-when-cross-origin"
               allowFullScreen
-              className="md:w-[1060px] md:h-[700px] w-full h-[300px] cursor-pointer"
+              className=" w-full lg:h-[700px] md:[500px] sm:h-[400px] h-[300px]   cursor-pointer"
             ></iframe>
             <div className="pt-16 flex justify-center max-w-4xl items-center space-x-24">
             <Link

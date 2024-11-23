@@ -142,7 +142,7 @@ export default function NavBar() {
         {isSearchPage ? null : <SearchComponent />}
       </NavbarContent>
       <NavbarContent
-        className={`w-full hidden md:flex gap-10 `}
+        className={`w-full md:hidden hidden lg:flex gap-10 `}
         justify="center"
       >
         {navItems.map((item, index) => (
