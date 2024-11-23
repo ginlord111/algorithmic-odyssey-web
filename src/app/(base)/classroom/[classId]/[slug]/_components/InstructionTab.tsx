@@ -9,6 +9,7 @@ import Link from "next/link";
 import timeDiff from "@/utils/timeCalc";
 import ActivityComment from "./ActivityComment";
 import dueDateDiff from "@/utils/dueDateCalc";
+
 const InstructionTab = ({ act }: { act: Activity }) => {
   const extension = tiptapExtensions();
   const instruction = generateHTML(act.instruction as JSONContent, extension);

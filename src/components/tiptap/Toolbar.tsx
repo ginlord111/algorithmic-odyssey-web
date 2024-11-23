@@ -10,7 +10,7 @@ const Toolbar = ({editor,setImageFile}: { editor: Editor | null, setImageFile:Di
 
   return (
     <div className="border border-input bg-transparent rounded">
-      <Toggle
+      {/* <Toggle
         size="sm"
         pressed={editor.isActive("heading")}
         onPressedChange={() =>
@@ -18,7 +18,7 @@ const Toolbar = ({editor,setImageFile}: { editor: Editor | null, setImageFile:Di
         }
       >
         <Heading2 />
-      </Toggle>
+      </Toggle> */}
 
       <Toggle
         size="sm"

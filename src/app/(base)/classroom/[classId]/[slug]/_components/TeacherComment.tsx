@@ -6,7 +6,7 @@ import { Avatar } from '@nextui-org/react'
 import { Badge } from '@/components/ui/badge'
 import { fetchTeacherFeedback } from '@/actions/actions'
 import { TeacherFeedBack } from '@prisma/client'
-import {formatDateToYYYYMMDD} from '@/utils/formatData'
+import {formatDate} from '@/utils/formatData'
 interface TeacherCommentProps {
   teacherName?: string
   teacherAvatar?: string
@@ -33,9 +33,9 @@ export default function TeacherComment({
       }
       fetchTeacherData()
     },[studActId])
-    // const submissionDate = useMemo(()=> {
-    //   return formatDateToYYYYMMDD(teacherData?.createdAt as Date)
-    // },[teacherData?.createdAt])
+    const submissionDate = useMemo(()=> {
+      return formatDate(teacherData?.createdAt as Date)
+    },[teacherData?.createdAt])
 
     console.log(teacherData, "TEACHER DATAAA")
   return (
@@ -43,7 +43,7 @@ export default function TeacherComment({
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <h2 className="text-xl font-bold">Teacher&apos;s Feedback</h2>
         <div className="flex items-center space-x-2">
-          <Badge variant="secondary">ewqewqewq</Badge>
+          <Badge variant="secondary">{submissionDate}</Badge>
           <Badge variant="outline">Grade: {teacherData?.studentScore}</Badge>
         </div>
       </CardHeader>

@@ -34,7 +34,7 @@ const ClassworkList = ({
         </div>
         <div className="flex flex-col ">
           <p className="font-semibold tracking-wide text-md">
-            {`${act.teacherName} posted a new activity: ${act.title}`}
+            {`${act.teacherName} posted a new  ${act.isActivity ? "activity: " : "assesment: "}${act.title}`}
           </p>
           <p className="text-sm text-muted-foreground">{timeDiffCalc}</p>
         </div>

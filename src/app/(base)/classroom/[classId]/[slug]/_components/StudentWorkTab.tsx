@@ -42,7 +42,8 @@ const StudentWorkTab = ({
 
   const handleViewWorks = (stud: StudentActivity) => {
     if (stud.fileSubmittedUrl) {
-      router.push(stud.fileSubmittedUrl);
+      // router.push(stud.fileSubmittedUrl);
+      window.open(stud.fileSubmittedUrl, '_blank')
     } else if (stud.codeSubmitted) {
       router.replace(`${pathname}?tab=compiler&student=${stud.studentId}`);
       setCurrentTab("compiler");

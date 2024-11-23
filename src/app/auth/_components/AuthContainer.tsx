@@ -8,18 +8,22 @@ import {
   Tab,
   Card,
   CardBody,
+  useDisclosure
 } from "@nextui-org/react";
 import SignInTab from "./sign-in";
 import SignUpTab from "./sign-up";
+import { useRouter } from "next/navigation";
 const AuthContainer = () => {
   const [selected, setSelected] = useState<"login" | Key>("sign-in");
+  const {isOpen, onOpen, onClose} = useDisclosure();
+  const router = useRouter()
   return (
     <div className="flex flex-col w-screen h-screen items-center justify-center ">
       <Modal
         defaultOpen
         isDismissable={false}
         isKeyboardDismissDisabled={true}
-        hideCloseButton
+        onClose={()=>router.push("/")}
         size="2xl"
       >
         <ModalContent className="flex justify-center items-center p-2 py-8 overflow-auto">

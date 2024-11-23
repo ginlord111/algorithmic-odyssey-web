@@ -1,27 +1,12 @@
-export function formatDateToYYYYMMDD(createdAt: Date): string {
-  // Validate that the createdAt date is valid
-  const createdAtDate = new Date(createdAt).getTime();
-  if (isNaN(createdAtDate)) {
-    throw new Error("Invalid createdAt date.");
-  }
+export function formatDate(dateString: Date): string {
+  // Create a Date object from the input string
+  const date = new Date(dateString);
 
-  // Format the result as yyyy-mm-dd
-  const year = createdAt.getFullYear();
-  const month = String(createdAt.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-  const day = String(createdAt.getDate()).padStart(2, '0');
+  // Extract year, month, and day components
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Pad month with leading zero if needed
+  const day = String(date.getDate()).padStart(2, '0'); // Pad day with leading zero if needed
 
-  // Return formatted date
+  // Format the date string
   return `${year}-${month}-${day}`;
-}
-
-// Example usage
-const data = {
-  createdAt: new Date("2024-11-22T13:29:04.227Z") // Date object
-};
-
-try {
-  const resultDate = formatDateToYYYYMMDD(data.createdAt);
-  console.log(`Formatted Date: ${resultDate}`); // Output format: yyyy-mm-dd
-} catch (error) {
-  console.error(error);
 }

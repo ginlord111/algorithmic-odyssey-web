@@ -1,10 +1,12 @@
-import React, { Dispatch, useRef, useState } from "react";
+import React, { Dispatch, Fragment, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Activity, StudentActivity, User } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import TeacherComment from "./TeacherComment";
+import { isPastDate } from "@/utils/isPastDueDate";
 const SubmittingWorks = ({
   works,
   setWorks,
@@ -46,14 +48,21 @@ const SubmittingWorks = ({
     toast.success("Sucessful submitted your works");
     setIsLoading(false);
   };
+  const isPastDueDate = useMemo(()=> {
+    return isPastDate(act.dueDate as Date)
+   },[act.dueDate])
   return (
-    <div className="bg-white p-14 rounded-md border border-[#dadce0]">
-      {studentWork?.score && (
+  <Fragment>
+    {studentWork?.score ? (
+      <TeacherComment studActId={studentWork.id} />
+    ): (
+      <div className="bg-white p-14 rounded-md border border-[#dadce0]">
+      {/* {studentWork?.score && (
         <div className="flex justify-end space-x-3">
           <span className="text-muted-foreground">Score:</span>
           <span className="font-semibold">{studentWork.score}</span>
         </div>
-      )}
+      )} */}
       {studentWork && !studentWork.score && (
         <div className="flex justify-end space-x-3 text-muted-foreground italic">
           <span>Waiting to be graded</span>
@@ -77,11 +86,12 @@ const SubmittingWorks = ({
           Your work has been submitted
         </span>
       ) : (
+        <div className="flex flex-col space-y-2">
         <div className="flex justify-end space-x-3">
           <Button className="bg-red-500" onClick={() => setWorks(null)}>
             Cancel
           </Button>
-          <Button className="bg-blue-500" onClick={onSubmit}>
+          <Button className="bg-blue-500" onClick={onSubmit} disabled={isPastDueDate}>
             {isLoading ? (
               <Loader2 className="w-7 h-7 animate-spin" />
             ) : (
@@ -89,13 +99,19 @@ const SubmittingWorks = ({
             )}
           </Button>
         </div>
+        {isPastDueDate && <div className="italic text-muted-foreground text-end pt-1">Work cannot be submit after the due date</div>}
+        </div>
       )}
+   
       {message && (
         <span className="text-red-500 font-bold text-sm flex justify-end mt-2">
           Something went wrong
         </span>
       )}
     </div>
+    )}
+    </Fragment>
+  
   );
 };
 const Works = ({

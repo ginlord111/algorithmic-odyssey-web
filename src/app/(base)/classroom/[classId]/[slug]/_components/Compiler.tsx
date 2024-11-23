@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 import { Select, SelectItem, useDisclosure } from "@nextui-org/react";
 import { Button } from "@/components/ui/button";
 import { Activity, StudentActivity, User } from "@prisma/client";
@@ -10,6 +10,7 @@ import { useSearchParams } from "next/navigation";
 import { Ban } from 'lucide-react';
 import { InputGradeModal } from "@/components/modal/InputGradeModal";
 import TeacherComment from "./TeacherComment";
+import { isPastDate } from "@/utils/isPastDueDate";
 
 interface Language {
   name: string;
@@ -77,6 +78,9 @@ const Compiler = ({ user, act,studentWork }: { user: User; act: Activity,student
   const searchParams = useSearchParams();
   const {isOpen, onOpenChange, onOpen,onClose} = useDisclosure();
   const studentId = searchParams.get("student");
+  const isPastDueDate = useMemo(()=> {
+    return isPastDate(act.dueDate as Date)
+   },[act.dueDate])
   const updateCompilerContent = (code: string,initLang?:string) => {
     if (code) {
       const iframe = iframeRef.current;
@@ -295,7 +299,7 @@ const Compiler = ({ user, act,studentWork }: { user: User; act: Activity,student
               ))}
             </Select>
             {user?.isStudent  && (
-              <Button onClick={handleSubmit}>
+              <Button onClick={handleSubmit} disabled={isPastDueDate}>
                 {isLoading ? (
                   <Loader2 className="animate-spin w-6 h-6" />
                 ) : (
@@ -311,6 +315,7 @@ const Compiler = ({ user, act,studentWork }: { user: User; act: Activity,student
               </Button>
        )}
           </div>
+         {isPastDueDate &&  <span className="text-end italic text-muted-foreground">Work cannot be submit after the due date</span>}
           <span className={`text-red-500 md:text-base text-sm  ${showError ? 'block' : 'hidden'}`}> <Ban className="inline-block w-4 h-4"/> Please run the code first or correct any errors</span>
           <iframe
             ref={iframeRef}

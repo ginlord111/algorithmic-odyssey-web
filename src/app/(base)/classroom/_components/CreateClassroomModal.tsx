@@ -94,10 +94,10 @@ const CreateClassroomModal = ({
                     name="classroomName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Classroom or subject name</FormLabel>
+                        <FormLabel>Subject name</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Enter classrooom/subject name"
+                            placeholder="Subject name"
                             {...field}
                           />
                         </FormControl>
