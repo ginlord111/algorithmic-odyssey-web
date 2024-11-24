@@ -6,9 +6,9 @@ const Header = ({children, className}:{children?:ReactNode, className?:string}) 
     <div className={cn("md:h-[50vh] h-[40vh] relative flex flex-col", className)}>
         {/* TODO: USE DIFFERENT IMAGE PER LOAD JUST LIKE GODOT WEBSITE */}
     <Image
-     src="/header-banner-2.gif"
+     src="/giffy.gif"
       alt="Animated GIF"
-      className="brightness-50 object-fill"
+      className="brightness-50 object-cover"
       fill
       priority
       unoptimized
