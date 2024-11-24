@@ -8,6 +8,7 @@ import { Activity, StudentActivity, User } from "@prisma/client";
 import Works from "./Works";
 import userInfo from "@/store/store";
 import Compiler from "./Compiler";
+import ClassroomSkeleton from "../../_components/ClassroomSkeleton";
 
 const ActivityContainer = ({
   act,
@@ -42,33 +43,37 @@ const ActivityContainer = ({
   if (isStudent) {
     return (
       <Fragment>
-        {currentTab === "instruction" ? (
-          <InstructionTab act={act} />
-        ) : currentTab === "compiler" ? (
-          <Compiler    user={user as User} act={act}/>
-        ) : (
-          <Works
-            user={user as User}
-            act={act}
-            studentWork={studentWork as StudentActivity}
-          />
-        )}
+   {currentTab ? (
+     currentTab === "instruction" ? (
+      <InstructionTab act={act} />
+    ) : currentTab === "compiler" ? (
+      <Compiler    user={user as User} act={act}/>
+    ) : (
+      <Works
+        user={user as User}
+        act={act}
+        studentWork={studentWork as StudentActivity}
+      />
+    )
+   ) : (<ClassroomSkeleton isActivity/>)}
       </Fragment>
     );
   } else {
     return (
       <Fragment>
-        {currentTab === "instruction" ? (
-          <InstructionTab act={act} />
-        ) : currentTab === "compiler" ? (
-          <Compiler    user={user as User} act={act} studentWork={studentWork as StudentActivity}/>
-        ) : (
-          <StudentWorkTab
-            teacherViewWork={teacherViewWork as StudentActivity[]}
-            setCurrentTab={setCurrentTab as Dispatch<SetStateAction<NavActState>>}
-            teacherId={user?.id as string}
-          />
-        )}
+      {currentTab ? (
+          currentTab === "instruction" ? (
+            <InstructionTab act={act} />
+          ) : currentTab === "compiler" ? (
+            <Compiler    user={user as User} act={act} studentWork={studentWork as StudentActivity}/>
+          ) : (
+            <StudentWorkTab
+              teacherViewWork={teacherViewWork as StudentActivity[]}
+              setCurrentTab={setCurrentTab as Dispatch<SetStateAction<NavActState>>}
+              teacherId={user?.id as string}
+            />
+          )
+      ) : <ClassroomSkeleton isActivity/>}
       </Fragment>
     );
   }

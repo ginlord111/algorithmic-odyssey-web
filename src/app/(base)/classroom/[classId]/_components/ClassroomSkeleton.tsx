@@ -1,15 +1,17 @@
 import { Card, Skeleton } from '@nextui-org/react'
 import React from 'react'
 
-const ClassroomSkeleton = () => {
+const ClassroomSkeleton = ({isActivity=false}:{isActivity?:boolean}) => {
   return (
     <div className='relative mt-10 space-y-12'>
-      <Card className='lg:mx-36 mx-4 p-4'>
+  {!isActivity && (
+        <Card className='lg:mx-36 mx-4 p-4'>
         <div className="flex items-center gap-4">
           <Skeleton className="rounded-full w-12 h-12" />
           <Skeleton className="h-10 flex-grow rounded-lg" />
         </div>
       </Card>
+  )}
 
       <Card className='lg:mx-36 mx-4 p-4 '>
         <div className="flex items-start gap-4">
