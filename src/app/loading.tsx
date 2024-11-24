@@ -7,13 +7,18 @@ const Loader = () => {
   const [blurredBackground, setBlurredBackground] = useState(false)
 
   useEffect(() => {
-    // You can toggle between white and blurred background here
-    // For example, you could set it based on a prop or some condition
-    setBlurredBackground(true) // Set to false for white background
+    setBlurredBackground(true) 
+
+    // Prevent background scrolling
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
   }, [])
 
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center">
       {blurredBackground ? (
         <div className="absolute inset-0 backdrop-blur-md" />
       ) : (
@@ -36,4 +41,3 @@ const Loader = () => {
 }
 
 export default Loader
-
