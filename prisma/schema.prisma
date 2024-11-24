@@ -1,260 +1,271 @@
 generator client {
-provider        = "prisma-client-js"
-previewFeatures = ["multiSchema"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
-provider = "postgresql"
-url      = env("DATABASE_URL")
-schemas  = ["accounts", "activity", "classroom", "files", "follow", "forums", "notifications", "sessions", "users"]
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["accounts", "activity", "bug_report", "classroom", "files", "follow", "forums", "notifications", "sessions", "users"]
 }
 
 model User {
-id                     String                  @id @default(cuid())
-userId                 String?
-username               String                  @unique
-email                  String?                 @unique
-emailVerified          DateTime?
-userImage              String?
-facebook               String?
-github                 String?
-instagram              String?
-twitter                String?
-password               String?
-emailVerificationToken String?
-isEmailVerified        Boolean                 @default(false)
-role                   String                  @default("user")
-isStudent              Boolean                 @default(true)
-level                  Int?                    @default(1)
-score                  Json?
-fullName               String?
-gameState              Json?
-lessonProgress         Json?                   @default("{\"progress\": {\"merge_sort\": \"\", \"quick_sort\": \"\", \"bubble_sort\": \"\", \"binary_search\": \"\", \"kmp_algorithm\": \"\", \"linear_search\": \"\", \"insertion_sort\": \"\", \"selection_sort\": \"\", \"sequential_search\": \"\", \"depth_first_search\": \"\", \"euclidean_algorithm\": \"\", \"breadth_first_search\": \"\"}}")
-accounts               Account[]
-teacherActivity        Activity[]              @relation("TeacherWhoCreateActivity")
-activityComments       ActivityComments[]
-StudentActivity        StudentActivity[]       @relation("StudentActivities")
-teacherClassroms       Classroom[]             @relation("TeacherClassrooms")
-classroomAnnouncement  ClassroomAnnouncement[] @relation("TeacherStudentAnnouncement")
-following              Follow[]                @relation("Followers")
-follower               Follow[]                @relation("Followings")
-forums                 Forum[]
-comments               ForumComment[]
-forumLikes             ForumLike[]
-sessions               Session[]
-classrooms             Classroom[]             @relation("StudentClassrooms")
-teacherFeedback        TeacherFeedBack[]        @relation("TeacherFeedBacks")
-@@unique([id, username, userImage, facebook, twitter, github, instagram])
-@@unique([id, username, userImage])
-@@unique([id, userImage])
-@@unique([id, fullName])
-@@unique([id, fullName, userImage])
-@@unique([id, fullName, email, userImage])
-@@schema("users")
+  id                     String                  @id @default(cuid())
+  userId                 String?
+  username               String                  @unique
+  email                  String?                 @unique
+  emailVerified          DateTime?
+  userImage              String?
+  facebook               String?
+  github                 String?
+  instagram              String?
+  twitter                String?
+  password               String?
+  emailVerificationToken String?
+  isEmailVerified        Boolean                 @default(false)
+  role                   String                  @default("user")
+  isStudent              Boolean                 @default(true)
+  level                  Int?                    @default(1)
+  score                  Json?
+  fullName               String?
+  gameState              Json?
+  lessonProgress         Json?                   @default("{\"progress\": {\"merge_sort\": \"\", \"quick_sort\": \"\", \"bubble_sort\": \"\", \"binary_search\": \"\", \"kmp_algorithm\": \"\", \"linear_search\": \"\", \"insertion_sort\": \"\", \"selection_sort\": \"\", \"sequential_search\": \"\", \"depth_first_search\": \"\", \"euclidean_algorithm\": \"\", \"breadth_first_search\": \"\"}}")
+  accounts               Account[]
+  teacherActivity        Activity[]              @relation("TeacherWhoCreateActivity")
+  activityComments       ActivityComments[]
+  StudentActivity        StudentActivity[]       @relation("StudentActivities")
+  teacherClassroms       Classroom[]             @relation("TeacherClassrooms")
+  classroomAnnouncement  ClassroomAnnouncement[] @relation("TeacherStudentAnnouncement")
+  following              Follow[]                @relation("Followers")
+  follower               Follow[]                @relation("Followings")
+  forums                 Forum[]
+  comments               ForumComment[]
+  forumLikes             ForumLike[]
+  sessions               Session[]
+  teacherFeedback        TeacherFeedBack[]       @relation("TeacherFeedBacks")
+  classrooms             Classroom[]             @relation("StudentClassrooms")
+
+  @@unique([id, username, userImage, facebook, twitter, github, instagram])
+  @@unique([id, username, userImage])
+  @@unique([id, userImage])
+  @@unique([id, fullName])
+  @@unique([id, fullName, userImage])
+  @@unique([id, fullName, email, userImage])
+  @@schema("users")
 }
 
 model Account {
-id                String  @id @default(cuid())
-userId            String
-type              String
-provider          String
-providerAccountId String
-refresh_token     String?
-access_token      String?
-expires_at        Int?
-token_type        String?
-scope             String?
-id_token          String?
-session_state     String?
-user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-@@unique([provider, providerAccountId])
-@@schema("accounts")
+  @@unique([provider, providerAccountId])
+  @@schema("accounts")
 }
 
 model Session {
-id           String   @id @default(cuid())
-sessionToken String   @unique
-userId       String
-expires      DateTime
-user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-@@schema("sessions")
+  @@schema("sessions")
 }
 
 model Forum {
-id             String         @id @default(cuid())
-userId         String
-authorUsername String
-forumImage     String?
-title          String
-caption        String?
-createdAt      DateTime       @default(now())
-titleId        String         @unique
-userImage      String
-content        Json?
-user           User           @relation(fields: [userId, authorUsername, userImage], references: [id, username, userImage], onDelete: Cascade)
-comments       ForumComment[]
-forumLikes     ForumLike[]
+  id             String         @id @default(cuid())
+  userId         String
+  authorUsername String
+  forumImage     String?
+  title          String
+  caption        String?
+  createdAt      DateTime       @default(now())
+  titleId        String         @unique
+  userImage      String
+  content        Json?
+  user           User           @relation(fields: [userId, authorUsername, userImage], references: [id, username, userImage], onDelete: Cascade)
+  comments       ForumComment[]
+  forumLikes     ForumLike[]
 
-@@schema("forums")
+  @@schema("forums")
 }
 
 model ForumLike {
-id      String @id @default(cuid())
-userId  String
-forumId String
-forums  Forum  @relation(fields: [forumId], references: [id], onDelete: Cascade)
-user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id      String @id @default(cuid())
+  userId  String
+  forumId String
+  forums  Forum  @relation(fields: [forumId], references: [id], onDelete: Cascade)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-@@schema("forums")
+  @@schema("forums")
 }
 
 model ForumComment {
-id        String   @id @default(cuid())
-comment   String
-userId    String
-userImage String
-username  String
-forumId   String
-createdAt DateTime @default(now())
-forum     Forum    @relation(fields: [forumId], references: [id], onDelete: Cascade)
-user      User     @relation(fields: [userId, userImage, username], references: [id, userImage, username], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  comment   String
+  userId    String
+  userImage String
+  username  String
+  forumId   String
+  createdAt DateTime @default(now())
+  forum     Forum    @relation(fields: [forumId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId, userImage, username], references: [id, userImage, username], onDelete: Cascade)
 
-@@schema("forums")
+  @@schema("forums")
 }
 
 model Follow {
-id                 String   @id @default(cuid())
-followerId         String
-followingId        String
-createdAt          DateTime @default(now())
-userFollowerImage  String
-userFollowingImage String
-follower           User     @relation("Followers", fields: [followerId, userFollowerImage], references: [id, userImage], onDelete: Cascade)
-following          User     @relation("Followings", fields: [followingId, userFollowingImage], references: [id, userImage], onDelete: Cascade)
+  id                 String   @id @default(cuid())
+  followerId         String
+  followingId        String
+  createdAt          DateTime @default(now())
+  userFollowerImage  String
+  userFollowingImage String
+  follower           User     @relation("Followers", fields: [followerId, userFollowerImage], references: [id, userImage], onDelete: Cascade)
+  following          User     @relation("Followings", fields: [followingId, userFollowingImage], references: [id, userImage], onDelete: Cascade)
 
-@@unique([followerId, followingId])
-@@schema("follow")
+  @@unique([followerId, followingId])
+  @@schema("follow")
 }
 
 model Notifications {
-id            String   @id @default(cuid())
-userId        String
-type          String
-from          String
-resourceId    String?
-isRead        Boolean  @default(false)
-fromUserImage String
-createdAt     DateTime @default(now())
-fromUsername  String
+  id            String   @id @default(cuid())
+  userId        String
+  type          String
+  from          String
+  resourceId    String?
+  isRead        Boolean  @default(false)
+  fromUserImage String
+  createdAt     DateTime @default(now())
+  fromUsername  String
 
-@@schema("notifications")
+  @@schema("notifications")
 }
 
 model Classroom {
-id           String                  @id @default(cuid())
-teacherId    String
-className    String
-createdAt    DateTime                @default(now())
-sectionName  String
-teacherImage String
-teacherName  String
-code         String                  @unique
-activity     Activity[]              @relation("ClassroomActivities")
-teacher      User                    @relation("TeacherClassrooms", fields: [teacherName, teacherId, teacherImage], references: [fullName, id, userImage], onDelete: Cascade)
-announcement ClassroomAnnouncement[] @relation("ClassroomAnnouncement")
-students     User[]                  @relation("StudentClassrooms")
+  id           String                  @id @default(cuid())
+  teacherId    String
+  className    String
+  createdAt    DateTime                @default(now())
+  sectionName  String
+  teacherImage String
+  teacherName  String
+  code         String                  @unique
+  activity     Activity[]              @relation("ClassroomActivities")
+  teacher      User                    @relation("TeacherClassrooms", fields: [teacherName, teacherId, teacherImage], references: [fullName, id, userImage], onDelete: Cascade)
+  announcement ClassroomAnnouncement[] @relation("ClassroomAnnouncement")
+  students     User[]                  @relation("StudentClassrooms")
 
-@@schema("classroom")
+  @@schema("classroom")
 }
 
 model Activity {
-id               String             @id @default(cuid())
-teacherId        String
-classroomId      String
-title            String
-slug             String
-createdAt        DateTime           @default(now())
-instruction      Json
-fileUrl          String
-fileUrlDownload  String
-teacherName      String
-fileType         String
-maxScore         Int
-isActivity       Boolean            @default(false)
-dueDate          DateTime?
-classroom        Classroom          @relation("ClassroomActivities", fields: [classroomId], references: [id])
-teacher          User               @relation("TeacherWhoCreateActivity", fields: [teacherId, teacherName], references: [id, fullName])
-activityComments ActivityComments[]
-StudentActivity  StudentActivity[]
+  id               String             @id @default(cuid())
+  teacherId        String
+  classroomId      String
+  title            String
+  slug             String
+  createdAt        DateTime           @default(now())
+  instruction      Json
+  fileUrl          String
+  fileUrlDownload  String
+  teacherName      String
+  fileType         String
+  maxScore         Int
+  isActivity       Boolean            @default(false)
+  dueDate          DateTime?
+  classroom        Classroom          @relation("ClassroomActivities", fields: [classroomId], references: [id])
+  teacher          User               @relation("TeacherWhoCreateActivity", fields: [teacherId, teacherName], references: [id, fullName])
+  activityComments ActivityComments[]
+  StudentActivity  StudentActivity[]
 
-@@schema("activity")
+  @@schema("activity")
 }
 
 model StudentActivity {
-id               String    @id @default(cuid())
-studentId        String
-activityId       String
-score            Int?
-isCompleted      Boolean   @default(false)
-completedAt      DateTime?
-fileSubmittedUrl String?
-fileName         String?
-fileType         String?
-studentAvatar    String
-studentEmail     String
-studentName      String
-isGraded         Boolean   @default(false)
-codeSubmitted    String?
-codeLang         String?
-teacherFeedBackId String?
-activity         Activity  @relation(fields: [activityId], references: [id])
-student          User      @relation("StudentActivities", fields: [studentId, studentName, studentAvatar, studentEmail], references: [id, fullName, userImage, email])
-teacherFeedback  TeacherFeedBack? @relation(fields: [teacherFeedBackId], references: [id])
-@@schema("activity")
+  id                String           @id @default(cuid())
+  studentId         String
+  activityId        String
+  score             Int?
+  isCompleted       Boolean          @default(false)
+  completedAt       DateTime?
+  fileSubmittedUrl  String?
+  fileName          String?
+  fileType          String?
+  studentAvatar     String
+  studentEmail      String
+  studentName       String
+  isGraded          Boolean          @default(false)
+  codeSubmitted     String?
+  codeLang          String?
+  teacherFeedBackId String?
+  activity          Activity         @relation(fields: [activityId], references: [id])
+  student           User             @relation("StudentActivities", fields: [studentId, studentName, studentAvatar, studentEmail], references: [id, fullName, userImage, email])
+  teacherFeedback   TeacherFeedBack? @relation(fields: [teacherFeedBackId], references: [id])
+
+  @@schema("activity")
 }
 
 model ClassroomAnnouncement {
-id          String    @id @default(cuid())
-image       String?
-classroomId String
-userImage   String
-userId      String
-createdAt   DateTime  @default(now())
-content     Json?
-fullName    String
-classroom   Classroom @relation("ClassroomAnnouncement", fields: [classroomId], references: [id])
-user        User      @relation("TeacherStudentAnnouncement", fields: [userId, userImage, fullName], references: [id, userImage, fullName])
+  id          String    @id @default(cuid())
+  image       String?
+  classroomId String
+  userImage   String
+  userId      String
+  createdAt   DateTime  @default(now())
+  content     Json?
+  fullName    String
+  classroom   Classroom @relation("ClassroomAnnouncement", fields: [classroomId], references: [id])
+  user        User      @relation("TeacherStudentAnnouncement", fields: [userId, userImage, fullName], references: [id, userImage, fullName])
 
-@@schema("classroom")
+  @@schema("classroom")
 }
 
 model ActivityComments {
-id         String   @id @default(cuid())
-comment    String
-userId     String
-userImage  String
-username   String
-activityId String
-createdAt  DateTime @default(now())
-activity   Activity @relation(fields: [activityId], references: [id])
-user       User     @relation(fields: [userId, username, userImage], references: [id, fullName, userImage])
+  id         String   @id @default(cuid())
+  comment    String
+  userId     String
+  userImage  String
+  username   String
+  activityId String
+  createdAt  DateTime @default(now())
+  activity   Activity @relation(fields: [activityId], references: [id])
+  user       User     @relation(fields: [userId, username, userImage], references: [id, fullName, userImage])
 
-@@schema("activity")
+  @@schema("activity")
 }
 
-model TeacherFeedBack{
-id          String   @id @default(cuid())
-teacherId   String
-feedback    String
-teacherImage String
-teacherName String
-studentScore String
-studActId   String
-createdAt   DateTime @default(now())
-teacher     User     @relation("TeacherFeedBacks",fields: [teacherId,teacherImage,teacherName], references: [id,userImage,fullName])
-studentActivity StudentActivity[]
-@@schema("users")
+model TeacherFeedBack {
+  id              String            @id @default(cuid())
+  teacherId       String
+  feedback        String
+  teacherImage    String
+  teacherName     String
+  studentScore    String
+  createdAt       DateTime          @default(now())
+  studActId       String
+  studentActivity StudentActivity[]
+  teacher         User              @relation("TeacherFeedBacks", fields: [teacherId, teacherImage, teacherName], references: [id, userImage, fullName])
+
+  @@schema("users")
 }
 
+model BugReport {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+
+  @@schema("bug_report")
+}
