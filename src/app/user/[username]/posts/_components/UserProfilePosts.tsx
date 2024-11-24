@@ -8,7 +8,7 @@ import React, { Fragment } from 'react'
       <Fragment>
         {forums.map((forum) => (
           <Fragment key={forum.id}>
-            <ForumContainer {...forum} className="lg:mx-[200px]" userLikes={userLikes} />
+            <ForumContainer {...forum} className="lg:mx-[200px] pt-10" userLikes={userLikes} />
           </Fragment>
         ))}
       </Fragment>

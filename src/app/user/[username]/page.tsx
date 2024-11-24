@@ -40,7 +40,7 @@ const UserPostsPage = async ({ params }: { params: { username: string } }) => {
   }
 
   return (
-    <Suspense fallback={<Loader2 className="h-16 w-16 animate-spin"/>}> 
+    <Suspense fallback={<div className="flex items-center justify-center w-full"><Loader2 className="h-16 w-16 animate-spin"/></div>}> 
 <UserProfilePosts forums={forums} userLikes={userLikes}/>
       </Suspense>
     )
