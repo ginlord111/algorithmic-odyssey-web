@@ -1,12 +1,14 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { NavClasState } from "@/types/types";
 import Announcement from "./Announcement";
 import PendingTask from "./PendingTask";
 import GradedTask from "./GradedTask";
 import Classwork from "./Classwork";
 import { Activity, StudentActivity } from "@prisma/client";
+import ClassroomSkeleton from "./ClassroomSkeleton";
+import ForumSkeleton from "@/components/forum/ForumSkeleton";
 const SubjectContainer = ({classId,classActs,studentActs}:{classId:string,classActs:Activity[],studentActs:StudentActivity[]}) => {
   const searchParams = useSearchParams();
   
@@ -23,8 +25,9 @@ const SubjectContainer = ({classId,classActs,studentActs}:{classId:string,classA
   const pendingTasks = classActs.filter((act) => !isCompletedTaskIds.includes(act.id));
  
   return (
-    <div>
-      {currentTab === "announcement" ? (
+    <Fragment>
+ {currentTab ? (
+       currentTab === "announcement" ? (
         <Announcement classId={classId}/>
       ) : currentTab === "pending-task" ? (
         <PendingTask  pendingTasks={pendingTasks} />
@@ -35,8 +38,9 @@ const SubjectContainer = ({classId,classActs,studentActs}:{classId:string,classA
         <GradedTask gradedTasks={gradedTasks} 
         studentActs={studentActs}
         />
-      )}
-    </div>
+      )
+ ): <ClassroomSkeleton />}
+    </Fragment>
   );
 };
 
