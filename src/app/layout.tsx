@@ -10,6 +10,7 @@ import NextAuthProvider from "@/components/provider/NextAuthProvider";
 import { Suspense } from "react";
 import NextTopLoader from "nextjs-toploader";
 import { TopLoader } from "@/components/layout/TopLoader";
+import { BugReport } from "@/components/layout/BugReport";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "600", "700"] });
 export const metadata: Metadata = {
   title: "Algorithmic Odyssey",
@@ -43,6 +44,7 @@ export default function RootLayout({
             </Query>
           </Provider>
         </main>
+        <BugReport />
         <Footer />
       </body>
     </html>
