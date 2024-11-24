@@ -61,6 +61,7 @@ const Announcement = ({ classId }: { classId: string }) => {
   const {data:classAnn, refetch,isRefetching,isLoading,isPending,isSuccess} = useQuery({
     queryKey:['fetch-class-ann'],
     queryFn:fetchClassAnnouncement,
+    refetchOnWindowFocus: false,
 
   });
 
