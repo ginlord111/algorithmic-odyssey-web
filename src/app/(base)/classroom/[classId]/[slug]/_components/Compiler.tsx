@@ -79,7 +79,11 @@ const Compiler = ({ user, act,studentWork }: { user: User; act: Activity,student
   const {isOpen, onOpenChange, onOpen,onClose} = useDisclosure();
   const studentId = searchParams.get("student");
   const isPastDueDate = useMemo(()=> {
-    return isPastDate(act.dueDate as Date)
+    if(act.dueDate){
+      return isPastDate(act.dueDate as Date)
+    }else{
+      return false
+    }
    },[act.dueDate])
   const updateCompilerContent = (code: string,initLang?:string) => {
     if (code) {
@@ -224,10 +228,10 @@ const Compiler = ({ user, act,studentWork }: { user: User; act: Activity,student
       const data = await shouldRenderSubmitButton(act?.id, studentId as string);
       setRenderSubmitBtn(data?.isCompleted as boolean);
       setTargetStud(data)
-      console.log("RENDER DATAA", data)
+      console.log("RENDER dasdasdas", data)
     }
     else{
-      return;
+     setTargetStud(studentWork as StudentActivity)
     }
     };
     renderSubmitButton();
@@ -258,14 +262,15 @@ const Compiler = ({ user, act,studentWork }: { user: User; act: Activity,student
     };
 
     fetchTaskDone();
-  }, [act, user]);
+  }, [act, user,isLoading]);
   const handleGrade = () => {
     onOpen()
   }
   console.log(targetStud, "target sutd WORK")  
+  console.log(studentWork, "STUDENT WORK kewkewqeq")  
   return (
     <div className="relative mt-10">
-      <InputGradeModal  isOpen={isOpen} onOpenChange={onOpenChange} targetStud={targetStud} onClose={onClose}/>
+      <InputGradeModal  isOpen={isOpen} onOpenChange={onOpenChange} targetStud={targetStud} onClose={onClose} teacherId={act.teacherId}/>
       {isTaskDone?.isCompleted && !isTaskDone.score ? (
         <div className="flex items-center justify-center flex-col space-y-2">
           <Image
@@ -307,7 +312,7 @@ const Compiler = ({ user, act,studentWork }: { user: User; act: Activity,student
                 )}
               </Button>
             ) }
-      {renderSubmitBtn || !targetStud?.score || !studentId  && (
+      {renderSubmitBtn  && studentId && !targetStud?.score  && (
            <Button className="bg-purple-700 hover:bg-purple-700 text-white" 
            onClick={()=>handleGrade()}
               >
@@ -315,7 +320,7 @@ const Compiler = ({ user, act,studentWork }: { user: User; act: Activity,student
               </Button>
        )}
           </div>
-         {isPastDueDate &&  <span className="text-end italic text-muted-foreground">Work cannot be submit after the due date</span>}
+         { isPastDueDate &&  <span className="text-end italic text-muted-foreground">Work cannot be submit after the due date</span>}
           <span className={`text-red-500 md:text-base text-sm  ${showError ? 'block' : 'hidden'}`}> <Ban className="inline-block w-4 h-4"/> Please run the code first or correct any errors</span>
           <iframe
             ref={iframeRef}

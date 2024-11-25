@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["accounts", "activity", "bug_report", "classroom", "files", "follow", "forums", "notifications", "sessions", "users", "archived"]
+  schemas  = ["accounts", "activity", "archived", "bug_report", "classroom", "files", "follow", "forums", "notifications", "sessions", "users"]
 }
 
 model User {
@@ -35,6 +35,7 @@ model User {
   teacherActivity        Activity[]              @relation("TeacherWhoCreateActivity")
   activityComments       ActivityComments[]
   StudentActivity        StudentActivity[]       @relation("StudentActivities")
+  archived               Archived?               @relation("Archive")
   teacherClassroms       Classroom[]             @relation("TeacherClassrooms")
   classroomAnnouncement  ClassroomAnnouncement[] @relation("TeacherStudentAnnouncement")
   following              Follow[]                @relation("Followers")
@@ -45,7 +46,6 @@ model User {
   sessions               Session[]
   teacherFeedback        TeacherFeedBack[]       @relation("TeacherFeedBacks")
   classrooms             Classroom[]             @relation("StudentClassrooms")
-  archived               Archived?               @relation("Archive")
 
   @@unique([id, username, userImage, facebook, twitter, github, instagram])
   @@unique([id, username, userImage])
@@ -96,10 +96,10 @@ model Forum {
   titleId        String         @unique
   userImage      String
   content        Json?
+  archived       Archived?      @relation("Archive")
   user           User           @relation(fields: [userId, authorUsername, userImage], references: [id, username, userImage], onDelete: Cascade)
   comments       ForumComment[]
   forumLikes     ForumLike[]
-  archived           Archived?               @relation("Archive")
 
   @@schema("forums")
 }
@@ -115,16 +115,17 @@ model ForumLike {
 }
 
 model ForumComment {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   comment   String
   userId    String
   userImage String
   username  String
   forumId   String
-  createdAt DateTime @default(now())
-  forum     Forum    @relation(fields: [forumId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId, userImage, username], references: [id, userImage, username], onDelete: Cascade)
-archived               Archived?               @relation("Archive") 
+  createdAt DateTime  @default(now())
+  archived  Archived? @relation("Archive")
+  forum     Forum     @relation(fields: [forumId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId, userImage, username], references: [id, userImage, username], onDelete: Cascade)
+
   @@schema("forums")
 }
 
@@ -192,7 +193,8 @@ model Activity {
   teacher          User               @relation("TeacherWhoCreateActivity", fields: [teacherId, teacherName], references: [id, fullName], onDelete: Cascade)
   activityComments ActivityComments[]
   StudentActivity  StudentActivity[]
-  archived          Archived?             @relation("Archive")
+  archived         Archived?          @relation("Archive")
+
   @@schema("activity")
 }
 
@@ -274,16 +276,16 @@ model BugReport {
 }
 
 model Archived {
-  id         String   @id @default(cuid())
-  userId     String?   @unique
-  forumId     String? @unique
-  forumCommentId String? @unique
-  activityId String? @unique
-  archivedAt DateTime @default(now())
+  id             String        @id @default(cuid())
+  userId         String?       @unique
+  forumId        String?       @unique
+  forumCommentId String?       @unique
+  activityId     String?       @unique
+  archivedAt     DateTime      @default(now())
+  activity       Activity?     @relation("Archive", fields: [activityId], references: [id])
+  forumComment   ForumComment? @relation("Archive", fields: [forumCommentId], references: [id], onDelete: Cascade)
+  forum          Forum?        @relation("Archive", fields: [forumId], references: [id], onDelete: Cascade)
+  user           User?         @relation("Archive", fields: [userId], references: [id], onDelete: Cascade)
 
-  user       User?     @relation("Archive", fields: [userId], references: [id], onDelete: Cascade)
-  forum     Forum?     @relation("Archive", fields: [forumId], references: [id], onDelete: Cascade)  
-  forumComment  ForumComment? @relation("Archive", fields: [forumCommentId], references: [id], onDelete: Cascade) 
-  activity   Activity?  @relation("Archive", fields: [activityId], references: [id])
   @@schema("archived")
 }

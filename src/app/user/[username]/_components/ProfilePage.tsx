@@ -1,7 +1,7 @@
 "use client";
 import { Button as ButtonShadCn } from "@/components/ui/button";
 import { User } from "@prisma/client";
-import { Settings, Camera, Loader2, Pencil } from "lucide-react";
+import { Settings, Camera, Loader2, Pencil,CircleAlert  } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { Fragment, useEffect, useRef, useState } from "react";
@@ -36,6 +36,7 @@ const ProfilePage = ({
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [tempUsername, setTempUsername] = useState<string>(username);
   const [isLoadingUsername, setIsLoadingUsername] = useState<boolean>(false);
+  const [errMessage, setErrorMessage] = useState<string>("");
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -75,7 +76,8 @@ const ProfilePage = ({
     }
   }, []);
 const onSaveUsername = async (username:string) => {  
-  setIsLoadingUsername(true); 
+  setIsLoadingUsername(true);
+  setErrorMessage(""); 
   const response = await fetch("/api/profile/edit/", {
     method: "POST",
     body: JSON.stringify({ userId:id,username:username }),
@@ -85,6 +87,10 @@ const onSaveUsername = async (username:string) => {
     router.refresh();
     router.push(`/user/${username}`);
     toast.success("Edit profile successfully");
+  }
+  else{
+    const data = await response.json();
+    setErrorMessage(data.error);
   }
 }
   const handleBlur = () => {
@@ -159,6 +165,7 @@ const onSaveUsername = async (username:string) => {
               />
               <ButtonShadCn className="bg-blue-500 w-14 text-xs md:text-base md:w-fit" onClick={()=>onSaveUsername(tempUsername)}>{isLoadingUsername ? <Loader2 className="animate-spin h-4 w-4"/> : "Save"}</ButtonShadCn>
               <ButtonShadCn className="bg-red-500 w-14 text-xs md:text-base md:w-fit" onClick={handleBlur}>Cancel</ButtonShadCn>
+             {errMessage &&  <span className="text-red-500 text-sm italic"><CircleAlert  className="w-4 h-4 inline-block"/> {errMessage} </span>}
            </div>
             ) : (
               <button
@@ -255,24 +262,7 @@ const onSaveUsername = async (username:string) => {
             </Link> */}
           </div>
         </div>
-        {session?.user.email === email ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger className="h-fit mt-10" asChild>
-              <ButtonShadCn variant="ghost" className="border-transparent">
-                <Settings />
-              </ButtonShadCn>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>Settings</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleSignOut}>
-                Log out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <FollowBtn className="pt-3" followingId={id} />
-        )}
+  {session?.user.email !==email && <FollowBtn className="pt-3" followingId={id} />}
       </div>
     </div>
   );
