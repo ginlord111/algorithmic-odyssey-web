@@ -1,83 +1,91 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { ThumbsUp, MessageSquareText } from "lucide-react";
-import { Button } from "@nextui-org/react";
-import { isForumLike } from "@/helper/is-forum-like";
-import { ForumLike } from "@prisma/client";
-import { signIn, useSession } from "next-auth/react";
-import Link from "next/link";
-const ForumButtons = ({
+"use client"
+
+import React, { useEffect, useState } from "react"
+import { ThumbsUp, MessageSquare } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import { isForumLike } from "@/helper/is-forum-like"
+import { ForumLike } from "@prisma/client"
+import { signIn, useSession } from "next-auth/react"
+import Link from "next/link"
+import { cn } from "@/lib/utils"
+
+interface ForumButtonsProps {
+  likes: number
+  forumId: string
+  userLikes?: ForumLike[]
+  route: string
+  comments: number
+  postOwner: string
+}
+
+export default function ForumButtons({
   likes,
   forumId,
   userLikes = [],
   route,
   comments,
   postOwner,
-}: {
-  likes: number;
-  forumId: string;
-  userLikes?: ForumLike[];
-  route:string,
-  comments:number,
-  postOwner:string,
-}) => {
-  const [isClick, setIsClick] = useState<boolean | null>(null);
-  const [likeCount, setLikesCount] = useState<number>(likes);
-  const [commentCount , setCommentCount] = useState<number>(comments)
-  const [likeForum, setLikForum] = useState<boolean>();
+}: ForumButtonsProps) {
+  const [isLiked, setIsLiked] = useState<boolean>(false)
+  const [likeCount, setLikeCount] = useState<number>(likes)
+  const [commentCount, setCommentCount] = useState<number>(comments)
   const { data: session } = useSession()
-  const handleLike = async (id: string) => {
-    if (!id) return;
-    /// if user is not authenitcated redirect to sign in
-      if(!session?.user.id){
-        return signIn()
-      }
+
+  useEffect(() => {
+    const temp = isForumLike(userLikes, forumId)
+    setIsLiked(temp)
+  }, [userLikes, forumId])
+
+  const handleLike = async () => {
+    if (!forumId) return
+    if (!session?.user.id) {
+      return signIn()
+    }
+
     try {
       const response = await fetch("/api/forum/like", {
         method: "POST",
-        body: JSON.stringify({ id,postOwner,route}),
-      });
-      if (response.status === 400) {
-        return;
-      }
+        body: JSON.stringify({ id: forumId, postOwner, route }),
+      })
 
-      const data = await response.json();
-      const { isAlreadyLiked } =  data;
-      setLikesCount((like) => (isAlreadyLiked.length > 0 ? like - 1 : like + 1));
-      setIsClick((active) =>
-        isAlreadyLiked.length > 0 ? (active = false) : (active = true)
-      );
+      if (response.status === 400) return
+
+      const data = await response.json()
+      const { isAlreadyLiked } = data
+
+      setLikeCount((prevCount) => (isAlreadyLiked.length > 0 ? prevCount - 1 : prevCount + 1))
+      setIsLiked((prevState) => !prevState)
     } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
+      console.error("There was a problem with the like operation:", error)
     }
-  };
-
-  useEffect(() => {
-    const temp = isForumLike(userLikes, forumId);
-    setLikForum(temp);
-  }, [userLikes,forumId]);
-
+  }
 
   return (
-    <div className="flex flex-row gap-4 mt-4">
+    <div className="flex items-center space-x-2">
       <Button
-        isIconOnly
-        size="md"
-        onClick={() => handleLike(forumId)}
-        color={isClick ?? likeForum ? "success" : "default"}
-        className="p-1"
+        variant="ghost"
+        size="sm"
+        onClick={handleLike}
+        className={cn(
+          "flex items-center space-x-1 transition-colors",
+          isLiked && "text-primary hover:text-primary"
+        )}
       >
-        <ThumbsUp className="h-6 w-6 mr-1" />
-        <span className="font-bold text-[15px] ">{likeCount}</span>
+        <ThumbsUp className={cn("h-4 w-4", isLiked && "text-blue-500 fill-blue-500")} />
+        <span className="text-sm font-medium">{likeCount}</span>
       </Button>
-      <Link href={route}> 
-      <Button isIconOnly size="md" className="p-1">
-        <MessageSquareText className="h-6 w-6 mr-1" />
-        <span className="font-bold text-[15px] ">{commentCount}</span>
+      <Button
+        variant="ghost"
+        size="sm"
+        asChild
+        className="flex items-center space-x-1"
+      >
+        <Link href={route}>
+          <MessageSquare className="h-4 w-4" />
+          <span className="text-sm font-medium">{commentCount}</span>
+        </Link>
       </Button>
-      </Link>
     </div>
-  );
-};
+  )
+}
 
-export default ForumButtons;

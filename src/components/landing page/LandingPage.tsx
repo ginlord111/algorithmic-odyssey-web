@@ -59,7 +59,7 @@ const LandingPage = () => {
               Learn now
             </Link>
             <Link
-              href="https://algo-thesis.onrender.com"
+              href="https://algo-thesis.onrender.com/tutorial"
               target="_blank"
               className="bg-[#003459] p-3 px-6 rounded-md text-lg font-bold text-[white]"
             >
