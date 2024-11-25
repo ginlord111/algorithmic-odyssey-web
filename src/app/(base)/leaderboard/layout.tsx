@@ -8,7 +8,7 @@ export default function RootLayout ({
   }>)  {
   return (
 <Fragment>
-<Header />
+<Header title="Leaderboard"/>
 {children}
 </Fragment>
 

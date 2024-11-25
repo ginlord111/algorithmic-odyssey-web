@@ -17,6 +17,7 @@ try {
 
 
 
+
 } catch (error) {
   console.log(error, "ERROR")
 }
@@ -45,5 +46,7 @@ console.log(sortUser, "SORTED USER")
 
 return NextResponse.json({users:sortUser}, {status:200, headers})
 }
+
+
 
 
