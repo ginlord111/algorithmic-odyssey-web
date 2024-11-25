@@ -186,8 +186,8 @@ model Activity {
   maxScore         Int
   isActivity       Boolean            @default(false)
   dueDate          DateTime?
-  classroom        Classroom          @relation("ClassroomActivities", fields: [classroomId], references: [id])
-  teacher          User               @relation("TeacherWhoCreateActivity", fields: [teacherId, teacherName], references: [id, fullName])
+  classroom        Classroom          @relation("ClassroomActivities", fields: [classroomId], references: [id], onDelete:   Cascade)
+  teacher          User               @relation("TeacherWhoCreateActivity", fields: [teacherId, teacherName], references: [id, fullName], onDelete:Cascade) 
   activityComments ActivityComments[]
   StudentActivity  StudentActivity[]
 
@@ -211,9 +211,9 @@ model StudentActivity {
   codeSubmitted     String?
   codeLang          String?
   teacherFeedBackId String?
-  activity          Activity         @relation(fields: [activityId], references: [id])
-  student           User             @relation("StudentActivities", fields: [studentId, studentName, studentAvatar, studentEmail], references: [id, fullName, userImage, email])
-  teacherFeedback   TeacherFeedBack? @relation(fields: [teacherFeedBackId], references: [id])
+  activity          Activity         @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  student           User             @relation("StudentActivities", fields: [studentId, studentName, studentAvatar, studentEmail], references: [id, fullName, userImage, email], onDelete: Cascade)
+  teacherFeedback   TeacherFeedBack? @relation(fields: [teacherFeedBackId], references: [id],onDelete: Cascade)
 
   @@schema("activity")
 }
@@ -227,8 +227,8 @@ model ClassroomAnnouncement {
   createdAt   DateTime  @default(now())
   content     Json?
   fullName    String
-  classroom   Classroom @relation("ClassroomAnnouncement", fields: [classroomId], references: [id])
-  user        User      @relation("TeacherStudentAnnouncement", fields: [userId, userImage, fullName], references: [id, userImage, fullName])
+  classroom   Classroom @relation("ClassroomAnnouncement", fields: [classroomId], references: [id], onDelete: Cascade)
+  user        User      @relation("TeacherStudentAnnouncement", fields: [userId, userImage, fullName], references: [id, userImage, fullName],onDelete: Cascade)
 
   @@schema("classroom")
 }
@@ -241,8 +241,8 @@ model ActivityComments {
   username   String
   activityId String
   createdAt  DateTime @default(now())
-  activity   Activity @relation(fields: [activityId], references: [id])
-  user       User     @relation(fields: [userId, username, userImage], references: [id, fullName, userImage])
+  activity   Activity @relation(fields: [activityId], references: [id],onDelete: Cascade) 
+  user       User     @relation(fields: [userId, username, userImage], references: [id, fullName, userImage],onDelete:Cascade)
 
   @@schema("activity")
 }
@@ -257,7 +257,7 @@ model TeacherFeedBack {
   createdAt       DateTime          @default(now())
   studActId       String
   studentActivity StudentActivity[]
-  teacher         User              @relation("TeacherFeedBacks", fields: [teacherId, teacherImage, teacherName], references: [id, userImage, fullName])
+  teacher         User              @relation("TeacherFeedBacks", fields: [teacherId, teacherImage, teacherName], references: [id, userImage, fullName],onDelete: Cascade)
 
   @@schema("users")
 }
