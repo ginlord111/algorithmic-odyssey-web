@@ -7,7 +7,7 @@ export default function RootLayout({
 }>) {
   return (
     <Fragment>
-      <Header className="md:h-[40vh]" />
+      <Header className="md:h-[40vh]" title="Classroom" />
    
       {children}
     </Fragment>

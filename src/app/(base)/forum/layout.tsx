@@ -9,7 +9,7 @@ export default function RootLayout({
 }>) {
   return (
     <Fragment>
-      <Header />
+      <Header title="Forum"/>
       {/* <SidebarForum /> */}
       {children}
     </Fragment>

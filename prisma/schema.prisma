@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["accounts", "activity", "bug_report", "classroom", "files", "follow", "forums", "notifications", "sessions", "users"]
+  schemas  = ["accounts", "activity", "archived", "bug_report", "classroom", "files", "follow", "forums", "notifications", "sessions", "users"]
 }
 
 model User {
@@ -35,6 +35,7 @@ model User {
   teacherActivity        Activity[]              @relation("TeacherWhoCreateActivity")
   activityComments       ActivityComments[]
   StudentActivity        StudentActivity[]       @relation("StudentActivities")
+  archived               Archived?               @relation("Archive")
   teacherClassroms       Classroom[]             @relation("TeacherClassrooms")
   classroomAnnouncement  ClassroomAnnouncement[] @relation("TeacherStudentAnnouncement")
   following              Follow[]                @relation("Followers")
@@ -95,6 +96,7 @@ model Forum {
   titleId        String         @unique
   userImage      String
   content        Json?
+  archived       Archived?      @relation("Archive")
   user           User           @relation(fields: [userId, authorUsername, userImage], references: [id, username, userImage], onDelete: Cascade)
   comments       ForumComment[]
   forumLikes     ForumLike[]
@@ -113,15 +115,16 @@ model ForumLike {
 }
 
 model ForumComment {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   comment   String
   userId    String
   userImage String
   username  String
   forumId   String
-  createdAt DateTime @default(now())
-  forum     Forum    @relation(fields: [forumId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId, userImage, username], references: [id, userImage, username], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  archived  Archived? @relation("Archive")
+  forum     Forum     @relation(fields: [forumId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId, userImage, username], references: [id, userImage, username], onDelete: Cascade)
 
   @@schema("forums")
 }
@@ -186,10 +189,11 @@ model Activity {
   maxScore         Int
   isActivity       Boolean            @default(false)
   dueDate          DateTime?
-  classroom        Classroom          @relation("ClassroomActivities", fields: [classroomId], references: [id])
-  teacher          User               @relation("TeacherWhoCreateActivity", fields: [teacherId, teacherName], references: [id, fullName])
+  classroom        Classroom          @relation("ClassroomActivities", fields: [classroomId], references: [id], onDelete: Cascade)
+  teacher          User               @relation("TeacherWhoCreateActivity", fields: [teacherId, teacherName], references: [id, fullName], onDelete: Cascade)
   activityComments ActivityComments[]
   StudentActivity  StudentActivity[]
+  archived         Archived?          @relation("Archive")
 
   @@schema("activity")
 }
@@ -211,9 +215,9 @@ model StudentActivity {
   codeSubmitted     String?
   codeLang          String?
   teacherFeedBackId String?
-  activity          Activity         @relation(fields: [activityId], references: [id])
-  student           User             @relation("StudentActivities", fields: [studentId, studentName, studentAvatar, studentEmail], references: [id, fullName, userImage, email])
-  teacherFeedback   TeacherFeedBack? @relation(fields: [teacherFeedBackId], references: [id])
+  activity          Activity         @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  student           User             @relation("StudentActivities", fields: [studentId, studentName, studentAvatar, studentEmail], references: [id, fullName, userImage, email], onDelete: Cascade)
+  teacherFeedback   TeacherFeedBack? @relation(fields: [teacherFeedBackId], references: [id], onDelete: Cascade)
 
   @@schema("activity")
 }
@@ -227,8 +231,8 @@ model ClassroomAnnouncement {
   createdAt   DateTime  @default(now())
   content     Json?
   fullName    String
-  classroom   Classroom @relation("ClassroomAnnouncement", fields: [classroomId], references: [id])
-  user        User      @relation("TeacherStudentAnnouncement", fields: [userId, userImage, fullName], references: [id, userImage, fullName])
+  classroom   Classroom @relation("ClassroomAnnouncement", fields: [classroomId], references: [id], onDelete: Cascade)
+  user        User      @relation("TeacherStudentAnnouncement", fields: [userId, userImage, fullName], references: [id, userImage, fullName], onDelete: Cascade)
 
   @@schema("classroom")
 }
@@ -241,8 +245,8 @@ model ActivityComments {
   username   String
   activityId String
   createdAt  DateTime @default(now())
-  activity   Activity @relation(fields: [activityId], references: [id])
-  user       User     @relation(fields: [userId, username, userImage], references: [id, fullName, userImage])
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId, username, userImage], references: [id, fullName, userImage], onDelete: Cascade)
 
   @@schema("activity")
 }
@@ -257,7 +261,7 @@ model TeacherFeedBack {
   createdAt       DateTime          @default(now())
   studActId       String
   studentActivity StudentActivity[]
-  teacher         User              @relation("TeacherFeedBacks", fields: [teacherId, teacherImage, teacherName], references: [id, userImage, fullName])
+  teacher         User              @relation("TeacherFeedBacks", fields: [teacherId, teacherImage, teacherName], references: [id, userImage, fullName], onDelete: Cascade)
 
   @@schema("users")
 }
@@ -269,4 +273,19 @@ model BugReport {
   createdAt   DateTime @default(now())
 
   @@schema("bug_report")
+}
+
+model Archived {
+  id             String        @id @default(cuid())
+  userId         String?       @unique
+  forumId        String?       @unique
+  forumCommentId String?       @unique
+  activityId     String?       @unique
+  archivedAt     DateTime      @default(now())
+  activity       Activity?     @relation("Archive", fields: [activityId], references: [id])
+  forumComment   ForumComment? @relation("Archive", fields: [forumCommentId], references: [id], onDelete: Cascade)
+  forum          Forum?        @relation("Archive", fields: [forumId], references: [id], onDelete: Cascade)
+  user           User?         @relation("Archive", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@schema("archived")
 }

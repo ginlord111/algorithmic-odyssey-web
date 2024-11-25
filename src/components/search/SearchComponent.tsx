@@ -139,7 +139,7 @@ useEffect(() => {
         </div>
         <Input
           placeholder="Search"
-          className="bg-[#F7EAD9] focus:outline-none text-[#242424] placeholder-gray-400 font-normal rounded-full pl-8"
+          className="bg-[#FFFF] focus:outline-none text-[#242424] placeholder-gray-400 font-normal rounded-full pl-8"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
         />

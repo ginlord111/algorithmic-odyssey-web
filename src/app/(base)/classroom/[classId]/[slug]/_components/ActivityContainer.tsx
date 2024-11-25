@@ -47,7 +47,7 @@ const ActivityContainer = ({
      currentTab === "instruction" ? (
       <InstructionTab act={act} />
     ) : currentTab === "compiler" ? (
-      <Compiler    user={user as User} act={act}/>
+      <Compiler    user={user as User} act={act}  studentWork={studentWork as StudentActivity}/>
     ) : (
       <Works
         user={user as User}
