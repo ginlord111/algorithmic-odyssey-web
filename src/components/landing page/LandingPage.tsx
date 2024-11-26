@@ -137,7 +137,7 @@ const LandingPage = () => {
                     <h3 className="font-bold tracking-wide text-2xl h-fit text-white">
                       {card.title}
                     </h3>
-                    <p className="text-md text-gray-400">{card.desc}</p>
+                    <p className="text-md text-white">{card.desc}</p>
                   </div>
                 </CardBody>
               </Card>

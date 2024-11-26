@@ -7,23 +7,23 @@ const Footer = () => {
   const socials = [
     {
       icon: Instagram,
-      onClick: () => {},
+     href:"https://www.instagram.com/algorithmic.odyssey"
     },
     {
       icon: Twitter,
-      onClick: () => {},
+    href:"https://www.instagram.com/algorithmic.odyssey",
     },
     {
       icon: Facebook,
-      onClick: () => {},
+      href:"https://www.facebook.com/profile.php?id=61567663286434",
     },
     {
       icon: Github,
-      onClick: () => {},
+    href:"https://github.com/ginlord111/algorithmic-odyssey-web",
     },
     {
       icon: Youtube,
-      onClick: () => {},
+      href:"/",
     },
   ];
   const ourPages = [
@@ -63,7 +63,11 @@ const Footer = () => {
               </h1>
               <div className="flex items-center gap-4">
                 {socials.map((social, index) => (
-                  <social.icon key={index} className="text-white w-6 h-6" />
+    
+           <Link  href={social.href as string}>
+                <social.icon key={index} className="text-white w-6 h-6"/>
+           </Link>
+         
                 ))}
               </div>
               <div className="text-md text-white">

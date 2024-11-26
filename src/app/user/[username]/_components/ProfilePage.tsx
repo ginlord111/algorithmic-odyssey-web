@@ -6,14 +6,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "@nextui-org/react";
 import FollowBtn from "./FollowBtn";

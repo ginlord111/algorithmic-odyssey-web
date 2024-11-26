@@ -27,9 +27,9 @@ const ClassroomCard = ({ sub }: { sub: Classroom, }) => {
     </div>
 
         <div className="absolute !text-white px-3">
-          <p className="text-xl font-bold hover:underline transition">{sub.className}</p>
-          <p className="text-md font-semibold hover:underline transition">{sub.sectionName}</p>
-          <p className="text-md font-semibold hover:underline transition">{sub.teacherName}</p>
+          <p className="text-xl font-bold transition">{sub.className}</p>
+          <p className="text-md font-semibold transition">{sub.sectionName}</p>
+          <p className="text-md font-semiboldtransition">{sub.teacherName}</p>
             <Avatar 
             showFallback
             src={sub.teacherImage}
