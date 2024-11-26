@@ -150,7 +150,6 @@ export default function NavBar() {
             <Link
               href={item.href}
               className="text-xl"
-              target={item.name === "Game" ? "_blank" : ""}
             >
               {item.name}
             </Link>
