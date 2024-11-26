@@ -49,7 +49,12 @@ const SubmittingWorks = ({
     setIsLoading(false);
   };
   const isPastDueDate = useMemo(()=> {
+   if(act.dueDate){
     return isPastDate(act.dueDate as Date)
+   }
+   else{
+     return false
+    }
    },[act.dueDate])
   return (
   <Fragment>

@@ -10,20 +10,12 @@ const Footer = () => {
      href:"https://www.instagram.com/algorithmic.odyssey"
     },
     {
-      icon: Twitter,
-    href:"https://www.instagram.com/algorithmic.odyssey",
-    },
-    {
       icon: Facebook,
       href:"https://www.facebook.com/profile.php?id=61567663286434",
     },
     {
       icon: Github,
     href:"https://github.com/ginlord111/algorithmic-odyssey-web",
-    },
-    {
-      icon: Youtube,
-      href:"/",
     },
   ];
   const ourPages = [
@@ -97,11 +89,11 @@ const Footer = () => {
                 <div className="mt-5">
                     <Input type="email" placeholder="Enter your e-mail address" className="bg-transparent rounded-none px-5" color="default" size="md"/>
                 </div>
-                <div className="mt-5">
+                {/* <div className="mt-5">
                     <Button className="px-10 text-lg font-bold text-black">
                         Subscribe
                     </Button>
-                </div>
+                </div> */}
             </div>
           </div>
         </MaxWidthWrapper>
