@@ -81,7 +81,7 @@ const Footer = () => {
               <h3 className="text-lg font-bold pb-8 text-gray-300">Our pages</h3>
                   <div className="grid grid-cols-2 gap-4">
                     {ourPages.map((page)=> (
-                      <Link href={page.href} key={page.name} className="text-white">
+                      <Link href={page.href} key={page.name} key={index} className="text-white">
                      {page.name}
                       </Link>
                     ))}
