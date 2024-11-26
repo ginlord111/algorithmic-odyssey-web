@@ -26,7 +26,7 @@ try {
 
 export async function GET(){
   const allUser:User[] = (await prisma.user.findMany({}))
-  
+  console.log(allUser, "ALL USERRRSSS")
 const sortUser = allUser.sort((a:any,b:any) => {if(a.gameState.levels[0].isCompleted && b.gameState.levels[0].isCompleted){
 return b.gameState.levels[0].points - a.gameState.levels[0].points;
 
