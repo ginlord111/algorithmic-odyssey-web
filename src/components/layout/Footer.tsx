@@ -64,8 +64,8 @@ const Footer = () => {
               <div className="flex items-center gap-4">
                 {socials.map((social, index) => (
     
-           <Link  href={social.href as string}>
-                <social.icon key={index} className="text-white w-6 h-6"/>
+           <Link  href={social.href as string} key={index}>
+                <social.icon  className="text-white w-6 h-6"/>
            </Link>
          
                 ))}
@@ -81,7 +81,7 @@ const Footer = () => {
               <h3 className="text-lg font-bold pb-8 text-gray-300">Our pages</h3>
                   <div className="grid grid-cols-2 gap-4">
                     {ourPages.map((page)=> (
-                      <Link href={page.href} key={page.name} key={index} className="text-white">
+                      <Link href={page.href} key={page.name} className="text-white">
                      {page.name}
                       </Link>
                     ))}
