@@ -146,38 +146,7 @@ const LandingPage = () => {
         </MaxWidthWrapper>
       </div>
       {/* YOUTUBE TUTORIAL */}
-      <div className="h-fit mt-[250px] pb-[150px]">
-        <MaxWidthWrapper>
-          <h1 className="font-bold tracking-wide md:text-5xl text-2xl mb-10">
-          Learn and have fun!
-          </h1>
-          <div className="relative  flex-col space-y-4">
-            <iframe
-              src="https://www.youtube.com/embed/EC7BoilfBSk?si=FaSx4j5eQXA6zAPS"
-              title="Tutorial"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-              className=" w-full lg:h-[700px] md:[500px] sm:h-[400px] h-[300px]   cursor-pointer"
-            ></iframe>
-            <div className="pt-16 flex justify-center max-w-4xl items-center space-x-24">
-            <Link
-              href={"#"}
-              className="bg-[#00A8E8] p-3 px-6 rounded-md text-lg font-bold text-white border border-[#cbd5e11a]"
-            >
-              Learn now
-            </Link>
-            <Link
-              href={"https://algo-thesis.onrender.com"}
-              className="bg-[#003459] p-3 px-6 rounded-md text-lg font-bold text-[white]"
-            >
-              Play now
-            </Link>
-          </div>
-          </div>
-        </MaxWidthWrapper>
-      </div>
+   
     </div>
   );
 };
