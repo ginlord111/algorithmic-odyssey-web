@@ -53,13 +53,13 @@ const LandingPage = () => {
           </div>
           <div className="w-fit mt-16 flex space-x-4">
             <Link
-              href={"/tutorial"}
+              href={"https://algo-thesis.onrender.com/tutorial"}
               className="bg-white p-3 px-6 rounded-md text-lg font-bold text-[#333F67]"
             >
               Learn now
             </Link>
             <Link
-              href="https://algo-thesis.onrender.com/tutorial"
+              href="https://algo-thesis.onrender.com"
               target="_blank"
               className="bg-[#003459] p-3 px-6 rounded-md text-lg font-bold text-[white]"
             >
