@@ -106,6 +106,18 @@ export default function NavBar() {
       href: "/leaderboard",
       className: "",
     },
+    {
+      name: "Profile",
+      href: `/user/${user?.username as string}`,
+      className: "",
+      isMobile:true
+    },
+    {
+      name: "Log out",
+      href: "",
+      className: "",
+      isMobile:true
+    },
     // {
     //   name: "About us",
     //   href: "/about-us",
@@ -147,12 +159,14 @@ export default function NavBar() {
       >
         {navItems.map((item, index) => (
           <NavbarItem key={index}>
-            <Link
+            {!item.isMobile && (
+              <Link
               href={item.href}
               className="text-xl"
             >
               {item.name}
             </Link>
+            )}
           </NavbarItem>
         ))}
       </NavbarContent>
@@ -171,7 +185,8 @@ export default function NavBar() {
               </DrawerHeader>
               {navItems.map((item, index) => (
                 <NavbarItem key={index} className="block py-2 px-3">
-                  <Link href={item.href} className="text-xl">
+                 {/* {item.name === "Log out" && <div>Log out</div>} */}
+                 <Link href={item.href} className="text-xl">
                     <DrawerClose>{item.name}</DrawerClose>
                   </Link>
                 </NavbarItem>
